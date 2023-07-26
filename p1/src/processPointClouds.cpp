@@ -25,12 +25,33 @@ typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::FilterCloud(ty
   auto startTime = std::chrono::steady_clock::now();
 
   // TODO:: Fill in the function to do voxel grid point reduction and region based filtering
+  // https://pcl.readthedocs.io/en/latest/voxel_grid.html
+  typename pcl::PointCloud<PointT>::Ptr cloudFiltered (new pcl::PointCloud<PointT> ());
+
+  std::cout << "Point Cloud size before filtering: " << cloud->points.size() << std::endl;
+
+  // Create the filtering object
+  pcl::VoxelGrid<PointT> sor;
+
+  sor.setInputCloud(cloud);
+
+  // Each voxel is a cube with side filterRes (0.01f = 1 cm long)
+  sor.setLeafSize(filterRes, filterRes, filterRes);
+
+  // Set filter limits for the points coordinates x, y, z [suggested by Udacity GPT]
+  sor.setFilterLimits(minPoint[0], maxPoint[0]);
+  sor.setFilterLimits(minPoint[1], maxPoint[1]);
+  sor.setFilterLimits(minPoint[2], maxPoint[2]);
+
+  sor.filter(*cloudFiltered);
+
+  std::cout << "Point Cloud size after filtering: " << cloudFiltered->points.size() << std::endl;
 
   auto endTime = std::chrono::steady_clock::now();
-  auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
-  std::cout << "Filtering took " << elapsedTime.count() << " milliseconds" << std::endl;
+  auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+  std::cout << "Filtering took " << elapsedTime.count() / 1000. << " milliseconds" << std::endl;
 
-  return cloud;
+  return cloudFiltered;
 }
 
 /* Separate inliers (points on a plane, or road) from obstacles.
@@ -128,8 +149,8 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
     inliersIndices->indices.push_back(inlier);
 
   auto endTime = std::chrono::steady_clock::now();
-  auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
-  std::cout << "Plane segmentation took " << elapsedTime.count() << " milliseconds" << std::endl;
+  auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+  std::cout << "Plane segmentation took " << elapsedTime.count() / 1000. << " milliseconds" << std::endl;
 
   std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> segResult = SeparateClouds(inliersIndices, cloud);
   return segResult;
@@ -151,8 +172,8 @@ KdTree<PointT>* ProcessPointClouds<PointT>::CreateKdTree(typename pcl::PointClou
     tree->insert(cloud->points[i], i);
 
   auto endTime = std::chrono::steady_clock::now();
-  auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
-  std::cout << "KD-Tree generation took " << elapsedTime.count() << " milliseconds" << std::endl;
+  auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+  std::cout << "KD-Tree generation took " << elapsedTime.count() / 1000. << " milliseconds" << std::endl;
 
   return tree;
 }
@@ -171,8 +192,8 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::C
   std::vector<typename pcl::PointCloud<PointT>::Ptr> clusters = euclideanCluster(cloud, tree, clusterTolerance, minSize, maxSize);
 
   auto endTime = std::chrono::steady_clock::now();
-  auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
-  std::cout << "Clustering took " << elapsedTime.count() << " milliseconds and found " << clusters.size() << " clusters" << std::endl;
+  auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+  std::cout << "Clustering took " << elapsedTime.count() / 1000. << " milliseconds and found " << clusters.size() << " clusters" << std::endl;
 
   return clusters;
 }
