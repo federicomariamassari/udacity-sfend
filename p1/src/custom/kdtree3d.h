@@ -71,7 +71,6 @@ struct KdTree
           // Split by z
           lhs = point.z;
           rhs = (*node)->point.z;
-          break;
       }
 
       if (lhs < rhs)
@@ -118,7 +117,6 @@ struct KdTree
         case 2:
           lhs = target.z;
           rhs = node->point.z;
-          break;
       }
 
       if (lhs-distanceTol < rhs)
