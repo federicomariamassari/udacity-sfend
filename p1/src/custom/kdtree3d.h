@@ -140,7 +140,7 @@ struct KdTree
 };
 
 /* Initialize the boundaries of the box enclosing a 3D KD-Tree for rendering.
-   This code in this method was suggested by Udacity GPT.
+   The code in this method was suggested by Udacity GPT.
  */
 template<typename PointT>
 Box initKdTreeBox(typename pcl::PointCloud<PointT>::Ptr cloud)
