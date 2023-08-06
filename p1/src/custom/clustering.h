@@ -1,6 +1,6 @@
-// 3-dimensional Euclidean Clustering implementation using templates
-// Extended from cluster.cpp by Aaron Brown
-
+/* 3-Dimensional Euclidean Clustering algorithm implementation
+ * Extended from Aaron Brown's solution to Euclidean Clustering 2D (quiz/cluster.cpp)
+ */
 #ifndef CLUSTERING_H
 #define CLUSTERING_H
 
@@ -42,7 +42,7 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> euclideanCluster(typename pcl
 
     // Reject clusters outside boundaries
     if (cluster->points.size() >= minSize && cluster->points.size() <= maxSize)
-		clusters.push_back(cluster);
+      clusters.push_back(cluster);
 
     i++;
   }

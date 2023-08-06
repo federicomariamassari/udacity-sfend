@@ -1,5 +1,5 @@
-// PCL library functions for point cloud processing
-
+/* PCL library functions for point cloud processing.
+ */
 #ifndef PROCESSPOINTCLOUDS_H_
 #define PROCESSPOINTCLOUDS_H_
 
@@ -21,7 +21,7 @@
 #include <pcl/common/transforms.h>
 #include "render/box.h"
 
-// Custom implementations of KD-Tree 3D and Euclidean clustering (extended from Aaron Brown's solution)
+// Custom implementations of KD-Tree 3D and Euclidean clustering (extended from Aaron Brown's 2D solutions)
 #include "custom/kdtree3d.h"
 #include "custom/clustering.h"
 
@@ -55,12 +55,15 @@ class ProcessPointClouds {
 
     Box BoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster);
 
+    //BoxQ MinimumBoundingBoxQ(typename pcl::PointCloud<PointT>::Ptr cluster);
+
+    BoxQ MinimumXyAlignedBoundingBoxQ(typename pcl::PointCloud<PointT>::Ptr cluster);
+
     void savePcd(typename pcl::PointCloud<PointT>::Ptr cloud, std::string file);
 
     typename pcl::PointCloud<PointT>::Ptr loadPcd(std::string file);
 
     std::vector<boost::filesystem::path> streamPcd(std::string dataPath);
-
 };
 
 #endif /* PROCESSPOINTCLOUDS_H_ */

@@ -1,6 +1,6 @@
-// 3-dimensional KD-Tree implementation using templates
-// Extended from kdtree.h by Aaron Brown
-
+/* 3-Dimensional KD-Tree algorithm implementation
+ * Extended from Aaron Brown's solution to KD-Tree 2D (quiz/kdtree.h)
+ */
 #ifndef KDTREE_3D_H
 #define KDTREE_3D_H
 
@@ -16,7 +16,7 @@ struct Node
   Node<PointT>* right;
 
   Node(PointT arr, int setId)
-  : point(arr), id(setId), left(NULL), right(NULL)
+    : point(arr), id(setId), left(NULL), right(NULL)
   {}
 
   ~Node()
@@ -33,7 +33,7 @@ struct KdTree
   Node<PointT>* root;
 
   KdTree()
-  : root(NULL)
+    : root(NULL)
   {}
 
   ~KdTree()
@@ -90,10 +90,12 @@ struct KdTree
     if (node != NULL)
     {
       // Box-check lazy evaluation: does the point lie within the cube centered on target?
-      if (abs(node->point.x-target.x) <= distanceTol && abs(node->point.y-target.y) <= distanceTol && abs(node->point.z-target.z) <= distanceTol)
+      if (abs(node->point.x-target.x) <= distanceTol && abs(node->point.y-target.y) <= distanceTol 
+        && abs(node->point.z-target.z) <= distanceTol)
       {
         // Compare argument of norm to squared tolerance since square root is an expensive operation
-        float sumOfSquares = pow(node->point.x-target.x, 2) + pow(node->point.y-target.y, 2) + pow(node->point.z-target.z, 2);
+        float sumOfSquares = pow(node->point.x-target.x, 2) + pow(node->point.y-target.y, 2) + 
+          pow(node->point.z-target.z, 2);
 
         if (sumOfSquares <= pow(distanceTol, 2))
           ids.push_back(node->id);
@@ -138,7 +140,7 @@ struct KdTree
 };
 
 /* Initialize the boundaries of the box enclosing a 3D KD-Tree for rendering.
-   The code in this method was suggested by Udacity GPT.
+ * The code in this method was suggested by Udacity GPT.
  */
 template<typename PointT>
 Box initKdTreeBox(typename pcl::PointCloud<PointT>::Ptr cloud)
@@ -175,7 +177,7 @@ Box initKdTreeBox(typename pcl::PointCloud<PointT>::Ptr cloud)
   return window;
 }
 
-/* Efficient 3D rendering of a KD-Tree.
+/* Render a 3-dimensional KD-Tree.
  */
 template<typename PointT>
 void render3DTree(Node<PointT>* node, pcl::visualization::PCLVisualizer::Ptr& viewer, Box window, int& iteration, uint depth=0)
@@ -200,7 +202,7 @@ void render3DTree(Node<PointT>* node, pcl::visualization::PCLVisualizer::Ptr& vi
       vertices->points.push_back(PointT(node->point.x, window.y_min, window.z_max)); 
 
       // https://stackoverflow.com/questions/28296876/creating-a-polygon-with-point-cloud
-      viewer->addPolygon<pcl::PointXYZ>(vertices, 0, 0, 1, "vertices" + std::to_string(iteration));
+      viewer->addPolygon<PointT>(vertices, 0, 0, 1, "vertices" + std::to_string(iteration));
 
       lowerWindow.x_max = node->point.x;
       upperWindow.x_min = node->point.x;
@@ -233,7 +235,7 @@ void render3DTree(Node<PointT>* node, pcl::visualization::PCLVisualizer::Ptr& vi
       viewer->addPolygon<PointT>(vertices, 0, 1, 0, "vertices" + std::to_string(iteration));
 
       lowerWindow.z_max = node->point.z;
-      upperWindow.z_min = node->point.z; 
+      upperWindow.z_min = node->point.z;
     }
 
     iteration++;
