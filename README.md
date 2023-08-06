@@ -12,3 +12,5 @@ My Udacity Sensor Fusion Engineer Nanodegree projects, in C++.
 ## Project 1: LiDAR Obstacle Detection
 
 * [Starter Code](https://github.com/udacity/SFND_Lidar_Obstacle_Detection)
+
+![KD-Tree 3d](./p1/img/img2.png)
