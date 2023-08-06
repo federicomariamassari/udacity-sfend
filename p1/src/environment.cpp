@@ -15,7 +15,7 @@ std::vector<Car> initHighway(bool renderScene, pcl::visualization::PCLVisualizer
 {
   Car egoCar (Vect3(0, 0, 0), Vect3(4, 2, 2), Color(0, 1, 0), "egoCar");
   Car car1 (Vect3(15, 0, 0), Vect3(4, 2, 2), Color(0, 0, 1), "car1");
-  Car car2 (Vect3(8,-4, 0), Vect3(4, 2, 2), Color(0, 0, 1), "car2"); 
+  Car car2 (Vect3(8, -4, 0), Vect3(4, 2, 2), Color(0, 0, 1), "car2"); 
   Car car3 (Vect3(-12, 4, 0), Vect3(4, 2, 2), Color(0, 0, 1), "car3");
 
   std::vector<Car> cars;
