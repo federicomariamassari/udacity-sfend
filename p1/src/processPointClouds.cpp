@@ -323,7 +323,7 @@ BoxQ ProcessPointClouds<PointT>::MinimumXyAlignedBoundingBoxQ(typename pcl::Poin
 
   // V satisfies the orthogonality property A * A^T = I(3), but sometimes has determinant -1 (reflection) [5].
   // Convert to a valid rotation matrix by flipping the sign of the column associated to the smallest singular
-  // value, the one associated to the least significant axis of the transformation (source: Udacity GPT)
+  // value--the one related to the least significant axis of the transformation (source: Udacity GPT)
 
   if (V.determinant() < 0)
     // Flip the sign of the last column, since Eigen::JacobiSVD sorts columns descendingly by singular value
