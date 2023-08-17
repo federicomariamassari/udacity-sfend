@@ -55,7 +55,8 @@ class ProcessPointClouds {
 
     Box BoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster);
 
-    //BoxQ MinimumBoundingBoxQ(typename pcl::PointCloud<PointT>::Ptr cluster);
+    // Basic 3D quaternion rotations (to align object to XY-plane preserving Z rotation)
+    Eigen::Quaternionf axisRotate(float angle, char axis);
 
     BoxQ MinimumXyAlignedBoundingBoxQ(typename pcl::PointCloud<PointT>::Ptr cluster);
 

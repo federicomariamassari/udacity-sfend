@@ -52,15 +52,15 @@ void initCamera(CameraAngle setAngle, pcl::visualization::PCLVisualizer::Ptr& vi
     case XY: 
       viewer->setCameraPosition(-distance, -distance, distance, 1, 1, 0); 
       break;
-    
+
     case TopDown: 
       viewer->setCameraPosition(0, 0, distance, 1, 0, 1); 
       break;
-    
+
     case Side:
       viewer->setCameraPosition(0, -distance, 0, 0, 0, 1); 
       break;
-    
+
     case FPS: 
       viewer->setCameraPosition(-10, 0, 0, 0, 0, 1);
   }
@@ -147,6 +147,7 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer, const Options
 
     if (options.renderMinimumXyAlignedBoxes)
     {
+      // Experimental: Render PCA minimum bounding boxes aligned to the XY plane
       BoxQ boxQ = pointProcessor->MinimumXyAlignedBoundingBoxQ(cluster);
       renderBox(viewer, boxQ, clusterId);
     }
@@ -216,9 +217,10 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer, ProcessPointCloud
     // Render location of egoCar as a static purple box
     pcl::PointCloud<pcl::PointXYZI>::Ptr egoCarLocation (new pcl::PointCloud<pcl::PointXYZI>);
 
-    // To keep egoCar box constant instead of fitting one at each frame
-    pcl::PointXYZI egoCarMinPoint (-1.5, -1.7, -1.0, 1.0);
-    pcl::PointXYZI egoCarMaxPoint (2.6, 1.7, 0.4, 1.0);
+    // Detecting egoCar cluster and fitting a new box at each frame is computationally expensive and
+    // leads to flickering behaviour, so keeping box size constant (y-limits slightly lower than default)
+    pcl::PointXYZI egoCarMinPoint (-1.5, -1.6, -1.0, 1.0);
+    pcl::PointXYZI egoCarMaxPoint (2.6, 1.6, 0.4, 1.0);
 
     egoCarLocation->points.push_back(egoCarMinPoint);
     egoCarLocation->points.push_back(egoCarMaxPoint);
@@ -244,13 +246,13 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer, ProcessPointCloud
 
     if (options.renderMinimumXyAlignedBoxes)
     {
-      // Render minimum, XY-plane-aligned Bounding Boxes around the clusters
+      // Experimental: Render minimum, XY-plane-aligned PCA bounding boxes around the clusters
       BoxQ boxQ = pointProcessor->MinimumXyAlignedBoundingBoxQ(cluster);
       renderBox(viewer, boxQ, clusterId);
-    }      
+    }
 
     ++clusterId;
-  }  
+  }
 }
 
 int main (int argc, char** argv)
@@ -265,7 +267,7 @@ int main (int argc, char** argv)
   // MAIN OPTIONS TO RENDER ALL SCENARIOS
   // ----------------------------------------------------------------------------------------------
   bool renderCityBlock = true;
-  bool streamCityBlock = false;
+  bool streamCityBlock = true;
   bool trackCyclist = false;
 
   Options options(renderCityBlock, streamCityBlock, trackCyclist);
@@ -301,7 +303,7 @@ int main (int argc, char** argv)
         if (streamIterator == stream.end())
           streamIterator = stream.begin();
 
-        // Delay playback for 75 ms
+        // Delay playback by 75 ms
         viewer->spinOnce(75);
       }
 

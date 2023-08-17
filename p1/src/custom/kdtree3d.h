@@ -85,7 +85,7 @@ struct KdTree
     insertHelper(&root, 0, point, id);
   }
 
-  void searchHelper(PointT target, Node<PointT>* node, int depth, float distanceTol, std::vector<int>& ids)
+  void proximity(PointT target, Node<PointT>* node, int depth, float distanceTol, std::vector<int>& ids)
   {
     if (node != NULL)
     {
@@ -122,10 +122,10 @@ struct KdTree
       }
 
       if (lhs-distanceTol < rhs)
-        searchHelper(target, node->left, depth+1, distanceTol, ids);
+        proximity(target, node->left, depth+1, distanceTol, ids);
 
       if (lhs+distanceTol > rhs)
-        searchHelper(target, node->right, depth+1, distanceTol, ids);
+        proximity(target, node->right, depth+1, distanceTol, ids);
     }
   }
 
@@ -133,14 +133,14 @@ struct KdTree
   std::vector<int> search(PointT target, float distanceTol)
   {
     std::vector<int> ids;
-    searchHelper(target, root, 0, distanceTol, ids);
+    proximity(target, root, 0, distanceTol, ids);
 
     return ids;
   }
 };
 
 /* Initialize the boundaries of the box enclosing a 3D KD-Tree for rendering.
- * The code in this method was suggested by Udacity GPT.
+ * Note: The code in this method was suggested by Udacity GPT.
  */
 template<typename PointT>
 Box initKdTreeBox(typename pcl::PointCloud<PointT>::Ptr cloud)

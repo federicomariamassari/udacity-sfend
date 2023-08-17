@@ -15,7 +15,7 @@ void clusterHelper(int index, typename pcl::PointCloud<PointT>::Ptr cloud, typen
 
   for (int id : nearest)
   {
-    if(!processed[id])
+    if (!processed[id])
       clusterHelper(id, cloud, cluster, processed, tree, distanceTol);
   }
 }
