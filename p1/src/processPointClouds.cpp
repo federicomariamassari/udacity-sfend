@@ -359,9 +359,7 @@ BoxQ ProcessPointClouds<PointT>::MinimumXyAlignedBoundingBoxQ(typename pcl::Poin
 
   // Do not flatten bi-dimensional vertical objects (e.g., poles) to avoid "cross" effect (vertical
   // point cloud, horizontal bounding box)
-  int irrelevantDimensions = 0;
   float eps = 5e-3;
-
   if (S.x() > eps && S.y() > eps && S.z() > eps)
   {
     // All dimensions are relevant; align the minimum bounding boxes to the XY-plane
