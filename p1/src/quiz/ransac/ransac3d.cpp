@@ -16,10 +16,12 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr CreateData3d()
 pcl::visualization::PCLVisualizer::Ptr initScene()
 {
   pcl::visualization::PCLVisualizer::Ptr viewer(new pcl::visualization::PCLVisualizer ("3D Viewer"));
+
   viewer->setBackgroundColor (0, 0, 0);
   viewer->initCameraParameters();
   viewer->setCameraPosition(0, 0, 15, 0, 1, 0);
   viewer->addCoordinateSystem (1.0);
+
   return viewer;
 }
 
@@ -32,12 +34,13 @@ std::unordered_set<int> Ransac3d(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int 
 
   while (maxIterations--) {
   
-    // Randomly choose three points from the cloud and store them in a vector
+    // Randomly select three distinct point indices from the cloud to define a plane
     std::unordered_set<int> inliers;
 
     while (inliers.size() < 3)
       inliers.insert(rand() % (cloud->points.size()));
 
+    // Store the plane inlier points based on extracted indices
     std::vector<pcl::PointXYZ> p(3);
 
     auto itr = inliers.begin();
@@ -75,8 +78,8 @@ std::unordered_set<int> Ransac3d(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int 
   }
 
   auto endTime = std::chrono::steady_clock::now();
-  auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
-  std::cout << "Clustering took " << elapsedTime.count() << " milliseconds" << std::endl;
+  auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+  std::cout << "Clustering took " << elapsedTime.count() / 1000. << " milliseconds" << std::endl;
 
   return inliersResult;
 }
@@ -89,13 +92,12 @@ int main ()
   // Create data
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud = CreateData3d();
 
-  // TODO: Change the max iteration and distance tolerance arguments for Ransac function
   std::unordered_set<int> inliers = Ransac3d(cloud, 100, 0.20);
 
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloudInliers(new pcl::PointCloud<pcl::PointXYZ>());
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloudOutliers(new pcl::PointCloud<pcl::PointXYZ>());
 
-  for(int index = 0; index < cloud->points.size(); index++)
+  for (int index = 0; index < cloud->points.size(); index++)
   {
     pcl::PointXYZ point = cloud->points[index];
 
@@ -107,19 +109,15 @@ int main ()
   }
 
   // Render 3D point cloud with inliers and outliers
-  if(inliers.size())
+  if (inliers.size())
   {
-    renderPointCloud(viewer, cloudInliers, "inliers", Color(0,1,0));
-    renderPointCloud(viewer, cloudOutliers, "outliers", Color(1,0,0));
+    renderPointCloud(viewer, cloudInliers, "inliers", Color(0, 1, 0));
+    renderPointCloud(viewer, cloudOutliers, "outliers", Color(1, 0, 0));
   }
   
   else
-  {
     renderPointCloud(viewer,cloud,"data");
-  }
   
   while (!viewer->wasStopped ())
-  {
     viewer->spinOnce ();
-  }
 }

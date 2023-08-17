@@ -90,7 +90,8 @@ struct KdTree
     if (node != NULL)
     {
       // Box-check lazy evaluation: does the point lie within the cube centered on target?
-      if (abs(node->point.x-target.x) <= distanceTol && abs(node->point.y-target.y) <= distanceTol && abs(node->point.z-target.z) <= distanceTol)
+      if (abs(node->point.x-target.x) <= distanceTol && abs(node->point.y-target.y) <= distanceTol 
+        && abs(node->point.z-target.z) <= distanceTol)
       {
         // Square root is an expensive operation; compare the argument of norm to squared tolerance instead
         float sumOfSquares = pow(node->point.x-target.x, 2) + pow(node->point.y-target.y, 2) + pow(node->point.z-target.z, 2);

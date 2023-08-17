@@ -1,8 +1,7 @@
 /* \author Aaron Brown */
-// Quiz on implementing kd tree
+// Quiz on implementing 2-dimensional KD-Tree
 
 #include "../../../render/render.h"
-
 
 // Structure to represent node of kd tree
 struct Node
@@ -57,40 +56,31 @@ struct KdTree
 
   void insert(std::vector<float> point, int id)
   {
-    // TODO: Fill in this function to insert a new point into the tree
-    // the function should create a new node and place correctly with in the root 
+    // Insert a new point into the tree: create a new node and place correctly within the root
     insertHelper(&root, 0, point, id);
   }
 
   void searchHelper(std::vector<float> target, Node* node, int depth, float distanceTol, std::vector<int>& ids)
-  {
-    
-    // Use abs and squares to make it more readable and faster
+  {   
     if (node != NULL)
-    {
-      
+    {      
       // Box check: is point within the box?
-      //if (node->point[0] >= (target[0] - distanceTol) && (node->point[0] <= (target[0] + distanceTol)) 
-      //  && node->point[1] >= (target[1] - distanceTol) && (node->point[1] <= (target[1] + distanceTol)))
-      
       if (abs(node->point[0] - target[0]) <= distanceTol && abs(node->point[1] - target[1]) <= distanceTol)
-
       {
-        float distance = pow(node->point[0]-target[0], 2) + pow(node->point[1]-target[1], 2);
+        float distance = pow(node->point[0] - target[0], 2) + pow(node->point[1] - target[1], 2);
         
         if (distance <= pow(distanceTol, 2))
           ids.push_back(node->id);
       }
 
       // Where will the node flow? Check across box boundaries
-      if ((target[depth % 2]-distanceTol) < node->point[depth % 2])
+      if ((target[depth % 2] - distanceTol) < node->point[depth % 2])
         searchHelper(target, node->left, depth+1, distanceTol, ids);
 
-      if ((target[depth % 2]+distanceTol) > node->point[depth % 2])
+      if ((target[depth % 2] + distanceTol) > node->point[depth % 2])
         searchHelper(target, node->right, depth+1, distanceTol, ids);
     }
   }
-
 
   // return a list of point ids in the tree that are within distance of target
   std::vector<int> search(std::vector<float> target, float distanceTol)
@@ -100,6 +90,4 @@ struct KdTree
 
     return ids;
   }
-  
-
 };

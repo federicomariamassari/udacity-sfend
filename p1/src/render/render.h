@@ -54,16 +54,18 @@ struct Car
   void render(pcl::visualization::PCLVisualizer::Ptr& viewer)
   {
     // Render bottom of car
-    viewer->addCube(position.x-dimensions.x/2, position.x+dimensions.x/2, position.y-dimensions.y/2, position.y+dimensions.y/2, 
-    	position.z, position.z+dimensions.z*2/3, color.r, color.g, color.b, name); 
+    viewer->addCube(position.x-dimensions.x/2, position.x+dimensions.x/2, position.y-dimensions.y/2, 
+      position.y+dimensions.y/2, position.z, position.z+dimensions.z*2/3, color.r, color.g, color.b, name);
+
     viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION, 
-    	pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE, name); 
+    	pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE, name);
     viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, color.r, color.g, color.b, name);
     viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_OPACITY, 1.0, name);
-    
+
     // Render top of car
-    viewer->addCube(position.x-dimensions.x/4, position.x+dimensions.x/4, position.y-dimensions.y/2, position.y+dimensions.y/2, 
-    	position.z+dimensions.z*2/3, position.z+dimensions.z, color.r, color.g, color.b, name + "Top"); 
+    viewer->addCube(position.x-dimensions.x/4, position.x+dimensions.x/4, position.y-dimensions.y/2, 
+      position.y+dimensions.y/2, position.z+dimensions.z*2/3, position.z+dimensions.z, color.r, color.g, color.b, name + "Top");
+
     viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION, 
     	pcl::visualization::PCL_VISUALIZER_REPRESENTATION_SURFACE, name + "Top"); 
     viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, color.r, color.g, color.b, name + "Top");
@@ -87,18 +89,19 @@ struct Car
 
 void renderHighway(pcl::visualization::PCLVisualizer::Ptr& viewer);
 
-void renderRays(pcl::visualization::PCLVisualizer::Ptr& viewer, const Vect3& origin, const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud);
+void renderRays(pcl::visualization::PCLVisualizer::Ptr& viewer, const Vect3& origin, 
+  const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud);
 
 void clearRays(pcl::visualization::PCLVisualizer::Ptr& viewer);
 
-void renderPointCloud(pcl::visualization::PCLVisualizer::Ptr& viewer, const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, 
-	std::string name, Color color = Color(1,1,1));
+void renderPointCloud(pcl::visualization::PCLVisualizer::Ptr& viewer, 
+  const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, std::string name, Color color = Color(1, 1, 1));
 
-void renderPointCloud(pcl::visualization::PCLVisualizer::Ptr& viewer, const pcl::PointCloud<pcl::PointXYZI>::Ptr& cloud, 
-	std::string name, Color color = Color(-1,-1,-1));
+void renderPointCloud(pcl::visualization::PCLVisualizer::Ptr& viewer, 
+  const pcl::PointCloud<pcl::PointXYZI>::Ptr& cloud, std::string name, Color color = Color(-1, -1, -1));
 
-void renderBox(pcl::visualization::PCLVisualizer::Ptr& viewer, Box box, int id, Color color = Color(1,0,0), float opacity = 1);
+void renderBox(pcl::visualization::PCLVisualizer::Ptr& viewer, Box box, int id, Color color = Color(1, 0, 0), float opacity = 1);
 
-void renderBox(pcl::visualization::PCLVisualizer::Ptr& viewer, BoxQ box, int id, Color color = Color(1,0,0), float opacity = 1);
+void renderBox(pcl::visualization::PCLVisualizer::Ptr& viewer, BoxQ box, int id, Color color = Color(1, 0, 0), float opacity = 1);
 
 #endif /* RENDER_H */
