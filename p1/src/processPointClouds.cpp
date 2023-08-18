@@ -382,7 +382,7 @@ BoxQ ProcessPointClouds<PointT>::MinimumXyAlignedBoundingBoxQ(typename pcl::Poin
     rotateY = axisRotate(pitch, 'y');
     rotateX = axisRotate(roll, 'x');
 
-    // Reconstruct the original ZYX rotation as a quaternion product, but without pitch and roll
+    // Reconstruct the original ZYX rotation as a quaternion composition, but without pitch and roll
     Eigen::Matrix3f rotatedMatrix = rotateZ * rotateY * rotateX;
     Eigen::Quaternionf bboxQuaternionXyAligned (rotatedMatrix);
 
