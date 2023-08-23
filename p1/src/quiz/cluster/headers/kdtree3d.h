@@ -197,7 +197,7 @@ void render3DTree(Node<PointT>* node, pcl::visualization::PCLVisualizer::Ptr& vi
       vertices->points.push_back(PointT(node->point.x, window.y_min, window.z_max)); 
 
       // https://stackoverflow.com/questions/28296876/creating-a-polygon-with-point-cloud
-      viewer->addPolygon<pcl::PointXYZ>(vertices, 0, 0, 1, "vertices" + std::to_string(iteration));
+      viewer->addPolygon<PointT>(vertices, 0, 0, 1, "vertices" + std::to_string(iteration));
 
       lowerWindow.x_max = node->point.x;
       upperWindow.x_min = node->point.x;
