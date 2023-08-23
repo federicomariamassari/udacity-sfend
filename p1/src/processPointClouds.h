@@ -55,9 +55,6 @@ class ProcessPointClouds {
 
     Box BoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster);
 
-    // Basic 3D quaternion rotations (to align object to XY-plane preserving Z rotation)
-    Eigen::Quaternionf axisRotate(float angle, char axis);
-
     BoxQ MinimumXyAlignedBoundingBoxQ(typename pcl::PointCloud<PointT>::Ptr cluster);
 
     void savePcd(typename pcl::PointCloud<PointT>::Ptr cloud, std::string file);
@@ -65,6 +62,8 @@ class ProcessPointClouds {
     typename pcl::PointCloud<PointT>::Ptr loadPcd(std::string file);
 
     std::vector<boost::filesystem::path> streamPcd(std::string dataPath);
+
+    void sortEigenvectors(typename pcl::PointCloud<PointT>::Ptr cluster, Eigen::Matrix3f &eigenvectors);
 };
 
 #endif /* PROCESSPOINTCLOUDS_H_ */

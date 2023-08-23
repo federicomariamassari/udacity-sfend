@@ -16,8 +16,8 @@ void ProcessPointClouds<PointT>::numPoints(typename pcl::PointCloud<PointT>::Ptr
   std::cout << cloud->points.size() << std::endl;
 }
 
-/* Reduce point cloud size using Voxel Grid and Region of Interest filtering.
- * Remove LiDAR static points on egoCar roof.
+/* Reduce point cloud size using Voxel Grid and Region of Interest filtering and remove LiDAR
+ * static points on egoCar roof.
  */
 template<typename PointT>
 typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::FilterCloud(typename pcl::PointCloud<PointT>::Ptr cloud, 
@@ -54,7 +54,8 @@ typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::FilterCloud(ty
 
   pcl::CropBox<PointT> roof (true);
 
-  // Using default XYZI min/max values provided in the Nanodegree
+  // Using default XYZI min/max values provided in the Nanodegree (these values are slightly
+  // narrowed down when displaying egoCar box in custom/options.h)
   roof.setMin(Eigen::Vector4f (-1.5, -1.7, -1, 1));
   roof.setMax(Eigen::Vector4f (2.6, 1.7, -0.4, 1));
   roof.setInputCloud(cloudRegion);
@@ -68,7 +69,7 @@ typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::FilterCloud(ty
   pcl::ExtractIndices<PointT> extract;
   extract.setInputCloud(cloudRegion);
   extract.setIndices(inliers);
-  extract.setNegative(true);  // true: discard roof points; false: keep only roof points
+  extract.setNegative(true);  // true: discard roof points; false: keep only roof points and discard the rest
   extract.filter(*cloudRegion);
 
   std::cout << "Point Cloud size after filtering: " << cloudRegion->points.size() << std::endl;
@@ -107,7 +108,12 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
 }
 
 /* Perform RANSAC 3D segmentation.
- * Extended from Aaron Brown's solution to RANSAC 2D problem.
+ * Extended from Aaron Brown's solution to RANSAC 2D problem [1].
+ *
+ * Resources:
+ * [1] - Implementing RANSAC for Lines (Point Cloud Segmentation: Lesson 7), Udacity Sensor Fusion Nanodegree
+ * [2] - Extending RANSAC to Planes (Point Cloud Segmentation: Lesson 8), Udacity Sensor Fusion Nanodegree
+ * [3] - https://en.wikipedia.org/wiki/Random_sample_consensus
  */
 template<typename PointT>
 std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> 
@@ -138,7 +144,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
       itr++;
     }
 
-    // Find coefficients of general equation of a plane Ax + By + Cz + D = 0 via cross-product
+    // Find coefficients of general equation of a plane Ax + By + Cz + D = 0 via cross-product [2]
     float A, B, C, D;
     A = (p[1].y - p[0].y) * (p[2].z - p[0].z) - (p[1].z - p[0].z) * (p[2].y - p[0].y);
     B = (p[1].z - p[0].z) * (p[2].x - p[0].x) - (p[1].x - p[0].x) * (p[2].z - p[0].z);
@@ -189,6 +195,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
 
 /* Create a 3-dimensional KD-Tree.
  * This method encapsulates logic from 'Clustering' to ease 3D-rendering of the object.
+ * Also see: "custom/kdtree3d.h::render3DTree"
  */
 template<typename PointT>
 KdTree<PointT>* ProcessPointClouds<PointT>::CreateKdTree(typename pcl::PointCloud<PointT>::Ptr cloud)
@@ -209,8 +216,13 @@ KdTree<PointT>* ProcessPointClouds<PointT>::CreateKdTree(typename pcl::PointClou
   return tree;
 }
 
-/* Perform Euclidean clustering on a point cloud object with the help of a 3-dimensional KD-Tree.
- * In contrast to the starting code version, this method also requires a KD-Tree as argument.
+/* Perform Euclidean clustering on a point cloud object with the help of a 3-dimensional KD-Tree [1] [2] [3].
+ * In contrast with the starting code version, this method also requires a KD-Tree as argument (see "CreateKdTree").
+ *
+ * Resources:
+ * [1] - Insert Points (Clustering Obstacles: Lesson 6), Udacity Sensor Fusion Nanodegree
+ * [2] - Searching Points in a KD-Tree (Clustering Obstacles: Lesson 7), Udacity Sensor Fusion Nanodegree
+ * [3] - Euclidean Clustering (Clustering Obstacles: Lesson 8), Udacity Sensor Fusion Nanodegree
  */
 template<typename PointT>
 std::vector<typename pcl::PointCloud<PointT>::Ptr> 
@@ -250,38 +262,34 @@ Box ProcessPointClouds<PointT>::BoundingBox(typename pcl::PointCloud<PointT>::Pt
   return box;
 }
 
-/* Compute unit quaternions scaled by desired Euler angle [1].
- * 
- * Resources:
- *  [1] - https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
+/* Sort Eigenvector columns descendingly based on range magnitude across the three dimensions.
  */
 template<typename PointT>
-Eigen::Quaternionf ProcessPointClouds<PointT>::axisRotate(float angle, char axis)
+void ProcessPointClouds<PointT>::sortEigenvectors(typename pcl::PointCloud<PointT>::Ptr cluster, Eigen::Matrix3f &eigenvectors)
 {
-  Eigen::Quaternionf quaternion;
+  PointT minPoint, maxPoint;
+  pcl::getMinMax3D(*cluster, minPoint, maxPoint);
 
-  switch(axis)
-  {
-    case 'x':
-      quaternion = Eigen::AngleAxisf(angle, Eigen::Vector3f::UnitX());
-      break;
+  Eigen::Vector3f ranges {abs(maxPoint.x - minPoint.x), abs(maxPoint.y - minPoint.y), abs(maxPoint.z - minPoint.z)};
 
-    case 'y':
-      quaternion = Eigen::AngleAxisf(angle, Eigen::Vector3f::UnitY());
-      break;
+  std::vector<int> index {0, 1, 2};
 
-    case 'z':
-      quaternion = Eigen::AngleAxisf(angle, Eigen::Vector3f::UnitZ());
-  }
+  // Sorting and permutation logic suggested by Udacity GPT
+  std::sort(index.begin(), index.end(), [&](int a, int b) { return ranges[a] > ranges[b]; });
 
-  return quaternion;
+  Eigen::Vector3i sortedIndex = Eigen::Map<Eigen::Vector3i> (index.data());
+
+  Eigen::PermutationMatrix<Eigen::Dynamic, Eigen::Dynamic> permutationMatrix (eigenvectors.cols());
+  permutationMatrix.setIdentity();
+  permutationMatrix.indices() = sortedIndex;
+
+  eigenvectors = eigenvectors * permutationMatrix;
 }
 
 /* Find the smallest obstacle-fitting bounding boxes aligned with the XY plane.
  * 
  * PCA minimum bounding boxes are fitted around clusters of points using Ryan McCormick's methodology,
  * [1] [2], then flattened (roll, pitch = 0) keeping their original Z-axis orientation (yaw).
- * Some correction is applied if required.
  * 
  * Resources:
  * [1] - http://codextechnicanum.blogspot.com/2015/04/find-minimum-oriented-bounding-box-of.html
@@ -312,14 +320,32 @@ BoxQ ProcessPointClouds<PointT>::MinimumXyAlignedBoundingBoxQ(typename pcl::Poin
 
   // Use Singular Value Decomposition (SVD) instead of the eigendecomposition suggested by [1]
   Eigen::JacobiSVD<Eigen::MatrixXf> svd (covariance, Eigen::ComputeThinV);
-  
+
   // Extract matrix of right-singular vectors of the normalized VarCov matrix [4]
   // In Eigen, the columns of V are sorted descendingly by corresponding singular value, so the first
-  // column is associated to the dimension with most significant variation in the data
+  // column is associated with the dimension showing largest variation in the data
   Eigen::Matrix3f V = svd.matrixV();
 
   // Also extract singular values to test for almost meaningless dimensions
   Eigen::Vector3f S = svd.singularValues();
+
+  // Largely uni-dimensional clusters such as the side pole in City Block tend to display "cross" patterns
+  // (vertical point cloud, horizontal bounding box) because ranges for X and Y vary (affecting the sorting
+  // of the associated eigenvectors) and related singular values are scarcely significant. A correction is
+  // therefore applied in this case, so that eigenvectors are sorted in ZYX order (2, 1, 0).
+  // Note that trimming the range (e.g., removing outliers or considering data within n standard deviations)
+  // does not always help obtain the correct order for the eigenvectors.
+
+  float eps = 0.01;
+  int negligibleDimensions = (S.array() < eps).count();
+
+  if (negligibleDimensions < 2)
+    // Largely tri-dimensional objects: sort eigenvectors according to spread of data across dimensions
+    sortEigenvectors(cluster, V);
+
+  else
+    // Apply correction: ZYX
+    V = V.rowwise().reverse().eval();
 
   // V satisfies the orthogonality property A * A^T = I(3), but sometimes has determinant -1 (reflection) [5].
   // Convert to a valid rotation matrix by flipping the sign of the column associated to the smallest singular
@@ -357,37 +383,29 @@ BoxQ ProcessPointClouds<PointT>::MinimumXyAlignedBoundingBoxQ(typename pcl::Poin
   boxQ.cube_width = maxPoint.y - minPoint.y;
   boxQ.cube_height = maxPoint.z - minPoint.z;
 
-  // Do not flatten bi-dimensional vertical objects (e.g., poles) to avoid "cross" effect (vertical
-  // point cloud, horizontal bounding box)
-  float eps = 5e-3;
-  if (S.x() > eps && S.y() > eps && S.z() > eps)
-  {
-    // All dimensions are relevant; align the minimum bounding boxes to the XY-plane
+  // Extract rotation matrix from quaternion [7]
+  Eigen::Matrix3f rotationMatrix = boxQ.bboxQuaternion.toRotationMatrix();
 
-    // Extract rotation matrix from quaternion [7]
-    Eigen::Matrix3f rotationMatrix = boxQ.bboxQuaternion.toRotationMatrix();
+  // Extract Euler angles in ZYX order: yaw, pitch, roll [7]
+  Eigen::Vector3f euler = rotationMatrix.eulerAngles(2, 1, 0);
 
-    // Extract Euler angles in ZYX order: yaw, pitch, roll [7]
-    Eigen::Vector3f euler = rotationMatrix.eulerAngles(2, 1, 0);
+  // Set target roll (X) and pitch (Y) to 0 to align the boxes on the XY-plane  
+  float yaw = euler[0];
+  float pitch = 0.0;
+  float roll = 0.0;
 
-    // Set target roll (X) and pitch (Y) to 0 to align the boxes on the XY-plane  
-    float yaw = euler[0];
-    float pitch = 0.0;
-    float roll = 0.0;
+  // Generate basic 3D rotation matrices using axis-angle representation [8]
+  Eigen::Matrix3f rotateZ, rotateY, rotateX;
 
-    // Generate basic 3D rotation matrices using axis-angle representation [8]
-    Eigen::Matrix3f rotateZ, rotateY, rotateX;
+  rotateZ = Eigen::AngleAxisf(yaw, Eigen::Vector3f::UnitZ());
+  rotateY = Eigen::AngleAxisf(pitch, Eigen::Vector3f::UnitY());
+  rotateX = Eigen::AngleAxisf(roll, Eigen::Vector3f::UnitX());
 
-    rotateZ = axisRotate(yaw, 'z');
-    rotateY = axisRotate(pitch, 'y');
-    rotateX = axisRotate(roll, 'x');
+  // Reconstruct the original ZYX rotation as a quaternion composition, without pitch and roll
+  Eigen::Matrix3f rotatedMatrix = rotateZ * rotateY * rotateX;
+  Eigen::Quaternionf bboxQuaternionXyAligned (rotatedMatrix);
 
-    // Reconstruct the original ZYX rotation as a quaternion composition, but without pitch and roll
-    Eigen::Matrix3f rotatedMatrix = rotateZ * rotateY * rotateX;
-    Eigen::Quaternionf bboxQuaternionXyAligned (rotatedMatrix);
-
-    boxQ.bboxQuaternion = bboxQuaternionXyAligned;
-  }
+  boxQ.bboxQuaternion = bboxQuaternionXyAligned;
 
   return boxQ;
 }
@@ -408,7 +426,7 @@ typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::loadPcd(std::s
   {
     PCL_ERROR ("Couldn't read file \n");
   }
-  std::cerr << "Loaded " << cloud->points.size () << " data points from " + file << std::endl;
+  std::cerr << "\nLoaded " << cloud->points.size () << " data points from " + file << std::endl;
 
   return cloud;
 }

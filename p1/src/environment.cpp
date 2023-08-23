@@ -114,7 +114,7 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer, const Options
     Box window = initKdTreeBox<pcl::PointXYZ>(segmentCloud.first);
 
     int it = 0;
-    render3DTree(tree->root, viewer, window, it);
+    render3DTree<pcl::PointXYZ>(tree->root, viewer, window, it);
 
     auto endTime = std::chrono::steady_clock::now();
     auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
@@ -147,7 +147,7 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer, const Options
 
     if (options.renderMinimumXyAlignedBoxes)
     {
-      // Experimental: Render PCA minimum bounding boxes aligned to the XY plane
+      // Experimental: Render minimum, XY-plane-aligned PCA bounding boxes around the clusters
       BoxQ boxQ = pointProcessor->MinimumXyAlignedBoundingBoxQ(cluster);
       renderBox(viewer, boxQ, clusterId);
     }
@@ -197,7 +197,7 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer, ProcessPointCloud
     Box window = initKdTreeBox<pcl::PointXYZI>(segmentCloud.first);
 
     int it = 0;
-    render3DTree(tree->root, viewer, window, it);
+    render3DTree<pcl::PointXYZI>(tree->root, viewer, window, it);
 
     auto endTime = std::chrono::steady_clock::now();
     auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
@@ -255,6 +255,14 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer, ProcessPointCloud
   }
 }
 
+/* Render all scenarios in "LiDAR Obstacle Detection" project by changing main options.
+ * Fine-tune rendering options and parameters are in "custom/options.h".
+ *
+ * Main options:
+ * - renderCityBlock: true to render "City Block", false to render "Simple Highway"
+ * - streamCityBlock: true to stream multiple PCD files (data_1), false to display a single frame
+ * - trackCyclist: true for highly non-linear tracking of a bicyclist and the surrounding objects (data_2)
+ */
 int main (int argc, char** argv)
 {
   std::cout << "Starting enviroment..." << std::endl;
@@ -268,7 +276,7 @@ int main (int argc, char** argv)
   // ----------------------------------------------------------------------------------------------
   bool renderCityBlock = true;
   bool streamCityBlock = true;
-  bool trackCyclist = false;
+  bool trackCyclist = true;
 
   Options options(renderCityBlock, streamCityBlock, trackCyclist);
 
