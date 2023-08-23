@@ -276,7 +276,7 @@ int main (int argc, char** argv)
   // ----------------------------------------------------------------------------------------------
   bool renderCityBlock = true;
   bool streamCityBlock = true;
-  bool trackCyclist = true;
+  bool trackCyclist = false;
 
   Options options(renderCityBlock, streamCityBlock, trackCyclist);
 
