@@ -1,7 +1,9 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
 
-/* Options to customize Udacity's Sensor Fusion LiDAR Obstacle Detection project.
+/* Options to fine-tune rendering and parameters for all scenarios in Udacity's Sensor Fusion
+ * "LiDAR Object Detection" project.
+ * Called from environment.cpp "main" function: tweak its main options for changes to take effect.
  */
 struct Options
 {
@@ -59,11 +61,12 @@ struct Options
         renderMinimumXyAlignedBoxes = false;
 
         // RANSAC 3D
-        maxIterations = 60;
-        distanceThreshold = 0.27;  // 27 cm
+        maxIterations = 55;
+        distanceThreshold = 0.22;  // 22 cm
 
+        // Euclidean clustering
         clusterTolerance = 0.32;  // 32 cm
-        minSize = 9;  // To track the guard rails
+        minSize = 8;  // To track the guard rails
         maxSize = 1200;
       }
 
@@ -80,8 +83,8 @@ struct Options
 
         // Euclidean clustering
         clusterTolerance = 0.45;  // 45 cm
-        minSize = 15;  // To track the side pole
-        maxSize = 800;
+        minSize = 14;  // To track the side pole
+        maxSize = 650;
       }
 
       // ------------------------------------------------------------------------------------------

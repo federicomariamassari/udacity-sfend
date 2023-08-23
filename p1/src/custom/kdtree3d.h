@@ -1,5 +1,9 @@
 /* 3-Dimensional KD-Tree algorithm implementation
  * Extended from Aaron Brown's solution to KD-Tree 2D (quiz/kdtree.h)
+ *
+ * Resources:
+ * [1] - Insert Points (Clustering Obstacles: Lesson 6), Udacity Sensor Fusion Nanodegree
+ * [2] - Searching Points in a KD-Tree (Clustering Obstacles: Lesson 7), Udacity Sensor Fusion Nanodegree
  */
 #ifndef KDTREE_3D_H
 #define KDTREE_3D_H
@@ -41,6 +45,7 @@ struct KdTree
     delete root;
   }
 
+  // Extended from Aaron Brown's solution [1]
   void insertHelper(Node<PointT>** node, uint depth, PointT point, int id)
   {
     // Tree is empty
@@ -85,7 +90,8 @@ struct KdTree
     insertHelper(&root, 0, point, id);
   }
 
-  void proximity(PointT target, Node<PointT>* node, int depth, float distanceTol, std::vector<int>& ids)
+  // Extended from Aaron Brown's solution [2]
+  void searchHelper(PointT target, Node<PointT>* node, int depth, float distanceTol, std::vector<int>& ids)
   {
     if (node != NULL)
     {
@@ -122,10 +128,10 @@ struct KdTree
       }
 
       if (lhs-distanceTol < rhs)
-        proximity(target, node->left, depth+1, distanceTol, ids);
+        searchHelper(target, node->left, depth+1, distanceTol, ids);
 
       if (lhs+distanceTol > rhs)
-        proximity(target, node->right, depth+1, distanceTol, ids);
+        searchHelper(target, node->right, depth+1, distanceTol, ids);
     }
   }
 
@@ -133,13 +139,14 @@ struct KdTree
   std::vector<int> search(PointT target, float distanceTol)
   {
     std::vector<int> ids;
-    proximity(target, root, 0, distanceTol, ids);
+    searchHelper(target, root, 0, distanceTol, ids);
 
     return ids;
   }
 };
 
-/* Initialize the boundaries of the box enclosing a 3D KD-Tree for rendering.
+/* Initialize the boundaries of the box enclosing a 3D KD-Tree so that the initial segmentation
+ * planes are rendered with the correct dimensions.
  * Note: The code in this method was suggested by Udacity GPT.
  */
 template<typename PointT>
@@ -177,7 +184,8 @@ Box initKdTreeBox(typename pcl::PointCloud<PointT>::Ptr cloud)
   return window;
 }
 
-/* Render a 3-dimensional KD-Tree.
+/* Render a 3-dimensional KD-Tree (custom method).
+ * This method is computationally-intensive, so it is suggested to only use it in Simple Highway.
  */
 template<typename PointT>
 void render3DTree(Node<PointT>* node, pcl::visualization::PCLVisualizer::Ptr& viewer, Box window, int& iteration, uint depth=0)

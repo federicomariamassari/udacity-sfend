@@ -1,11 +1,15 @@
 /* 3-Dimensional Euclidean Clustering algorithm implementation
- * Extended from Aaron Brown's solution to Euclidean Clustering 2D (quiz/cluster.cpp)
+ * Extended from Aaron Brown's solution to Euclidean Clustering 2D (quiz/cluster.cpp) [1]
+ *
+ * Resources:
+ * [1] - Euclidean Clustering (Clustering Obstacles: Lesson 8), Udacity Sensor Fusion Nanodegree
  */
 #ifndef CLUSTERING_H
 #define CLUSTERING_H
 
+// Extended from Aaron Brown's solution [1]
 template<typename PointT>
-void clusterHelper(int index, typename pcl::PointCloud<PointT>::Ptr cloud, typename pcl::PointCloud<PointT>::Ptr& cluster, 
+void proximity(int index, typename pcl::PointCloud<PointT>::Ptr cloud, typename pcl::PointCloud<PointT>::Ptr& cluster, 
 	std::vector<bool>& processed, KdTree<PointT>* tree, float distanceTol)
 {
   processed[index] = true;
@@ -16,7 +20,7 @@ void clusterHelper(int index, typename pcl::PointCloud<PointT>::Ptr cloud, typen
   for (int id : nearest)
   {
     if (!processed[id])
-      clusterHelper(id, cloud, cluster, processed, tree, distanceTol);
+      proximity(id, cloud, cluster, processed, tree, distanceTol);
   }
 }
 
@@ -38,7 +42,7 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> euclideanCluster(typename pcl
 
     typename pcl::PointCloud<PointT>::Ptr cluster(new pcl::PointCloud<PointT>);
 
-    clusterHelper(i, cloud, cluster, processed, tree, distanceTol);
+    proximity(i, cloud, cluster, processed, tree, distanceTol);
 
     // Reject clusters outside boundaries
     if (cluster->points.size() >= minSize && cluster->points.size() <= maxSize)
