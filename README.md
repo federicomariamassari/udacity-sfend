@@ -13,4 +13,21 @@ My Udacity Sensor Fusion Engineer Nanodegree projects, in C++.
 
 * [Starter Code](https://github.com/udacity/SFND_Lidar_Obstacle_Detection)
 
-![KD-Tree 3d](./p1/img/img2.png)
+![KD-Tree 3d](./projects/p1/img/img2.gif)
+
+### How to Build and Run the Project
+
+We suppose the project resides at address `/home/$whoami/workspace/udacity-sfend/projects/p1`, with `$whoami` the username of the current user (verify on console).
+
+```bash
+cd /home/$whoami/workspace/udacity-rsend/projects/p1
+mkdir build && cd build
+cmake ..
+make
+```
+
+Then, run the newly-created executable:
+
+```bash
+./environment
+```
