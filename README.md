@@ -11,23 +11,29 @@ My Udacity Sensor Fusion Engineer Nanodegree projects, in C++.
 
 ## Project 1: LiDAR Obstacle Detection
 
+__Acquired familiarity with:__ Point Cloud Library (PCL).
+
+### Overview
+
+_Process raw LiDAR data with filtering, segmentation, and clustering to detect vehicles on the road: reduce the size of a point cloud using voxel grid and region-of-interest techniques, implement custom RANSAC planar model fitting and Euclidean clustering with KD-Trees to segregate and distinguish vehicles and obstacles, then bind the latter into boxes._
+
 * [Starter Code](https://github.com/udacity/SFND_Lidar_Obstacle_Detection)
 
-![KD-Tree 3d](./projects/p1/img/img2.gif)
+__[Link to code](projects/p1/)__
 
 ### How to Build and Run the Project
 
-We suppose the project resides at address `/home/$whoami/workspace/udacity-sfend/projects/p1`, with `$whoami` the username of the current user (verify on console).
+Clone the repository locally, for example inside `/home/$whoami/workspace` (with `$whoami` the username of the current user). Then build and run the main project as follows. To build and run `quiz` instead, see the project's README file.
 
 ```bash
 cd /home/$whoami/workspace/udacity-rsend/projects/p1
 mkdir build && cd build
 cmake ..
 make
-```
-
-Then, run the newly-created executable:
-
-```bash
 ./environment
 ```
+
+### Output
+
+![KD-Tree 3d](./projects/p1/img/img2.gif)
+
