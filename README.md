@@ -17,6 +17,8 @@ __Acquired familiarity with:__ Point Cloud Library (PCL).
 
 _Process raw LiDAR data with filtering, segmentation, and clustering to detect vehicles on the road: reduce the size of a point cloud using voxel grid and region-of-interest techniques, implement custom RANSAC planar model fitting and Euclidean clustering with KD-Trees to segregate and distinguish vehicles and obstacles, then bind the latter into boxes._
 
+
+
 __[Link to code](projects/p1/)__ | [Starter Code from Udacity](https://github.com/udacity/SFND_Lidar_Obstacle_Detection)
 
 ### How to Build and Run the Project
@@ -33,6 +35,6 @@ make
 
 ### Output
 
-A stream of incoming obstacles, encapsulated in PCA bounding boxes, is rendered in the city block scene below. Carla, Udacity's self-driving car, is the purple block at the center of the screen, with LiDAR mounted on top.
+A stream of incoming obstacles, encapsulated in PCA bounding boxes, is rendered in the city block scene below. Udacity's self-driving car Carla is the purple block at the center of the screen, with LiDAR mounted on top.
 
 ![KD-Tree 3d](./projects/p1/img/img2.gif)
