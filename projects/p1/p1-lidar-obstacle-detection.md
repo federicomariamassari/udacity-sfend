@@ -87,6 +87,18 @@ PCA boxes solve the problem of excessive fitting of diagonal point clouds, but a
 - Using PCA boxes in point 2, non-linear helps, but it is not enough especially because, due to the high variability of points in the point cloud clusters, the principal axes are not always correctly aligned, so additional corrective steps are needed.
 - Ego car: Instead of extracting the point cloud associated to ego car at each frame, to avoid flickering and reduce computational burden, the very first frame is analysed and the location kept constant for all subsequent stills.
 
+<table>
+  <tr>
+  <td align="center"><b>Figure 3.A</b>: Regular Bounding Boxes</td>
+  <td align="center"><b>Figure 3.B</b>: PCA Bounding Boxes</td>
+  <tr>
+  </tr>
+  <tr>
+    <td align="center"><img align="center" src="./img/mov2a.gif" width="475"/></td>
+    <td align="center"><img align="center" src="./img/mov2b.gif" width="475"/></td>
+  </tr>
+</table>
+
 1. https://en.wikipedia.org/wiki/Minimum_bounding_box_algorithms
 2. Dimitrov, D., Knauer, C., Kriegel, K., Rote, G.: [On the Bounding Boxes Obtained by Principal Component Analysis](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis), 2014, ResearchGate.
 
