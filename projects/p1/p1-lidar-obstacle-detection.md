@@ -12,19 +12,26 @@ from real Point Cloud Data (PCD).
 
 The project is organized as follows. The cloud is initially filtered to shrink its size, so as to reduce computational processing burden across consecutive frames (using voxel grid and region-of-interest ROI techniques), then 3-dimensional RANSAC is used to separate points belonging to the road plane from those belonging to obstacles (be it incoming vehicles or other still obstacles, we do not know at this stage). Then, based on point proximity, we distinguish across various clusters of points. And finally, we bind the clusters within boxes.
 
-Different degrees of obstacle detection (of increasing complexity) are presented in this project. 
+Different degrees of obstacle detection (of increasing complexity) are presented in this project.
+
 1. Simple detection from a sample environment (3 cars). This serves as testing environment for RANSAC, clustering, and the bounding box algorithms.
 2. Data from a real point cloud from Udacity's self-driving car, Carla: both static (one single frame) and dynamic (streaming of multiple frames).
 3. Of the above point, there are two options: linear, and highly dynamic/non-linear.
 
-Points 1 and 2 (static, linear) are generally easy to fit, but the highly non-linear case is requires advanced techniques which are not entirely explored in ths project for now. 
+Points 1 and 2 (static, linear) are generally easy to fit, but the highly non-linear case is requires advanced techniques which are not entirely explored in this project for now.
 
 ## Project Structure
+
+The directory structure tree for the project appears in Figure 2. It is possible to compile three different programs: the main one inside `src` plus two sample implementations for RANSAC as well as KD-Trees and Euclidean clustering (both in 2D and  3D) inside the `quiz` folder.
+
+
+Figure 2 shows the directory structure tree for the projects. There are 3 `CMakeLists.txt` overall, which means it's possible to compile three different projects. The top level is the main project, and then there are two in the `quiz` folder. The quiz folder contains sample programs on RANSAC, KD-Trees, and Euclidean Clustering built during the course, as basis for the main file. `environment.cpp` is the main file, while `processPointClouds.cpp` contains all functions of the projects, and builds upon the header files in `custom`. `options.h` contains all rendering options, together with values for all the hyperparameters in the project. `kdtree.h` and `clustering.h` contain, respectively, the logic for KD-Trees and Euclidean Clustering in 3 dimensions. Voxel grid, region of interest, and RANSAC implementations are instead contained in `processPointClouds.cpp`. Quiz also has basic 2D implementations of the above. `render` contains helper functions for object rendering, while `sensors` contains, among the others, raw point cloud data for different scenarios.
 
 __Figure 2: Directory Structure Tree__
 
 ```bash
 .
+├── build
 ├── CMakeLists.txt
 └── src
     ├── custom
@@ -36,6 +43,7 @@ __Figure 2: Directory Structure Tree__
     ├── processPointClouds.h
     ├── quiz
     │   ├── cluster
+    │   │   ├── build
     │   │   ├── CMakeLists.txt
     │   │   ├── cluster.cpp
     │   │   ├── cluster3d.cpp
@@ -44,6 +52,7 @@ __Figure 2: Directory Structure Tree__
     │   │       ├── kdtree.h
     │   │       └── kdtree3d.h
     │   └── ransac
+    │       ├── build
     │       ├── CMakeLists.txt
     │       ├── ransac2d.cpp
     │       └── ransac3d.cpp
@@ -71,6 +80,14 @@ The original point cloud is filtered using voxel grid technique. A voxel (volume
 ### Region Of Interest (ROI)
 
 Region-based fitting consists, instead, in keeping only a certain section (rectangular prism) of the diving environment, discarding the edges of low significance for object detection and perception of the surroundings, and which introduce additional computational burden (they add little benefit in processing the area, add little information). Since LiDAR is mounted on top of the car (to be able to continuously rotate 360° and perceive the environment), in order to keep the road plane, Z <belongs> [-2m, 1m]. X, Y, instead, are approximately symmetric and in [ ; ] and [ ; ]. This way we detect the road, but no wall or parked cars.
+
+### RANSAC
+
+$$
+A = (y_2 - y_1)(z_3 - z_1) - (z_2 - z_1)(y_3 - y_1)
+
+Ax + By + Cz + D = 0
+$$
 
 ### Bounding Boxes
 
