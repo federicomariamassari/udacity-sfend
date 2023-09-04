@@ -4,6 +4,12 @@
 
 ## Overview
 
+
+
+In this project, my very first using Point Cloud Library (PCL), 
+
+from real Point Cloud Data (PCD).
+
 The project is organized as follows. The cloud is initially filtered to shrink its size, so as to reduce computational processing burden across consecutive frames (using voxel grid and region-of-interest ROI techniques), then 3-dimensional RANSAC is used to separate points belonging to the road plane from those belonging to obstacles (be it incoming vehicles or other still obstacles, we do not know at this stage). Then, based on point proximity, we distinguish across various clusters of points. And finally, we bind the clusters within boxes.
 
 Different degrees of obstacle detection (of increasing complexity) are presented in this project. 
@@ -13,7 +19,9 @@ Different degrees of obstacle detection (of increasing complexity) are presented
 
 Points 1 and 2 (static, linear) are generally easy to fit, but the highly non-linear case is requires advanced techniques which are not entirely explored in ths project for now. 
 
-##
+## Project Structure
+
+__Figure 2: Directory Structure Tree__
 
 ```bash
 .
