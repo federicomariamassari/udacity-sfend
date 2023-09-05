@@ -84,9 +84,10 @@ Region-based fitting consists, instead, in keeping only a certain section (recta
 ### RANSAC
 
 ```math
-\begin{align="left"}
-A = (y_2 - y_1)(z_3 - z_1) - (z_2 - z_1)(y_3 - y_1) \\
-Ax + By + Cz + D = 0
+\begin{aligned}
+&&A = (y_2 - y_1)(z_3 - z_1) - (z_2 - z_1)(y_3 - y_1) \\
+
+&&Ax + By + Cz + D = 0
 \end{align}
 ```
 
