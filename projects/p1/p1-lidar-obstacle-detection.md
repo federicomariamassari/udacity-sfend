@@ -93,9 +93,9 @@ Region-based fitting consists, instead, in keeping only a certain section (recta
 \\
 &C = (x_2 - x_1)(y_3 - y_1) - (y_2 - y_1)(x_3 - x_1) \\
 \\
-&D = -(Ax_1 + By_1 + Cz_1)
+&D = -(Ax_1 + By_1 + Cz_1) \\
 \\
-&distance = \frac{|Ax + By + Cz + D}{\sqrt{A^2 + B^2 + C^2}}
+&distance = \frac{|Ax + By + Cz + D|}{\sqrt{A^2 + B^2 + C^2}}
 \end{align*}
 ```
 
