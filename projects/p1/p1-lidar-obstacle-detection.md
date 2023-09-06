@@ -87,6 +87,42 @@ __Figure 2: Directory Structure Tree__
             <td><code>renderScene</code></td>
             <td><code>true</code> to display highway and cars</td>
         </tr>
+        <tr>
+            <td><code>renderLidarScans</code></td>
+            <td><code>true</code> to render LiDAR scans</td>
+        </tr>
+        <tr>
+            <td><code>renderDataPoints</code></td>
+            <td><code>true</code> to render colorless point cloud data points</td>
+        </tr>
+        <tr>
+            <td><code>renderPlaneCloud</code></td>
+            <td><code>true</code> to render inliers in green</td>
+        </tr>
+        <tr>
+            <td><code>renderObstacleCloud</code></td>
+            <td><code>true</code> to render obstacles (non-inliers) in red</td>
+        </tr>
+        <tr>
+            <td><code>renderKdTree</code></td>
+            <td><code>true</code> to render 3D KD-Tree in the Viewer (only recommended for Simple Highway)</td>
+        </tr>
+        <tr>
+            <td><code>renderClusters</code></td>
+            <td><code>true</code> to render Euclidean Clustering on obstacle data</td>
+        </tr>
+        <tr>
+            <td><code>renderEgoCarBox</code></td>
+            <td><code>true</code> to render a box of the approximate Ego Car location in magenta</td>
+        </tr>
+        <tr>
+            <td><code>renderBoxes</code></td>
+            <td><code>true</code> to render regular bounding boxes around obstacle data</td>
+        </tr>
+        <tr>
+            <td><code>renderMinimumXyAlignedBoxes</code></td>
+            <td><code>true</code> to render XY-plane-aligned minimum bounding boxes</td>
+        </tr>
     </tbody>
 </table>
 
