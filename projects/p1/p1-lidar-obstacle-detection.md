@@ -92,6 +92,10 @@ __Figure 2: Directory Structure Tree__
             <td><code>true</code> to render LiDAR scans</td>
         </tr>
         <tr>
+            <td><code>filterPointCloud</code></td>
+            <td><code>true</code> to downsample the point cloud using a voxel grid filter</td>
+        </tr>
+        <tr>
             <td><code>renderDataPoints</code></td>
             <td><code>true</code> to render colorless point cloud data points</td>
         </tr>
@@ -133,6 +137,18 @@ The original point cloud is filtered using voxel grid technique. A voxel (volume
 ### Region Of Interest (ROI)
 
 Region-based fitting consists, instead, in keeping only a certain section (rectangular prism) of the diving environment, discarding the edges of low significance for object detection and perception of the surroundings, and which introduce additional computational burden (they add little benefit in processing the area, add little information). Since LiDAR is mounted on top of the car (to be able to continuously rotate 360° and perceive the environment), in order to keep the road plane, Z <belongs> [-2m, 1m]. X, Y, instead, are approximately symmetric and in [ ; ] and [ ; ]. This way we detect the road, but no wall or parked cars.
+
+<table>
+  <tr>
+  <td align="center"><b>Figure 3.A</b>: Raw (unfiltered) point cloud</td>
+  <td align="center"><b>Figure 3.B</b>: Voxel grid -filtered (20 cm) point cloud</td>
+  <tr>
+  </tr>
+  <tr>
+    <td align="center"><img align="center" src="img/img2.png" width="475"/></td>
+    <td align="center"><img align="center" src="img/img3.png" width="475"/></td>
+  </tr>
+</table>
 
 ### RANSAC
 
