@@ -99,6 +99,14 @@ Region-based fitting consists, instead, in keeping only a certain section (recta
 \end{align*}
 ```
 
+__Figure 3: RANSAC__
+![RANSAC](./img/img4.png)
+
+### Euclidean Clustering
+
+__Figure 3: Euclidean Clustering__
+![Euclidean Clustering](./img/img5.png)
+
 ### Bounding Boxes
 
 Fitting bounding boxes to point cloud clusters is useful to visualize the edges to which the autonomous agent would expect to bump into the obstacle if these were touched. Two kinds of boxes are fitted as part of this project: "constant" bounding boxes, and minimum "PCA" bounding boxes.
