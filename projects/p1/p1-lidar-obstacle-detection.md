@@ -75,7 +75,20 @@ __Figure 2: Directory Structure Tree__
 
 ### Rendering Options
 
-
+<table>
+    <thead>
+        <tr>
+            <th>Parameter</th>
+            <th>Rationale</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>renderScene</code></td>
+            <td><code>true</code> to display highway and cars</td>
+        </tr>
+    </tbody>
+</table>
 
 ### Voxel Grid
 
