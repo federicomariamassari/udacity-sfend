@@ -17,7 +17,7 @@ __Acquired familiarity with:__ Point Cloud Library (PCL).
 
 _Filter, segment, and cluster raw LiDAR data to detect vehicles and obstacles on the road._
 
-In this assignment I learn how to process point clouds from LiDAR scans in order to identify vehicles and other obstacles in a driving environment. I reduce cloud size using voxel (volumetric pixel) grid and region of interest techniques, separate road and obstacles via RANSAC (RANdom SAmple Consensus), group points belonging to the same objects using Euclidean clustering with 3-dimensional KD-Trees, and finally enclose the obtained clusters within either regular or minimum bounding boxes.
+In this assignment I learn how to process point clouds from LiDAR scans in order to identify vehicles and other obstacles in a driving environment. I first reduce cloud size using voxel (volumetric pixel) grid and region of interest techniques, then separate road and obstacles via RANSAC (RANdom SAmple Consensus), group points belonging to the same objects using Euclidean clustering with 3-dimensional KD-Trees, and finally enclose the obtained clusters within either regular or minimum bounding boxes.
 
 __[Link to code](projects/p1/)__ | [Starter Code from Udacity](https://github.com/udacity/SFND_Lidar_Obstacle_Detection)
 
