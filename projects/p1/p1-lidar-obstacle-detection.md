@@ -141,7 +141,7 @@ Region-based fitting consists, instead, in keeping only a certain section (recta
 <table>
   <tr>
   <td align="center"><b>Figure 3.A</b>: Raw (unfiltered) point cloud</td>
-  <td align="center"><b>Figure 3.B</b>: Voxel grid -filtered (20 cm) point cloud</td>
+  <td align="center"><b>Figure 3.B</b>: Voxel grid (20 cm) and ROI -filtered point cloud</td>
   <tr>
   </tr>
   <tr>
