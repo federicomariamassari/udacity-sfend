@@ -22,8 +22,7 @@ Points 1 and 2 (static, linear) are generally easy to fit, but the highly non-li
 
 ## Project Structure
 
-The directory structure tree for the project appears in Figure 2. It is possible to compile three different programs: the main one inside `src` plus two sample implementations for RANSAC as well as KD-Trees and Euclidean clustering (both in 2D and  3D) inside the `quiz` folder.
-
+The directory structure tree for the project appears in Figure 2. One can compile three different programs: the main one, `environment`, inside `src` plus two test implementations for RANSAC as well as KD-Trees and Euclidean clustering (2D/3D) inside `quiz`.
 
 Figure 2 shows the directory structure tree for the projects. There are 3 `CMakeLists.txt` overall, which means it's possible to compile three different projects. The top level is the main project, and then there are two in the `quiz` folder. The quiz folder contains sample programs on RANSAC, KD-Trees, and Euclidean Clustering built during the course, as basis for the main file. `environment.cpp` is the main file, while `processPointClouds.cpp` contains all functions of the projects, and builds upon the header files in `custom`. `options.h` contains all rendering options, together with values for all the hyperparameters in the project. `kdtree.h` and `clustering.h` contain, respectively, the logic for KD-Trees and Euclidean Clustering in 3 dimensions. Voxel grid, region of interest, and RANSAC implementations are instead contained in `processPointClouds.cpp`. Quiz also has basic 2D implementations of the above. `render` contains helper functions for object rendering, while `sensors` contains, among the others, raw point cloud data for different scenarios.
 
