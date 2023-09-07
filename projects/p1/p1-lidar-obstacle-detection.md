@@ -22,6 +22,8 @@ __Figure 1: PCA-Boxes-Enclosed Cluster Obstacles__
 
 The directory structure tree for the project appears in Figure 2. Three programs can be compiled: the main one, `environment`, inside `src`, plus two test implementations for RANSAC as well as KD-Trees and Euclidean clustering (2D/3D) inside `quiz`.
 
+For the main project, 
+
 Figure 2 shows the directory structure tree for the projects. There are 3 `CMakeLists.txt` overall, which means it's possible to compile three different projects. The top level is the main project, and then there are two in the `quiz` folder. The quiz folder contains sample programs on RANSAC, KD-Trees, and Euclidean Clustering built during the course, as basis for the main file. `environment.cpp` is the main file, while `processPointClouds.cpp` contains all functions of the projects, and builds upon the header files in `custom`. `options.h` contains all rendering options, together with values for all the hyperparameters in the project. `kdtree.h` and `clustering.h` contain, respectively, the logic for KD-Trees and Euclidean Clustering in 3 dimensions. Voxel grid, region of interest, and RANSAC implementations are instead contained in `processPointClouds.cpp`. Quiz also has basic 2D implementations of the above. `render` contains helper functions for object rendering, while `sensors` contains, among the others, raw point cloud data for different scenarios.
 
 __Figure 2: Directory Structure Tree__
@@ -69,6 +71,31 @@ __Figure 2: Directory Structure Tree__
         │       └── simpleHighway.pcd
         └── lidar.h
 ```
+
+### Main Options
+
+<table>
+    <thead>
+        <tr>
+            <th>Parameter</th>
+            <th>Rationale</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>renderCityBlock</code></td>
+            <td><code>true</code> to display City Block; <code>false</code> to render Simple Highway</td>
+        </tr>
+        <tr>
+            <td><code>streamCityBlock</code></td>
+            <td><code>true</code> to continuously stream PCD in <code>data_1</code>; <code>false</code> to render a single frame</td>
+        </tr>
+        <tr>
+            <td><code>trackCyclist</code></td>
+            <td><code>true</code> for highly non-linear tracking of a bicyclist and the surrounding objects (<code>data_2</code>)</td>
+        </tr>
+    </tbody>
+</table>
 
 ### Rendering Options
 
