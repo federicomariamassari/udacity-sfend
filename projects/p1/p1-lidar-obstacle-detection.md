@@ -4,11 +4,9 @@
 
 ## Overview
 
+In autonomous systems, such as robots and self-driving cars, LiDAR (Light Detection And Ranging) is commonly used as a way to accurately measure distances and create detailed 3-dimensional maps of the surrounding environment. LiDAR targets surfaces with laser beams (pulses of a few nanoseconds) and measures the time it takes for them to bounce back. By doing so, it generates Point Cloud Data (PCD).
 
-
-In this project, my very first using Point Cloud Library (PCL), 
-
-from real Point Cloud Data (PCD).
+In this project, my very first using Point Cloud Library (PCL), I filter, segment, and cluster raw data from LiDAR scans to detect incoming vehicles and obstacles within a driving environment. 
 
 The project is organized as follows. The cloud is initially filtered to shrink its size, so as to reduce computational processing burden across consecutive frames (using voxel grid and region-of-interest ROI techniques), then 3-dimensional RANSAC is used to separate points belonging to the road plane from those belonging to obstacles (be it incoming vehicles or other still obstacles, we do not know at this stage). Then, based on point proximity, we distinguish across various clusters of points. And finally, we bind the clusters within boxes.
 
@@ -22,7 +20,7 @@ Points 1 and 2 (static, linear) are generally easy to fit, but the highly non-li
 
 ## Project Structure
 
-The directory structure tree for the project appears in Figure 2. One can compile three different programs: the main one, `environment`, inside `src` plus two test implementations for RANSAC as well as KD-Trees and Euclidean clustering (2D/3D) inside `quiz`.
+The directory structure tree for the project appears in Figure 2. Three programs can be compiled: the main one, `environment`, inside `src`, plus two test implementations for RANSAC as well as KD-Trees and Euclidean clustering (2D/3D) inside `quiz`.
 
 Figure 2 shows the directory structure tree for the projects. There are 3 `CMakeLists.txt` overall, which means it's possible to compile three different projects. The top level is the main project, and then there are two in the `quiz` folder. The quiz folder contains sample programs on RANSAC, KD-Trees, and Euclidean Clustering built during the course, as basis for the main file. `environment.cpp` is the main file, while `processPointClouds.cpp` contains all functions of the projects, and builds upon the header files in `custom`. `options.h` contains all rendering options, together with values for all the hyperparameters in the project. `kdtree.h` and `clustering.h` contain, respectively, the logic for KD-Trees and Euclidean Clustering in 3 dimensions. Voxel grid, region of interest, and RANSAC implementations are instead contained in `processPointClouds.cpp`. Quiz also has basic 2D implementations of the above. `render` contains helper functions for object rendering, while `sensors` contains, among the others, raw point cloud data for different scenarios.
 
