@@ -8,15 +8,15 @@ In autonomous systems such as robots and self-driving cars, LiDAR (Light Detecti
 
 In this project, my very first using Point Cloud Library (PCL), I filter, segment, and cluster point clouds from LiDAR scans to detect incoming vehicles and obstacles within a driving environment. For each frame, I start by reducing the density of the cloud using Voxel Grid and Region of Interest (ROI) techniques. This helps to simplify the data and focus on the most relevant information. Next, I use RANSAC to separate the road plane from the obstacles, allowing for a clearer understanding of the environment. To identify individual objects, I employ Euclidean clustering and KD-Trees. This allows me to group together points that belong to the same object, making it easier to analyze and track them. Finally, I encapsulate these clusters within bounding boxes (both regular and PCA-based), providing a visual representation of the detected objects [Figure 1].
 
-__Figure 1: PCA-Boxes-Enclosed Cluster Obstacles__
-!['LiDAR Obstacle Detection' Animated GIF](img/mov3.gif)
-
 The project analyses driving scenes of increasing complexity:
 
 1. __Simple Highway__: A sample environment used to test and fine-tune RANSAC, Euclidean Clustering, and Bounding Boxes.
 2. __City Block (static)__: A static frame of real point cloud data from Udacity's self-driving car, Carla.
 3. __City Block (streaming, linear)__: A stream of frames, of which case 2 is the initial one, depicting a linear road.
 4. __City Block (streaming, non-linear)__: Tracking a cyclist through a dynamic, highly non-linear environment (not entirely explored).
+
+__Figure 1: PCA-Boxes-Enclosed Cluster Obstacles__
+!['LiDAR Obstacle Detection' Animated GIF](img/mov3.gif)
 
 ## Project Structure
 
