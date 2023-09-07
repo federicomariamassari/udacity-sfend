@@ -4,11 +4,9 @@
 
 ## Overview
 
-In autonomous systems such as robots and self-driving cars, LiDAR (Light Detection And Ranging) is commonly used as a way to accurately measure distances and create detailed 3-dimensional maps of the surrounding environment. LiDAR targets surfaces with laser beams (pulses of a few nanoseconds) and measures the time it takes for such beams to bounce back; in doing so, it generates Point Cloud Data (PCD).
+In autonomous systems such as robots and self-driving cars, LiDAR (Light Detection And Ranging) is commonly used as a way to accurately measure distances and create detailed 3-dimensional maps of a surrounding environment. LiDAR targets surfaces with laser beams (pulses of a few nanoseconds) and measures the time it takes for the beams to bounce back; when surfaces are hit, Point Cloud Data (PCD) are generated.
 
-In this project, my very first using Point Cloud Library (PCL), I filter, segment, and cluster point cloud data from LiDAR scans to detect incoming vehicles and obstacles within a driving environment. 
-
-The project is organized as follows. The cloud is initially filtered to shrink its size, so as to reduce computational processing burden across consecutive frames (using voxel grid and region-of-interest ROI techniques), then 3-dimensional RANSAC is used to separate points belonging to the road plane from those belonging to obstacles (be it incoming vehicles or other still obstacles, we do not know at this stage). Then, based on point proximity, we distinguish across various clusters of points. And finally, we bind the clusters within boxes.
+In this project, my very first using Point Cloud Library (PCL), I filter, segment, and cluster point clouds from LiDAR scans to detect incoming vehicles and obstacles within a driving environment. For each analysed frame, I first reduce the density of the cloud using Voxel Grid and Region of Interest (ROI) techniques, then separate road plane and obstacles via RANSAC, identify the single objects using Euclidean clustering and KD-Trees, and finally encapsulate the clusters inside bounding boxes [Figure 1].
 
 Different degrees of obstacle detection (of increasing complexity) are presented in this project.
 
