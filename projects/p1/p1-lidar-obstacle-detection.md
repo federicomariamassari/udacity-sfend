@@ -11,15 +11,12 @@ In this project, my very first using Point Cloud Library (PCL), I filter, segmen
 __Figure 1: PCA-Boxes-Enclosed Cluster Obstacles__
 !['LiDAR Obstacle Detection' Animated GIF](img/mov3.gif)
 
-This project includes driving scenes of increasing complexity.
+The project analyses driving scenes of increasing complexity:
 
-Different degrees of obstacle detection (of increasing complexity) are presented in this project.
-
-1. Simple detection from a sample environment (3 cars). This serves as testing environment for RANSAC, clustering, and the bounding box algorithms.
-2. Data from a real point cloud from Udacity's self-driving car, Carla: both static (one single frame) and dynamic (streaming of multiple frames).
-3. Of the above point, there are two options: linear, and highly dynamic/non-linear.
-
-Points 1 and 2 (static, linear) are generally easy to fit, but the highly non-linear case is requires advanced techniques which are not entirely explored in this project for now.
+1. __Simple Highway__: A sample environment used to test and fine-tune RANSAC, Euclidean Clustering, and Bounding Boxes.
+2. __City Block (static)__: A static frame of real point cloud data from Udacity's self-driving car, Carla.
+3. __City Block (streaming, linear)__: A stream of frames, of which case 2 is the initial one, depicting a linear road.
+4. __City Block (streaming, non-linear)__: Tracking a cyclist through a dynamic, highly non-linear environment (not entirely explored).
 
 ## Project Structure
 
