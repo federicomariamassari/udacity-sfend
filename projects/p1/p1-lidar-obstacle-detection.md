@@ -72,7 +72,11 @@ __Figure 2: Directory Structure Tree__
         └── lidar.h
 ```
 
-### Main Options
+### Options
+
+#### Main Options
+
+These are contained in function `main` of `environment.cpp`:
 
 <table>
     <thead>
@@ -84,7 +88,7 @@ __Figure 2: Directory Structure Tree__
     <tbody>
         <tr>
             <td><code>renderCityBlock</code></td>
-            <td><code>true</code> to display City Block; <code>false</code> to render Simple Highway</td>
+            <td><code>true</code> to display City Block, <code>false</code> to render Simple Highway</td>
         </tr>
         <tr>
             <td><code>streamCityBlock</code></td>
@@ -97,7 +101,9 @@ __Figure 2: Directory Structure Tree__
     </tbody>
 </table>
 
-### Rendering Options
+#### Rendering Options
+
+These are available in `options.h`:
 
 <table>
     <thead>
