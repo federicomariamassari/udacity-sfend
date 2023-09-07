@@ -6,7 +6,9 @@
 
 In autonomous systems such as robots and self-driving cars, LiDAR (Light Detection And Ranging) is commonly used as a way to accurately measure distances and create detailed 3-dimensional maps of a surrounding environment. LiDAR targets surfaces with laser beams (pulses of a few nanoseconds) and measures the time it takes for the beams to bounce back; when surfaces are hit, Point Cloud Data (PCD) are generated.
 
-In this project, my very first using Point Cloud Library (PCL), I filter, segment, and cluster point clouds from LiDAR scans to detect incoming vehicles and obstacles within a driving environment. For each analysed frame, I first reduce the density of the cloud using Voxel Grid and Region of Interest (ROI) techniques, then separate road plane and obstacles via RANSAC, identify the single objects using Euclidean clustering and KD-Trees, and finally encapsulate the clusters inside bounding boxes [Figure 1].
+In this project, my very first using Point Cloud Library (PCL), I filter, segment, and cluster point clouds from LiDAR scans to detect incoming vehicles and obstacles within a driving environment. 
+
+For each frame, I started by reducing the density of the cloud using Voxel Grid and Region of Interest (ROI) techniques. This helped to simplify the data and focus on the most relevant information. Next, I used RANSAC to separate the road plane from the obstacles, allowing for a clearer understanding of the environment. To identify individual objects, I employed Euclidean clustering and KD-Trees. This allowed me to group together points that belonged to the same object, making it easier to analyze and track them. Finally, I encapsulated these clusters within bounding boxes (both regular and PCA-based), providing a visual representation of the detected objects [Figure 1].
 
 Different degrees of obstacle detection (of increasing complexity) are presented in this project.
 
