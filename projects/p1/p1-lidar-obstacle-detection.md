@@ -4,7 +4,7 @@
 
 ## Overview
 
-In autonomous systems, such as robots and self-driving cars, LiDAR (Light Detection And Ranging) is commonly used as a way to accurately measure distances and create detailed 3-dimensional maps of the surrounding environment. LiDAR targets surfaces with laser beams (pulses of a few nanoseconds) and measures the time it takes for them to bounce back. By doing so, it generates Point Cloud Data (PCD).
+In autonomous systems, such as robots and self-driving cars, LiDAR (Light Detection And Ranging) is commonly used as a way to reliably measure distances and create detailed 3-dimensional maps of the surrounding environment. LiDAR targets surfaces with laser beams (pulses of a few nanoseconds) and measures the time it takes for them to bounce back. By doing so, it generates Point Cloud Data (PCD).
 
 In this project, my very first using Point Cloud Library (PCL), I filter, segment, and cluster raw data from LiDAR scans to detect incoming vehicles and obstacles within a driving environment. 
 
