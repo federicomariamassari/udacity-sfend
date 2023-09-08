@@ -26,7 +26,7 @@ The directory structure tree for the project appears in Figure 2. In particular:
 
 - `src` includes main files `environment.cpp` (executable: `environment`) and `processPointCloud.cpp`, the latter holding all functions that manipulate point cloud data: voxel grid and region of interest filtering, RANSAC, KD-Tree and clustering 3D (logic for these is called from header files), regular and minimum (PCA-based) bounding boxes;
 
-- `custom` has algorithmic implementations for KD-Tree creation and Euclidean clustering, as well as rendering options for all scenarios (in `options.h`, see below);
+- `custom` has algorithmic implementations for KD-Tree creation and Euclidean clustering, as well as rendering options for all scenarios (in `options.h`, see next section);
 
 - `render` contains helper functions for object rendering, while `sensors` holds, among the others, raw PCD files for different scenarios.
 
@@ -83,6 +83,10 @@ __Figure 2: Directory Structure Tree__
         │       └── simpleHighway.pcd
         └── lidar.h
 ```
+
+## Building and Running the Project
+
+
 
 ### Options
 
