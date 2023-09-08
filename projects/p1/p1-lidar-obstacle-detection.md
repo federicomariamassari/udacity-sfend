@@ -22,13 +22,13 @@ __Figure 1: PCA-Boxes-Enclosed Cluster Obstacles__
 
 The directory structure tree for the project appears in Figure 2. In particular:
 
-- `quiz` contains 2D/3D test implementations for RANSAC (executables: `quizRansac`, `quizRansac3d`) as well as KD-Trees and Euclidean clustering (`quizCluster`, `quizCluster3d`); these serve as prototypes for the main project.
+- `quiz` contains 2D/3D test implementations for RANSAC (executables: `quizRansac`, `quizRansac3d`) as well as KD-Trees and Euclidean clustering (`quizCluster`, `quizCluster3d`); these serve as prototypes for the main project;
 
-- `src` includes main files `environment.cpp` (executable: `environment`) and `processPointCloud.cpp`, the latter holding all functions that manipulate point cloud data: voxel grid and region of interest filtering, RANSAC, KD-Tree and clustering 3D (logic for these is called from header files), regular and minimum (PCA-based) bounding boxes.
+- `src` includes main files `environment.cpp` (executable: `environment`) and `processPointCloud.cpp`, the latter holding all functions that manipulate point cloud data: voxel grid and region of interest filtering, RANSAC, KD-Tree and clustering 3D (logic for these is called from header files), regular and minimum (PCA-based) bounding boxes;
 
-- `custom` has algorithmic implementations for KD-Tree and Euclidean clustering, as well as rendering options for all scenarios (in `options.h`, see below);
+- `custom` has algorithmic implementations for KD-Tree creation and Euclidean clustering, as well as rendering options for all scenarios (in `options.h`, see below);
 
-- `render` contains helper functions for object rendering, while `sensors` contains, among the others, raw PCD files for different scenarios.
+- `render` contains helper functions for object rendering, while `sensors` holds, among the others, raw PCD files for different scenarios.
 
 __Figure 2: Directory Structure Tree__
 
