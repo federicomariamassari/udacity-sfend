@@ -6,7 +6,7 @@
 
 In autonomous systems, such as robots or self-driving cars, LiDAR (Light Detection And Ranging) is commonly used as a way to accurately measure distances and create detailed 3-dimensional maps of a surrounding environment. LiDAR targets surfaces with laser beams (photon pulses of a few nanoseconds) and measures the time it takes for the beams to bounce back; when surfaces are hit, Point Cloud Data (PCD) are generated.
 
-In this project, my very first using Point Cloud Library (PCL), I filter, segment, and cluster point clouds from LiDAR scans to detect incoming vehicles and obstacles within a driving environment. For each frame, I start by reducing the density of the cloud using Voxel Grid and Region of Interest (ROI) techniques. This helps to simplify the data and focus on the most relevant information. Next, I use RANSAC to separate the road plane from the obstacles, allowing for a clearer understanding of the environment. To identify individual objects, I employ Euclidean clustering and KD-Trees. This allows me to group together points that belong to the same target, making it easier to analyze and track them. Finally, I encapsulate these clusters within bounding boxes (both regular and PCA-based), providing a visual representation of the detected objects [Figure 1].
+In this project, my very first using Point Cloud Library (PCL), I filter, segment, and cluster point clouds from LiDAR scans to detect incoming vehicles and obstacles within a driving environment. For each frame, I start by reducing the density of the cloud using Voxel Grid and Region of Interest (ROI) techniques. This helps to simplify the data and focus on the most relevant information. Next, I use RANSAC to separate the road plane from the obstacles, allowing for a clearer understanding of the environment. To identify individual objects, I employ Euclidean clustering and KD-Trees. This allows me to group together points that belong to the same target, making it easier to analyze and track them. Finally, I encapsulate these clusters within bounding boxes (both regular and PCA-based), providing a visual representation of the detected items [Figure 1].
 
 The project analyses driving scenes of increasing complexity:
 
@@ -20,17 +20,23 @@ __Figure 1: PCA-Boxes-Enclosed Cluster Obstacles__
 
 ## Project Structure
 
-The directory structure tree for the project appears in Figure 2. Three programs can be compiled: the main one, `environment`, inside `src`, plus two test implementations for RANSAC as well as KD-Trees and Euclidean clustering (2D/3D) inside `quiz`.
+The directory structure tree for the project appears in Figure 2. In particular:
 
-For the main project, 
+- `quiz` contains 2D/3D test implementations for RANSAC (executables: `quizRansac`, `quizRansac3d`) as well as KD-Trees and Euclidean clustering (`quizCluster`, `quizCluster3d`); these serve as prototypes for the main project.
 
-Figure 2 shows the directory structure tree for the projects. There are 3 `CMakeLists.txt` overall, which means it's possible to compile three different projects. The top level is the main project, and then there are two in the `quiz` folder. The quiz folder contains sample programs on RANSAC, KD-Trees, and Euclidean Clustering built during the course, as basis for the main file. `environment.cpp` is the main file, while `processPointClouds.cpp` contains all functions of the projects, and builds upon the header files in `custom`. `options.h` contains all rendering options, together with values for all the hyperparameters in the project. `kdtree.h` and `clustering.h` contain, respectively, the logic for KD-Trees and Euclidean Clustering in 3 dimensions. Voxel grid, region of interest, and RANSAC implementations are instead contained in `processPointClouds.cpp`. Quiz also has basic 2D implementations of the above. `render` contains helper functions for object rendering, while `sensors` contains, among the others, raw point cloud data for different scenarios.
+- `src` includes main files `environment.cpp` (executable: `environment`) and `processPointCloud.cpp`, the latter holding all functions that manipulate point cloud data: voxel grid and region of interest filtering, RANSAC, KD-Tree and clustering 3D (logic for these is called from header files), regular and minimum (PCA-based) bounding boxes.
+
+- `custom` has algorithmic implementations for KD-Tree and Euclidean clustering, as well as rendering options for all scenarios (in `options.h`, see below);
+
+- `render` contains helper functions for object rendering, while `sensors` contains, among the others, raw PCD files for different scenarios.
 
 __Figure 2: Directory Structure Tree__
 
 ```bash
 .
 ├── build
+│   ├── ...
+│   └── environment
 ├── CMakeLists.txt
 └── src
     ├── custom
@@ -43,6 +49,9 @@ __Figure 2: Directory Structure Tree__
     ├── quiz
     │   ├── cluster
     │   │   ├── build
+    │   │   │   ├── ...    
+    │   │   │   ├── quizCluster
+    │   │   │   └── quizCluster3d
     │   │   ├── CMakeLists.txt
     │   │   ├── cluster.cpp
     │   │   ├── cluster3d.cpp
@@ -52,6 +61,9 @@ __Figure 2: Directory Structure Tree__
     │   │       └── kdtree3d.h
     │   └── ransac
     │       ├── build
+    │       │   ├── ...  
+    │       │   ├── quizRansac
+    │       │   └── quizRansac3d
     │       ├── CMakeLists.txt
     │       ├── ransac2d.cpp
     │       └── ransac3d.cpp
