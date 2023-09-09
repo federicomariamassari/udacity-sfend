@@ -198,6 +198,8 @@ These are available in `custom/options.h` and render features for a particular s
     </tbody>
 </table>
 
+## Code Logic
+
 ### Voxel Grid
 
 The original point cloud is filtered using voxel grid technique. A voxel (volumetric pixel) is a 3-dimensional [...]. The raw point cloud is subdivided into 3D cubes 20 centimeters in side, and all the points belonging to a particular cube are "approximated" by their _centroid_, a single point in 3D space which has as coordinates the means of all 3 coordinates of the enclosed points. Dimensionality reduction is thus achieved by ?? this cloud of points by the single centroid. 20 cm was found to be a good trade-off between dimensionality reduction and precision/details kept. Cloud achieved a ration of ~100k to ~5k points per frame. Dimension reduction is particularly important for self-driving cars or applications where fast processing of data is essential.
@@ -279,10 +281,11 @@ PCA boxes solve the problem of excessive fitting of diagonal point clouds, but a
   </tr>
 </table>
 
+## Resources
+
 1. https://github.com/RobustFieldAutonomyLab/LeGO-LOAM/issues/245
 2. https://github.com/dgrzech/sobfu/issues/15
-
-1. https://en.wikipedia.org/wiki/Minimum_bounding_box_algorithms
-2. Dimitrov, D., Knauer, C., Kriegel, K., Rote, G.: [On the Bounding Boxes Obtained by Principal Component Analysis](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis), 2014, ResearchGate.
+3. https://en.wikipedia.org/wiki/Minimum_bounding_box_algorithms
+4. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
 
 [Home](../../README.md) | Next: 
