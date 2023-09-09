@@ -88,7 +88,27 @@ __Figure 2: Directory Structure Tree__
 
 ### Rendering Issues
 
-PCL option `pcl::visualization::PCL_VISUALIZER_POINT_SIZE` does not render properly on Ubuntu 20.04-5 (UTM QEMU 7.0 aarch64), so specifying point size (integer) greater than 1 has no effect. This seems to be related to an incomplete VTK 7.1 installation on Ubuntu 20.04 [1] [2]. The consequence is that point clouds are practically invisible when rendered with PCL viewer on the virtual machine, hence most of the pictures in this README file were captured from the provided Udacity workspace (Ubuntu 16.04, PCL 1.7).
+PCL option `pcl::visualization::PCL_VISUALIZER_POINT_SIZE` does not render properly on Ubuntu 20.04-5 (UTM QEMU 7.0 aarch64), so specifying point size (integer) greater than 1 has no effect. This seems to be related to an incomplete VTK 7.1 installation on Ubuntu 20.04 [1] [2]. The consequence is that point clouds are practically invisible when rendered with PCL Viewer on the virtual machine, hence most of the pictures in this README file were captured from the provided Udacity workspace (Ubuntu 16.04, PCL 1.7).
+
+### Building the Main File
+
+```bash
+cd /home/$whoami/workspace/udacity-rsend/projects/p1
+mkdir build && cd build
+cmake ..
+make
+./environment
+```
+
+### Building Quiz Files
+
+```bash
+cd /home/$whoami/workspace/udacity-rsend/projects/p1/src/quiz/{ransac|cluster}
+mkdir build && cd build
+cmake ..
+make
+./quiz{Ransac|Cluster}{|3D}
+```
 
 ## Running the Project
 
