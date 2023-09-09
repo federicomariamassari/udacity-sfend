@@ -88,9 +88,7 @@ __Figure 2: Directory Structure Tree__
 
 ### Rendering Issues
 
-As of August 2023, PCL option `pcl::visualization::PCL_VISUALIZER_POINT_SIZE` does not render properly on Ubuntu 20.04-5 UTM QEMU 7.0 (aarch64), so specifying point size (integer) larger than 1 has no effect. The drawback is that the point cloud is practically invisible when rendered with PCL Viewer on the virtual machine; hence, all pictures in this README files were captured from the provided Udacity workspace (Ubuntu 16.04, PCL 1.7).
-
-The issue seems to be with an incomplete VTK 7.1 installation on UTM.
+PCL option `pcl::visualization::PCL_VISUALIZER_POINT_SIZE` does not render properly on Ubuntu 20.04-5 (UTM QEMU 7.0), so specifying point size (integer) greater than 1 has no effect. This seems to be related to an incomplete VTK 7.1 installation on Ubuntu 20.04 [1] [2]. The consequence is that point clouds are practically invisible when rendered with PCL viewer on the virtual machine, hence most pictures in this README file were captured from the provided Udacity workspace (Ubuntu 16.04, PCL 1.7).
 
 ## Running the Project
 
@@ -262,6 +260,9 @@ PCA boxes solve the problem of excessive fitting of diagonal point clouds, but a
     <td align="center"><img align="center" src="./img/mov2b.gif" width="475"/></td>
   </tr>
 </table>
+
+1. https://github.com/RobustFieldAutonomyLab/LeGO-LOAM/issues/245
+2. https://github.com/dgrzech/sobfu/issues/15
 
 1. https://en.wikipedia.org/wiki/Minimum_bounding_box_algorithms
 2. Dimitrov, D., Knauer, C., Kriegel, K., Rote, G.: [On the Bounding Boxes Obtained by Principal Component Analysis](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis), 2014, ResearchGate.
