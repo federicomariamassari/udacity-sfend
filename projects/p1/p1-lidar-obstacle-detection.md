@@ -202,7 +202,11 @@ These are available in `custom/options.h` and render features for a particular s
 
 ### Voxel Grid
 
-The original point cloud is filtered using voxel grid technique. A voxel (volumetric pixel) is a 3-dimensional [...]. The raw point cloud is subdivided into 3D cubes 20 centimeters in side, and all the points belonging to a particular cube are "approximated" by their _centroid_, a single point in 3D space which has as coordinates the means of all 3 coordinates of the enclosed points. Dimensionality reduction is thus achieved by ?? this cloud of points by the single centroid. 20 cm was found to be a good trade-off between dimensionality reduction and precision/details kept. Cloud achieved a ration of ~100k to ~5k points per frame. Dimension reduction is particularly important for self-driving cars or applications where fast processing of data is essential.
+Reducing the density of a point cloud is important in the context of self-driving cars, where quick data processing is crucial. The voxel grid technique helps achieve this purpose by downsampling, hence simplifying, the initial point cloud. A __voxel__ (volumetric pixel) is a cube representing a single point in a three-dimensional space. 
+
+A trade-off is needed to ensure that enough details are kept to keep
+
+The original point cloud is filtered using voxel grid technique. A voxel (volumetric pixel) is a 3-dimensional [...]. The raw point cloud is subdivided into 3D cubes 20 centimeters in side, and all the points belonging to a particular cube are "approximated" by their _centroid_, a single point in 3D space which has as coordinates the means of all 3 coordinates of the enclosed points. Dimensionality reduction is thus achieved by ?? this cloud of points by the single centroid. 20 cm was found to be a good trade-off between dimensionality reduction and precision/details kept. Cloud achieved a ratio of ~100k to ~5k points per frame. Dimension reduction is particularly important for self-driving cars or applications where fast processing of data is essential.
 
 ### Region Of Interest (ROI)
 
@@ -243,7 +247,7 @@ __Figure 3: RANSAC__
 
 ### Euclidean Clustering
 
-__Figure 4: KD-Tree 3D from Simple Highway__
+__Figure 4: Simple Highway KD-Tree 3D__
 ![Euclidean Clustering](./img/img8.png)
 
 __Figure 5: Euclidean Clustering__
