@@ -114,7 +114,7 @@ make
 
 #### Main Options
 
-These are contained in function `main` of `environment.cpp`:
+These are contained in `environment.cpp` (`main` function) and render all available scenarios:
 
 <table>
     <thead>
@@ -126,22 +126,22 @@ These are contained in function `main` of `environment.cpp`:
     <tbody>
         <tr>
             <td><code>renderCityBlock</code></td>
-            <td><code>true</code> to display City Block, <code>false</code> to render Simple Highway</td>
+            <td><code>true</code> to display "City Block", <code>false</code> to render "Simple Highway"</td>
         </tr>
         <tr>
             <td><code>streamCityBlock</code></td>
-            <td><code>true</code> to continuously stream point cloud data in <code>data_1</code>; <code>false</code> to render the first frame only</td>
+            <td><code>true</code> to continuously stream point cloud data in <code>data_1</code>, <code>false</code> to render the first frame only</td>
         </tr>
         <tr>
             <td><code>trackCyclist</code></td>
-            <td><code>true</code> for highly non-linear tracking of a bicyclist and the surrounding objects (PCD contained in <code>data_2</code>)</td>
+            <td><code>true</code> for highly non-linear tracking of a bicyclist and the surrounding objects (PCD: <code>data_2</code>)</td>
         </tr>
     </tbody>
 </table>
 
 #### Rendering Options
 
-These are available in `options.h`:
+These are available in `custom/options.h` and render features for a particular scenario:
 
 <table>
     <thead>
