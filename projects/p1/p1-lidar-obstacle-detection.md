@@ -84,9 +84,15 @@ __Figure 2: Directory Structure Tree__
         └── lidar.h
 ```
 
-## Building and Running the Project
+## Building the Project
 
+### Rendering Issues
 
+As of August 2023, PCL option `pcl::visualization::PCL_VISUALIZER_POINT_SIZE` does not render properly on Ubuntu 20.04-5 UTM QEMU 7.0 (aarch64), so specifying point size (integer) larger than 1 has no effect. The drawback is that the point cloud is practically invisible when rendered with PCL Viewer on the virtual machine; hence, all pictures in this README files were captured from the provided Udacity workspace (Ubuntu 16.04, PCL 1.7).
+
+The issue seems to be with an incomplete VTK 7.1 installation on UTM.
+
+## Running the Project
 
 ### Options
 
@@ -108,11 +114,11 @@ These are contained in function `main` of `environment.cpp`:
         </tr>
         <tr>
             <td><code>streamCityBlock</code></td>
-            <td><code>true</code> to continuously stream PCD in <code>data_1</code>; <code>false</code> to render a single frame</td>
+            <td><code>true</code> to continuously stream point cloud data in <code>data_1</code>; <code>false</code> to render the first frame only</td>
         </tr>
         <tr>
             <td><code>trackCyclist</code></td>
-            <td><code>true</code> for highly non-linear tracking of a bicyclist and the surrounding objects (<code>data_2</code>)</td>
+            <td><code>true</code> for highly non-linear tracking of a bicyclist and the surrounding objects (PCD contained in <code>data_2</code>)</td>
         </tr>
     </tbody>
 </table>
