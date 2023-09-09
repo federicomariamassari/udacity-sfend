@@ -114,7 +114,7 @@ make
 
 #### Main Options
 
-These are contained in `environment.cpp` (`main` function) and render all available scenarios:
+These are contained in `environment.cpp` (`main` function) and render all available scenarios. If the first option is <code>false</code>, the other two are ignored.
 
 <table>
     <thead>
@@ -177,7 +177,7 @@ These are available in `custom/options.h` and render features for a particular s
         </tr>
         <tr>
             <td><code>renderKdTree</code></td>
-            <td><code>true</code> to render 3D KD-Tree in the Viewer (only recommended for Simple Highway)</td>
+            <td><code>true</code> to render 3D KD-Tree in the Viewer (only recommended for "Simple Highway")</td>
         </tr>
         <tr>
             <td><code>renderClusters</code></td>
