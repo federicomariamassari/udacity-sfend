@@ -243,7 +243,19 @@ __Figure 3: RANSAC__
 
 ### Euclidean Clustering
 
-__Figure 3: Euclidean Clustering__
+<table>
+  <tr>
+  <td align="center"><b>Figure 4.A</b>: KD-Tree from Quiz</td>
+  <td align="center"><b>Figure 4.B</b>: KD-Tree from "Simple Highway"</td>
+  <tr>
+  </tr>
+  <tr>
+    <td align="center"><img align="center" src="img/img0.png" width="475"/></td>
+    <td align="center"><img align="center" src="img/img7.png" width="475"/></td>
+  </tr>
+</table>
+
+__Figure 5: Euclidean Clustering__
 ![Euclidean Clustering](./img/img5.png)
 
 ### Bounding Boxes
@@ -283,8 +295,8 @@ PCA boxes solve the problem of excessive fitting of diagonal point clouds, but a
 
 ## Resources
 
-1. [https://github.com/RobustFieldAutonomyLab/LeGO-LOAM/issues/245](https://github.com/RobustFieldAutonomyLab/LeGO-LOAM/issues/245)
-2. [https://github.com/dgrzech/sobfu/issues/15](https://github.com/dgrzech/sobfu/issues/15)
+1. https://github.com/RobustFieldAutonomyLab/LeGO-LOAM/issues/245
+2. https://github.com/dgrzech/sobfu/issues/15
 3. https://en.wikipedia.org/wiki/Minimum_bounding_box_algorithms
 4. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
 
