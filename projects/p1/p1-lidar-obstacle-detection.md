@@ -283,8 +283,8 @@ PCA boxes solve the problem of excessive fitting of diagonal point clouds, but a
 
 ## Resources
 
-1. https://github.com/RobustFieldAutonomyLab/LeGO-LOAM/issues/245
-2. https://github.com/dgrzech/sobfu/issues/15
+1. [https://github.com/RobustFieldAutonomyLab/LeGO-LOAM/issues/245](https://github.com/RobustFieldAutonomyLab/LeGO-LOAM/issues/245)
+2. [https://github.com/dgrzech/sobfu/issues/15](https://github.com/dgrzech/sobfu/issues/15)
 3. https://en.wikipedia.org/wiki/Minimum_bounding_box_algorithms
 4. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
 
