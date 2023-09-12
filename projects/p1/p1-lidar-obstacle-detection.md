@@ -206,7 +206,7 @@ Reducing the density of a point cloud is essential in applications that require 
 
 ### Region Of Interest (ROI)
 
-Region-based fitting consists, instead, in keeping only a certain section (a rectangular prism) of the driving environment, discarding the edges, of low significance for object detection and perception of the surroundings, and which introduce additional computational burden (they add little benefit in processing the area, add little information). In this project, since LiDAR is mounted on top of the car (to be able to continuously rotate 360° and perceive the environment), in order to keep the road plane, Z <belongs> [-2m, 1m]. X, Y, instead, are approximately symmetric and in [ ; ] and [ ; ]. This way we detect the road, but no wall or parked cars.
+Region-based filtering consists, instead, in keeping only the core (a rectangular prism) of the driving environment, discarding the edges, which have low significance for object detection and introduce unnecessary computational burden.
 
 <table>
   <tr>
