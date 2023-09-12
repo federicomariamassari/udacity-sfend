@@ -208,6 +208,8 @@ Reducing the density of a point cloud is essential in applications that require 
 
 Region-based filtering consists, instead, in keeping only the core (a rectangular prism) of the driving environment, discarding the edges, which have low significance for object detection and introduce unnecessary computational burden.
 
+The outcome of filtering is displayed in Figure 3.
+
 <table>
   <tr>
   <td align="center"><b>Figure 3.A</b>: Raw (unfiltered) point cloud</td>
