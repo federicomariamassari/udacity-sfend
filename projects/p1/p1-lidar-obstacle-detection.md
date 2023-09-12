@@ -134,7 +134,7 @@ These are contained in `environment.cpp` (`main` function) and render all availa
         </tr>
         <tr>
             <td><code>trackCyclist</code></td>
-            <td><code>true</code> for highly non-linear tracking of a bicyclist and the surrounding objects (PCD: <code>data_2</code>)</td>
+            <td><code>true</code> for highly non-linear tracking of a bicyclist and the surrounding objects in <code>data_2</code></td>
         </tr>
     </tbody>
 </table>
@@ -202,15 +202,11 @@ These are available in `custom/options.h` and render features for a particular s
 
 ### Voxel Grid
 
-Reducing the density of a point cloud is important in the context of self-driving cars, where quick data processing is crucial. The voxel grid technique helps achieve this purpose by downsampling, hence simplifying, the initial point cloud. A __voxel__ (volumetric pixel) is a cube representing a single point in a three-dimensional space. 
-
-A trade-off is needed to ensure that enough details are kept to keep
-
-The original point cloud is filtered using voxel grid technique. A voxel (volumetric pixel) is a 3-dimensional [...]. The raw point cloud is subdivided into 3D cubes 20 centimeters in side, and all the points belonging to a particular cube are "approximated" by their _centroid_, a single point in 3D space which has as coordinates the means of all 3 coordinates of the enclosed points. Dimensionality reduction is thus achieved by ?? this cloud of points by the single centroid. 20 cm was found to be a good trade-off between dimensionality reduction and precision/details kept. Cloud achieved a ratio of ~100k to ~5k points per frame. Dimension reduction is particularly important for self-driving cars or applications where fast processing of data is essential.
+Reducing the density of a point cloud is essential in applications that require real-time handling of data, such as self-driving car software. The voxel grid technique helps achieve this purpose by downsampling the input cloud, optimizing data storage and processing requirements. A _voxel_ (volumetric pixel) is a cube that encapsulates and represents a single point in the three-dimensional space. The raw point cloud is divided into a cubic grid, and all points belonging to a particular cube are approximated by their _centroid_, a unique point with coordinates the means of all coordinates of the enclosed points: filtering is thus obtained by replacing the cloud of points in each cube with the corresponding centroid. For all exercises in this project, a side of 20 cm for the cubes was found to be a good trade-off between computational efficiency and detail preservation (ration of ~100k to ~5k point per frame).
 
 ### Region Of Interest (ROI)
 
-Region-based fitting consists, instead, in keeping only a certain section (rectangular prism) of the diving environment, discarding the edges of low significance for object detection and perception of the surroundings, and which introduce additional computational burden (they add little benefit in processing the area, add little information). Since LiDAR is mounted on top of the car (to be able to continuously rotate 360° and perceive the environment), in order to keep the road plane, Z <belongs> [-2m, 1m]. X, Y, instead, are approximately symmetric and in [ ; ] and [ ; ]. This way we detect the road, but no wall or parked cars.
+Region-based fitting consists, instead, in keeping only a certain section (a rectangular prism) of the driving environment, discarding the edges, of low significance for object detection and perception of the surroundings, and which introduce additional computational burden (they add little benefit in processing the area, add little information). In this project, since LiDAR is mounted on top of the car (to be able to continuously rotate 360° and perceive the environment), in order to keep the road plane, Z <belongs> [-2m, 1m]. X, Y, instead, are approximately symmetric and in [ ; ] and [ ; ]. This way we detect the road, but no wall or parked cars.
 
 <table>
   <tr>
