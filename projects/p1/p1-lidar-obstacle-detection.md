@@ -206,7 +206,7 @@ Reducing the density of a point cloud is essential in applications that require 
 
 ### Region Of Interest (ROI)
 
-Region-based filtering consists, instead, in keeping only the core (a rectangular prism) of the driving environment, discarding the edges, which have low significance for object detection and introduce unnecessary computational burden.
+Region-based filtering consists, instead, in keeping only the core (a rectangular prism) of the driving environment, discarding the edges, which have low significance for object detection and introduce unnecessary computational burden [3]. For "City Block", the region of interest is, in meters: $X \in [-10; 30]$, $Y \in [-5; 6]$, $Z \n [-2; 1]$. That is, position the car roughly in the middle of the road, with ample view forward and enough backward, and since LiDAR is mounted on top of the vehicle, also enough at the bottom to be able to detect the road itself.
 
 The outcome of filtering is displayed in Figure 3.
 
@@ -290,7 +290,8 @@ PCA boxes solve the problem of excessive fitting of diagonal point clouds, but a
 
 1. https://github.com/RobustFieldAutonomyLab/LeGO-LOAM/issues/245
 2. https://github.com/dgrzech/sobfu/issues/15
-3. https://en.wikipedia.org/wiki/Minimum_bounding_box_algorithms
-4. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
+3. https://knowledge.udacity.com/questions/609855
+4. https://en.wikipedia.org/wiki/Minimum_bounding_box_algorithms
+5. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
 
 [Home](../../README.md) | Next: 
