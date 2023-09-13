@@ -224,6 +224,20 @@ The outcome of filtering is displayed in Figure 3.
 
 ### RANSAC
 
+RANSAC (RANdom SAmple Consensus), an iterative outlier detection method, is now used to distinguish between road and obstacles in the filtered point cloud. The maximum number of iterations is kept at 50 for all scenarios. For each iteration, three points are randomly selected from the cloud, and a plane fit to them according to the following equations.
+
+General form of the equation of a plane:
+
+$$
+Ax + By + Cz + D = 0
+$$
+
+The iteration with the highest number of inliers to the plane is selected as the road, and all points which are at a higher-than-tolerated distance are labelled as outliers and considered obstacles.
+
+Three points, define point 2 and three in reference to point 1.
+
+$v_1 \times v_2 = n = [A B C]^T$ defines cross product and it's the normal to the plane. general form of the equation of a plane.
+
 ```math
 \begin{align*}
 &Ax + By + Cz + D = 0 \\
@@ -291,6 +305,8 @@ PCA boxes solve the problem of excessive fitting of diagonal point clouds, but a
 1. https://github.com/RobustFieldAutonomyLab/LeGO-LOAM/issues/245
 2. https://github.com/dgrzech/sobfu/issues/15
 3. https://knowledge.udacity.com/questions/609855
+4. https://en.wikipedia.org/wiki/Euclidean_planes_in_three-dimensional_space
+5. https://en.wikipedia.org/wiki/Normal_(geometry)
 4. https://en.wikipedia.org/wiki/Minimum_bounding_box_algorithms
 5. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
 
