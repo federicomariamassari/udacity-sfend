@@ -224,7 +224,7 @@ The outcome of filtering is displayed in Figure 3.
 
 ### RANSAC
 
-RANSAC (RANdom SAmple Consensus), an iterative outlier detection method, is now used to distinguish between road and obstacles in the filtered point cloud. The maximum number of iterations is kept at 50 for all scenarios. For each iteration, three points $p_1 = (x_1, y_1, z_1)$, $p_2 = (x_2, y_2, z_2)$, $p_3 = (x_3, y_3, z_3)$ are randomly selected from the cloud, and a plane is fit to them via the following equations:
+RANSAC (RANdom SAmple Consensus) [4], an iterative outlier detection method, is now used to distinguish between road and obstacles in the filtered point cloud. The maximum number of iterations is kept at 50 for all scenarios. For each iteration, three points $p_1 = (x_1, y_1, z_1)$, $p_2 = (x_2, y_2, z_2)$, $p_3 = (x_3, y_3, z_3)$ are randomly selected from the cloud, and a plane is fit to them via the following equations:
 
 General form of the equation of a plane:
 
@@ -232,7 +232,7 @@ $$
 Ax + By + Cz + D = 0
 $$
 
-And the four coefficients $A$, $B$, $C$, $D$ are [4]:
+And the four coefficients $A$, $B$, $C$, $D$ are [5]:
 
 ```math
 \begin{align*}
@@ -259,7 +259,7 @@ __Figure 4: RANSAC__
 
 ### Euclidean Clustering
 
-To distinguish among objects, groups of points are then associated by proximity using Euclidean Clustering. The nearest neighbor search is optimized via KD-Trees (K-Dimensional Trees), a data structure that organizes points in a hierarchical fashion, splitting the data based on a different dimension at each level: at root by $x$, at levels 1 and 2, respectively, by $y$ and $z$, then at level 3 again by $x$, and so on. Visually, the splits are planes perpendicular to each coordinate [Figure 5].
+To distinguish among objects, groups of points are then associated by proximity using Euclidean Clustering. The nearest neighbor search is optimized via KD-Trees (K-Dimensional Trees) [6], a data structure that organizes points in a hierarchical fashion, splitting the data based on a different dimension at each level: at root by $x$, at levels 1 and 2, respectively, by $y$ and $z$, then at level 3 again by $x$, and so on. Visually, the splits are planes that cut each level into two subcells [Figure 5].
 
 __Figure 5: Simple Highway KD-Tree 3D__
 ![Euclidean Clustering](./img/img8.png)
@@ -307,9 +307,11 @@ PCA boxes solve the problem of excessive fitting of diagonal point clouds, but a
 1. https://github.com/RobustFieldAutonomyLab/LeGO-LOAM/issues/245
 2. https://github.com/dgrzech/sobfu/issues/15
 3. https://knowledge.udacity.com/questions/609855
-4. https://en.wikipedia.org/wiki/Euclidean_planes_in_three-dimensional_space
-5. https://en.wikipedia.org/wiki/Normal_(geometry)
-4. https://en.wikipedia.org/wiki/Minimum_bounding_box_algorithms
-5. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
+4. https://en.wikipedia.org/wiki/Random_sample_consensus
+5. https://en.wikipedia.org/wiki/Euclidean_planes_in_three-dimensional_space
+6. https://en.wikipedia.org/wiki/K-d_tree
+7. https://en.wikipedia.org/wiki/K-means_clustering
+8. https://en.wikipedia.org/wiki/Minimum_bounding_box_algorithms
+9. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
 
 [Home](../../README.md) | Next: 
