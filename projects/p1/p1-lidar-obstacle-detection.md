@@ -243,6 +243,7 @@ And the four coefficients $A$, $B$, $C$, $D$ are [4]:
 &C = (x_2 - x_1)(y_3 - y_1) - (y_2 - y_1)(x_3 - x_1) \\
 \\
 &D = -(Ax_1 + By_1 + Cz_1)
+\end{align*}
 ```
 
 A point is then labelled as "outlier" if its distance to the plane:
