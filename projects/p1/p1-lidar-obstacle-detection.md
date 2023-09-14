@@ -232,21 +232,7 @@ $$
 Ax + By + Cz + D = 0
 $$
 
-And the four coefficients are [4]:
-
-$$
-A = (y_2 - y_1)(z_3 - z_1) - (z_2 - z_1)(y_3 - y_1) \\
-B = (z_2 - z_1)(x_3 - x_1) - (x_2 - x_1)(z_3 - z_1) \\
-C = (x_2 - x_1)(y_3 - y_1) - (y_2 - y_1)(x_3 - x_1) \\
-D = -(Ax_1 + By_1 + Cz_1)
-$$
-```
-
-The iteration with the highest number of inliers to the plane is selected as the road, and all points which are at a higher-than-tolerated distance are labelled as outliers and considered obstacles.
-
-Three points, define point 2 and three in reference to point 1.
-
-$v_1 \times v_2 = n = [A B C]^T$ defines cross product and it's the normal to the plane. general form of the equation of a plane.
+And the four coefficients $A$, $B$, $C$, $D$ are [4]:
 
 ```math
 \begin{align*}
@@ -256,13 +242,18 @@ $v_1 \times v_2 = n = [A B C]^T$ defines cross product and it's the normal to th
 \\
 &C = (x_2 - x_1)(y_3 - y_1) - (y_2 - y_1)(x_3 - x_1) \\
 \\
-&D = -(Ax_1 + By_1 + Cz_1) \\
-\\
-&distance = \frac{|Ax + By + Cz + D|}{\sqrt{A^2 + B^2 + C^2}}
-\end{align*}
+&D = -(Ax_1 + By_1 + Cz_1)
 ```
 
-__Figure 3: RANSAC__
+A point is then labelled as "outlier" if its distance to the plane:
+
+$$
+distance = \frac{|Ax + By + Cz + D|}{\sqrt{A^2 + B^2 + C^2}}
+$$
+
+is greater than the specified threshold (e.g., 15 cm in "City Block"). The iteration with the largest number of inliers to the plane is selected as the road, while all outliers are considered obstacles [Figure 4].
+
+__Figure 4: RANSAC__
 ![RANSAC](./img/img4.png)
 
 ### Euclidean Clustering
