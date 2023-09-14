@@ -224,7 +224,7 @@ The outcome of filtering is displayed in Figure 3.
 
 ### RANSAC
 
-RANSAC (RANdom SAmple Consensus) [4], an iterative outlier detection method, is now used to distinguish between road and obstacles in the filtered point cloud. The maximum number of iterations is kept at 50 for all scenarios. For each iteration, three points $p_1 = (x_1, y_1, z_1)$, $p_2 = (x_2, y_2, z_2)$, $p_3 = (x_3, y_3, z_3)$ are randomly selected from the cloud, and a plane is fit to them via the following equations [5]:
+RANSAC (RANdom SAmple Consensus) [4], an iterative outlier detection method, is now used to distinguish between road and obstacles in the filtered point cloud. The maximum number of iterations is kept at 50 for all scenarios. For each iteration, three points $p_1 = (x_1, y_1, z_1)$, $p_2 = (x_2, y_2, z_2)$, $p_3 = (x_3, y_3, z_3)$ are randomly selected from the cloud, and a plane fit to them via the following equations [5]:
 
 General form of the equation of a plane:
 
@@ -259,7 +259,7 @@ __Figure 4: RANSAC__
 
 ### Euclidean Clustering
 
-To distinguish among objects, groups of points are then associated by proximity using Euclidean Clustering. The nearest neighbor search is optimized via KD-Trees (K-Dimensional Trees) [6], a data structure that organizes points in a hierarchical fashion, splitting the data based on a different dimension at each level: at root by $x$, at levels 1 and 2, respectively, by $y$ and $z$, then at level 3 again by $x$, and so on. Visually, the splits are planes that cut each level into two subcells [Figure 5].
+To distinguish among objects, groups of points are then associated by proximity using Euclidean Clustering. The nearest neighbor search is optimized via KD-Trees (K-Dimensional Trees) [6], a data structure that organizes points in a hierarchical fashion, splitting the data based on a different dimension at each level: at root by $x$, at levels 1 and 2, respectively, by $y$ and $z$, then at level 3 by $x$ again, and so on. Visually, the splits are planes (red, blue, green) that cut each level into two subcells [Figure 5].
 
 __Figure 5: Simple Highway KD-Tree 3D__
 ![Euclidean Clustering](./img/img8.png)
