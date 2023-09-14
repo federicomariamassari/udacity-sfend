@@ -224,7 +224,7 @@ The outcome of filtering is displayed in Figure 3.
 
 ### RANSAC
 
-RANSAC (RANdom SAmple Consensus) [4], an iterative outlier detection method, is now used to distinguish between road and obstacles in the filtered point cloud. The maximum number of iterations is kept at 50 for all scenarios. For each iteration, three points $p_1 = (x_1, y_1, z_1)$, $p_2 = (x_2, y_2, z_2)$, $p_3 = (x_3, y_3, z_3)$ are randomly selected from the cloud, and a plane is fit to them via the following equations:
+RANSAC (RANdom SAmple Consensus) [4], an iterative outlier detection method, is now used to distinguish between road and obstacles in the filtered point cloud. The maximum number of iterations is kept at 50 for all scenarios. For each iteration, three points $p_1 = (x_1, y_1, z_1)$, $p_2 = (x_2, y_2, z_2)$, $p_3 = (x_3, y_3, z_3)$ are randomly selected from the cloud, and a plane is fit to them via the following equations [5]:
 
 General form of the equation of a plane:
 
@@ -232,7 +232,7 @@ $$
 Ax + By + Cz + D = 0
 $$
 
-And the four coefficients $A$, $B$, $C$, $D$ are [5]:
+And the four coefficients $A$, $B$, $C$, $D$ are:
 
 ```math
 \begin{align*}
