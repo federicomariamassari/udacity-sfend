@@ -259,10 +259,12 @@ __Figure 4: RANSAC__
 
 ### Euclidean Clustering
 
-__Figure 4: Simple Highway KD-Tree 3D__
+To distinguish among objects, groups of points are then associated by proximity using Euclidean Clustering. The nearest neighbor search is optimized via KD-Trees (K-Dimensional Trees), a data structure that organizes data points in a hierarchical fashion, splitting them based on different dimensions at each level: at root by $x$, at levels 1 and 2 by $y$ and $z$ respectively, then at level 3 again by $x$, and so on. When rendered visually, splitting forms dimension-aligned planes [Figure 5].
+
+__Figure 5: Simple Highway KD-Tree 3D__
 ![Euclidean Clustering](./img/img8.png)
 
-__Figure 5: Euclidean Clustering__
+__Figure 6: Euclidean Clustering__
 ![Euclidean Clustering](./img/img5.png)
 
 ### Bounding Boxes
