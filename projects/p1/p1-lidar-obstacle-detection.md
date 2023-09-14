@@ -206,7 +206,7 @@ Reducing the density of a point cloud is essential in applications that require 
 
 ### Region Of Interest (ROI)
 
-Region-based filtering consists, instead, in keeping only the core (a rectangular prism) of the driving environment discarding the edges, which have low significance for object detection and introduce unnecessary computational burden [3]. For "City Block", the region of interest is (in meters): $X \in [-10; 30]$, $Y \in [-5; 6]$, $Z \in [-2; 1]$. That is, position the car roughly in the middle of the road, with ample view forward and enough backward, and since LiDAR is mounted on top of the vehicle, also enough at the bottom to keep the road itself.
+Region-based filtering consists, instead, in keeping only the core (a rectangular prism) of the driving environment discarding the edges, which have low significance for object detection and introduce unnecessary computational burden [3]. For "City Block", the region of interest (in meters) is: $X \in [-10; 30]$, $Y \in [-5; 6]$, $Z \in [-2; 1]$. That is, position the car roughly in the middle of the road, with ample view forward and enough backward, and since LiDAR is mounted on top of the vehicle, also enough at the bottom to keep the road plane itself.
 
 The outcome of filtering is displayed in Figure 3.
 
@@ -224,13 +224,24 @@ The outcome of filtering is displayed in Figure 3.
 
 ### RANSAC
 
-RANSAC (RANdom SAmple Consensus), an iterative outlier detection method, is now used to distinguish between road and obstacles in the filtered point cloud. The maximum number of iterations is kept at 50 for all scenarios. For each iteration, three points are randomly selected from the cloud, and a plane fit to them according to the following equations.
+RANSAC (RANdom SAmple Consensus), an iterative outlier detection method, is now used to distinguish between road and obstacles in the filtered point cloud. The maximum number of iterations is kept at 50 for all scenarios. For each iteration, three points $p_1 = (x_1, y_1, z_1)$, $p_2 = (x_2, y_2, z_2)$, $p_3 = (x_3, y_3, z_3)$ are randomly selected from the cloud, and a plane is fit to them via the following equations:
 
 General form of the equation of a plane:
 
 $$
 Ax + By + Cz + D = 0
 $$
+
+And the four coefficients are [4]:
+
+
+$$
+&A = (y_2 - y_1)(z_3 - z_1) - (z_2 - z_1)(y_3 - y_1)
+&B = (z_2 - z_1)(x_3 - x_1) - (x_2 - x_1)(z_3 - z_1)
+&C = (x_2 - x_1)(y_3 - y_1) - (y_2 - y_1)(x_3 - x_1)
+&D = -(Ax_1 + By_1 + Cz_1)
+$$
+
 
 The iteration with the highest number of inliers to the plane is selected as the road, and all points which are at a higher-than-tolerated distance are labelled as outliers and considered obstacles.
 
@@ -240,8 +251,6 @@ $v_1 \times v_2 = n = [A B C]^T$ defines cross product and it's the normal to th
 
 ```math
 \begin{align*}
-&Ax + By + Cz + D = 0 \\
-\\
 &A = (y_2 - y_1)(z_3 - z_1) - (z_2 - z_1)(y_3 - y_1) \\
 \\
 &B = (z_2 - z_1)(x_3 - x_1) - (x_2 - x_1)(z_3 - z_1) \\
