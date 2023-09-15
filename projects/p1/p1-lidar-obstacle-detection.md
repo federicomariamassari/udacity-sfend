@@ -257,9 +257,9 @@ is greater than the specified threshold (e.g., 15 cm in "City Block"). The itera
 __Figure 4: RANSAC__
 ![RANSAC](./img/img4.png)
 
-### Euclidean Clustering
+### Euclidean Clustering with KD-Trees
 
-To distinguish among objects, groups of points are then associated by proximity using Euclidean Clustering. The nearest neighbor search is optimized via KD-Trees (K-Dimensional Trees) [6], a data structure that organizes points in a hierarchical fashion, splitting the data based on a different dimension at each level: at root by $x$, at levels 1 and 2, respectively, by $y$ and $z$, then at level 3 by $x$ again, and so on. Visually, the splits are planes (red, blue, green) that cut each level into two subcells [Figure 5].
+To distinguish among objects, groups of points are then associated by proximity using Euclidean Clustering. The nearest neighbor search is optimized via KD-Trees (K-Dimensional Trees) [6], a data structure that organizes points in a hierarchical fashion, splitting the data based on a different dimension at each level: at root by $x$, at levels 1 and 2 by $y$ and $z$ respectively, then at level 3 by $x$ again, and so on. Visually, the splits are planes (red, blue, green) that cut each level into two subcells [Figure 5].
 
 __Figure 5: Simple Highway KD-Tree 3D__
 ![Euclidean Clustering](./img/img8.png)
