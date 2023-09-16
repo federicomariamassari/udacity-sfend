@@ -45,3 +45,5 @@ make
 A stream of incoming obstacles, encapsulated in PCA bounding boxes, is rendered in the city block scene below. Udacity's self-driving vehicle Carla is the purple block at the center of the screen, with LiDAR mounted on top.
 
 ![PCA Bounding Boxes](./projects/p1/img/mov1.gif)
+
+## Project 2: Camera Based 2D Feature Tracking (Mid-Term)
