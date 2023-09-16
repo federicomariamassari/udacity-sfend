@@ -11,7 +11,7 @@ In this project, my very first using Point Cloud Library (PCL), I filter, segmen
 The project analyses driving scenes of increasing complexity:
 
 1. __Simple Highway__: A sample environment used to test and fine-tune RANSAC, Euclidean Clustering, and Bounding Boxes.
-2. __City Block (static)__: A static frame of real point cloud data from Udacity's self-driving car, Carla.
+2. __City Block (static)__: A static frame of real point cloud data from Carla, Udacity's self-driving car.
 3. __City Block (streaming, linear)__: A stream of frames, of which case 2 is the initial one, depicting a linear road.
 4. __City Block (streaming, non-linear)__: Tracking a cyclist through a dynamic, highly non-linear environment (not entirely explored).
 
@@ -217,8 +217,8 @@ The outcome of filtering is displayed in Figure 3.
   <tr>
   </tr>
   <tr>
-    <td align="center"><img align="center" src="img/img2.png" width="475"/></td>
-    <td align="center"><img align="center" src="img/img3.png" width="475"/></td>
+    <td align="center"><img align="center" src="img/img2a.png" width="475"/></td>
+    <td align="center"><img align="center" src="img/img2b.png" width="475"/></td>
   </tr>
 </table>
 
