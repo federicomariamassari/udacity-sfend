@@ -208,7 +208,7 @@ Reducing the density of a point cloud is essential in applications that require 
 
 Region-based filtering consists, instead, in keeping only the core (a rectangular prism) of the driving environment discarding the edges, which have low significance for object detection and introduce unnecessary computational burden [3]. For "City Block", the region of interest (in meters) is: $X \in [-10; 30]$, $Y \in [-5; 6]$, $Z \in [-2; 1]$. That is, position the car roughly in the middle of the road, with ample view forward and enough backward, and since LiDAR is mounted on top of the vehicle, also enough at the bottom to keep the road plane itself.
 
-The outcome of filtering is displayed in Figure 3.
+A comparison between unfiltered and filtered clouds is displayed in Figure 3.
 
 <table>
   <tr>

@@ -82,7 +82,7 @@ struct Options
         distanceThreshold = 0.15;  // 15 cm
 
         // Euclidean clustering
-        clusterTolerance = 0.45;  // 45 cm
+        clusterTolerance = 0.85;  // 85 cm
         minSize = 14;  // To track the side pole
         maxSize = 650;
       }
