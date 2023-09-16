@@ -4,9 +4,12 @@
 
 ## Overview
 
-In autonomous systems such as robots or self-driving cars, LiDAR (Light Detection And Ranging) is commonly used as a way to accurately measure distances and create detailed 3-dimensional maps of a surrounding environment. LiDAR targets surfaces with laser beams (photon pulses of a few nanoseconds) and measures the time it takes for the beams to bounce back; when surfaces are hit, Point Cloud Data (PCD) are generated.
+In autonomous systems, such as robots or self-driving cars, LiDAR (Light Detection And Ranging) is commonly used as a way to accurately measure distances and create detailed 3-dimensional maps of the surrounding environment. LiDAR targets surfaces with laser beams (photon pulses of a few nanoseconds) and measures the time it takes for the beams to bounce back; when surfaces are hit, Point Cloud Data (PCD) are generated.
 
-In this project, my very first using Point Cloud Library (PCL), I filter, segment, and cluster point clouds from LiDAR scans to detect incoming vehicles and obstacles within a driving environment. For each frame, I start by reducing the density of the cloud using Voxel Grid and Region of Interest (ROI) techniques. This helps to simplify the data and focus on the most relevant information. Next, I use RANSAC to separate the road plane from the obstacles, allowing for a clearer understanding of the environment. To identify individual objects, I utilize Euclidean clustering and KD-Trees. This allows me to group together points that belong to the same target, making it easier to analyze and track them. Finally, I encapsulate these clusters within bounding boxes (both regular and PCA-based), providing a visual representation of the detected items [Figure 1].
+In this initial project, I filter, segment, and cluster point clouds from LiDAR scans to detect incoming vehicles and obstacles within a driving lane. For each frame, I first reduce the density of the cloud using voxel grid and region of interest (ROI) techniques, which help simplify the data and keep only the most relevant information. Then, I separate the road plane from the obstacles, and get a clearer understanding of the environment, using RANSAC. Next, I group together points that belong to the same objects via Euclidean clustering and KD-Trees. And finally, I encapsulate these clusters within bounding boxes, both regular and PCA (Principal Component Analysis) -based, to get a visual representation of the detected objects [Figure 1].
+
+__Figure 1: PCA-Boxes-Enclosed Cluster Obstacles__
+!['LiDAR Obstacle Detection' Animated GIF](img/mov3.gif)
 
 The project analyses driving scenes of increasing complexity:
 
@@ -14,9 +17,6 @@ The project analyses driving scenes of increasing complexity:
 2. __City Block (static)__: A static frame of real point cloud data from Carla, Udacity's self-driving car.
 3. __City Block (streaming, linear)__: A stream of frames, of which case 2 is the initial one, depicting a linear road.
 4. __City Block (streaming, non-linear)__: Tracking a cyclist through a dynamic, highly non-linear environment (not entirely explored).
-
-__Figure 1: PCA-Boxes-Enclosed Cluster Obstacles__
-!['LiDAR Obstacle Detection' Animated GIF](img/mov3.gif)
 
 ## Project Structure
 
@@ -208,7 +208,7 @@ Reducing the density of a point cloud is essential in applications that require 
 
 Region-based filtering consists, instead, in keeping only the core (a rectangular prism) of the driving environment discarding the edges, which have low significance for object detection and introduce unnecessary computational burden [3]. For "City Block", the region of interest (in meters) is: $X \in [-10; 30]$, $Y \in [-5; 6]$, $Z \in [-2; 1]$. That is, position the car roughly in the middle of the road, with ample view forward and enough backward, and since LiDAR is mounted on top of the vehicle, also enough at the bottom to keep the road plane itself.
 
-A comparison between unfiltered and filtered clouds is displayed in Figure 3.
+A comparison between unfiltered and filtered clouds is shown in Figure 3.
 
 <table>
   <tr>
