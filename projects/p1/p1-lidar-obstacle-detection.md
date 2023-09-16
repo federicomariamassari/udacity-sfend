@@ -134,7 +134,7 @@ These are contained in `environment.cpp` (`main` function) and render all availa
         </tr>
         <tr>
             <td><code>trackCyclist</code></td>
-            <td><code>true</code> for highly non-linear tracking of a bicyclist and the surrounding objects in <code>data_2</code></td>
+            <td><code>true</code> for highly non-linear tracking of a bicyclist and the surrounding objects using data contained in <code>data_2</code></td>
         </tr>
     </tbody>
 </table>
