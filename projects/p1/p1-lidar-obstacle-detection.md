@@ -86,9 +86,14 @@ __Figure 2: Directory Structure Tree__
 
 ## Building and Running the Project
 
-### Rendering Issues
+### Rendering Configurations
+
+In UTM PCL some pcl rendering properties are size and width properties are incompatible with GPU acceleration properties
 
 PCL option `pcl::visualization::PCL_VISUALIZER_POINT_SIZE` does not render properly on Ubuntu 20.04-5 (UTM QEMU 7.0 aarch64), so specifying point size (integer) greater than 1 has no effect. This seems to be related to an incomplete VTK 7.1 installation on Ubuntu 20.04 [1] [2]. The consequence is that point clouds are practically invisible when rendered with PCL Viewer on the virtual machine, hence most of the pictures in this README file were captured from the provided Udacity workspace (Ubuntu 16.04, PCL 1.7).
+
+Display > Emulated Display Card > `virtio-ramfb-gl` (GPU Supported) `-gl` `virtio-ramfb`
+Do not use GPU acceleration and MESA version
 
 ### Main File
 
@@ -232,7 +237,7 @@ $$
 Ax + By + Cz + D = 0
 $$
 
-And the four coefficients $A$, $B$, $C$, $D$ are:
+Coefficients $A$, $B$, $C$, $D$ (obtained via cross-product):
 
 ```math
 \begin{align*}
@@ -252,23 +257,33 @@ $$
 distance = \frac{|Ax + By + Cz + D|}{\sqrt{A^2 + B^2 + C^2}}
 $$
 
-is greater than the specified threshold (e.g., 15 cm in "City Block"). The iteration with the largest number of inliers to the plane is selected as the road, while all outliers are considered obstacles [Figure 4].
+is greater than the specified threshold (e.g., 15 cm in "City Block"). The iteration with the largest number of inliers to the plane is selected as the road, while all outliers are marked as obstacles [Figure 4].
 
 __Figure 4: RANSAC__
 ![RANSAC](./img/img4.png)
 
 ### Euclidean Clustering
 
-#### KD-Trees
+<table>
+  <tr>
+  <td align="center"><b>Figure 4.A</b>: KD-Tree Quiz</td>
+  <td align="center"><b>Figure 4.B</b>: KD-Tree Simple Highway</td>
+  <tr>
+  </tr>
+  <tr>
+    <td align="center"><img align="center" src="img/img1a.png" width="475"/></td>
+    <td align="center"><img align="center" src="img/img1b.png" width="475"/></td>
+  </tr>
+</table>
 
-To distinguish among objects, groups of points are then associated by proximity using Euclidean Clustering. The nearest neighbor search is optimized via KD-Trees (K-Dimensional Trees) [6], a data structure that organizes points in a hierarchical fashion, splitting the data based on a different dimension at each level: at root by $x$, at levels 1 and 2 by $y$ and $z$ respectively, then at level 3 by $x$ again, and so on. Visually, the splits are planes (red, blue, green) that cut each level into two subcells [Figure 5].
+To discriminate among objects, points are then grouped together based on proximity using Euclidean clustering.
+groups of points are then associated based on proximit
+To discriminate among objects, groups of points are then associated by proximity using Euclidean clustering. The nearest neighbor search is optimized via K-Dimensional Trees [6], a data structure that splits points hierarchically based on a different dimension at each level: 
 
-__Figure 5: Simple Highway KD-Tree 3D__
-![Euclidean Clustering](./img/img8.png)
 
-#### Clustering
+organizes points in a hierarchical fashion, splitting the data based on a different dimension at each level: at root by $x$, at levels 1 and 2 by $y$ and $z$ respectively, then at level 3 by $x$ again, and so on. Visually, the splits are planes (red, blue, green) that cut each level into two subcells [Figure 5].
 
-__Figure 6: Euclidean Clustering__
+__Figure 5: Euclidean Clustering__
 ![Euclidean Clustering](./img/img5.png)
 
 ### Bounding Boxes
@@ -310,6 +325,7 @@ PCA boxes solve the problem of excessive fitting of diagonal point clouds, but a
 
 1. https://github.com/RobustFieldAutonomyLab/LeGO-LOAM/issues/245
 2. https://github.com/dgrzech/sobfu/issues/15
+3. https://github.com/utmapp/UTM/discussions/5075
 3. https://knowledge.udacity.com/questions/609855
 4. https://en.wikipedia.org/wiki/Random_sample_consensus
 5. https://en.wikipedia.org/wiki/Euclidean_planes_in_three-dimensional_space
