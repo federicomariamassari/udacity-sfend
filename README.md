@@ -46,6 +46,10 @@ A stream of incoming obstacles, encapsulated in PCA bounding boxes, is rendered 
 
 ![PCA Bounding Boxes](./projects/p1/img/mov1.gif)
 
-## Project 2: Camera Based 2D Feature Tracking (Mid-Term)
+## Project 2: Camera-Based 2D Feature Tracking (Mid-Term)
 
 __Acquired familiarity with:__ OpenCV 4.x
+
+### Overview
+
+__[Link to code](projects/p2/)__ | [Starter Code from Udacity](https://github.com/udacity/SFND_2D_Feature_Tracking)
