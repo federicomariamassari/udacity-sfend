@@ -4,9 +4,9 @@
 
 ## Overview
 
-In autonomous systems, such as robots or self-driving cars, LiDAR (Light Detection And Ranging) is commonly used as a way to accurately measure distances and create detailed 3-dimensional maps of the surrounding environment. LiDAR targets surfaces with laser beams (photon pulses of a few nanoseconds) and measures the time it takes for the beams to bounce back; when surfaces are hit, Point Cloud Data (PCD) are generated.
+In autonomous systems, such as robots or self-driving cars, LiDAR (Light Detection And Ranging) is commonly used as a way to accurately measure distances and create detailed three-dimensional maps of the surrounding environment. LiDAR targets surfaces with laser beams (photon pulses of a few nanoseconds) and measures the time it takes for the beams to bounce back; when surfaces are hit, Point Cloud Data (PCD) are generated.
 
-In this initial project, I filter, segment, and cluster point clouds from LiDAR scans to detect incoming vehicles and obstacles within a driving lane. For each frame, I first reduce the density of the cloud using voxel grid and region of interest (ROI) techniques, which help simplify the data and keep only the most relevant information. I then separate the road plane from the obstacles using RANSAC, and get a clearer view of the environment. Next, I group together points that belong to the same objects via Euclidean clustering and KD-Trees. And finally, I encapsulate the clusters within bounding boxes, both regular and PCA (Principal Component Analysis) -based, to get a visual representation of the detected items [Figure 1].
+In this initial project, I filter, segment, and cluster point clouds from LiDAR scans to detect incoming vehicles and obstacles within a driving lane. For each frame, I first reduce the density of the cloud using voxel grid and region of interest (ROI) techniques, which help simplify the data and keep only the most relevant information. I then separate the road plane from the obstacles using RANSAC, and get a clearer view of the environment. Next, I group together points that belong to the same objects via Euclidean clustering and KD-Trees. And finally, I encapsulate the clusters within both regular and PCA (Principal Component Analysis) bounding boxes to get a visual representation of the detected items [Figure 1].
 
 __Figure 1: PCA-Boxes-Enclosed Cluster Obstacles__
 !['LiDAR Obstacle Detection' Animated GIF](img/mov3.gif)
@@ -88,7 +88,15 @@ __Figure 2: Directory Structure Tree__
 
 ### Rendering Configurations
 
+To properly build and render PCL Viewer on Ubuntu 20.04-5 (UTM QEMU 7.0 aarch64), the following 
+
 In UTM PCL some pcl rendering properties are size and width properties are incompatible with GPU acceleration properties
+
+Create a symlink to `vtk7` as `vtk` [1]:
+
+```bash
+sudo ln /usr/bin/vtk7 /usr/bin/vtk
+```
 
 PCL option `pcl::visualization::PCL_VISUALIZER_POINT_SIZE` does not render properly on Ubuntu 20.04-5 (UTM QEMU 7.0 aarch64), so specifying point size (integer) greater than 1 has no effect. This seems to be related to an incomplete VTK 7.1 installation on Ubuntu 20.04 [1] [2]. The consequence is that point clouds are practically invisible when rendered with PCL Viewer on the virtual machine, hence most of the pictures in this README file were captured from the provided Udacity workspace (Ubuntu 16.04, PCL 1.7).
 
@@ -263,18 +271,6 @@ __Figure 4: RANSAC__
 ![RANSAC](./img/img4.png)
 
 ### Euclidean Clustering
-
-<table>
-  <tr>
-  <td align="center"><b>Figure 4.A</b>: KD-Tree Quiz</td>
-  <td align="center"><b>Figure 4.B</b>: KD-Tree Simple Highway</td>
-  <tr>
-  </tr>
-  <tr>
-    <td align="center"><img align="center" src="img/img1a.png" width="475"/></td>
-    <td align="center"><img align="center" src="img/img1b.png" width="475"/></td>
-  </tr>
-</table>
 
 To discriminate among objects, points are then grouped together based on proximity using Euclidean clustering.
 groups of points are then associated based on proximit
