@@ -102,12 +102,20 @@ make
 sudo make install
 ```
 
-2. Create symlinks for `vtk7` as `pvtk` [1]. In Ubuntu 20.04, `sudo apt install vtk7` installs VTK under `vtk7` folder, but PCL `cmake` looks for the files under `vtk`. `pvtk`, its Python bindings, are symlinked to Python 3.
+2. Create symlinks for `vtk7` as `pvtk` [1]. In Ubuntu 20.04, `sudo apt install vtk7` installs VTK under `vtk7` folder, but PCL CMake looks for the files in `vtk`. For lack of a better alternative, its Python bindings, `pvtk`, are simply a symlink to Python 3.
 
 ```bash
 sudo ln /usr/bin/vtk7 /usr/bin/vtk
 sudo ln /usr/bin/python3 /usr/bin/pvtk
 ```
+
+3. Disable GPU Acceleration from UTM's Virtual Machine properties. Select "Display" > "Emulated Display Card" > `virtio-ramfb`.
+
+. From UTM's virtual machine properties, select 
+
+from UTM's VM properties. 
+
+Switch to any card that does not contain `-gl` in its name.
 
 PCL option `pcl::visualization::PCL_VISUALIZER_POINT_SIZE` does not render properly on Ubuntu 20.04-5 (UTM QEMU 7.0 aarch64), so specifying point size (integer) greater than 1 has no effect (with the consequence that point clouds are practically invisible when rendered with PCL viewer on the VM).
 
