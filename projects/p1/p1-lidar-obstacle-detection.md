@@ -6,7 +6,7 @@
 
 In autonomous systems, such as robots or self-driving cars, LiDAR (Light Detection And Ranging) is commonly used as a way to accurately measure distances and create detailed three-dimensional maps of the surrounding environment. LiDAR targets surfaces with laser beams (photon pulses of a few nanoseconds) and measures the time it takes for the beams to bounce back; when surfaces are hit, Point Cloud Data (PCD) are generated.
 
-In this initial project, I filter, segment, and cluster point clouds from LiDAR scans to detect incoming vehicles and obstacles within a driving lane. For each frame, I first reduce the density of the cloud using voxel grid and region of interest (ROI) techniques, which help simplify the data and keep only the most relevant information. I then separate the road plane from the obstacles using RANSAC, and get a clearer view of the environment. Next, I group together points that belong to the same objects via Euclidean clustering and KD-Trees. And finally, I encapsulate the clusters within both regular and PCA (Principal Component Analysis) bounding boxes to get a visual representation of the detected items [Figure 1].
+In this initial project, I filter, segment, and cluster point clouds from LiDAR scans to detect incoming vehicles and obstacles within a driving lane. For each frame, I first reduce the density of the cloud using voxel grid and region of interest (ROI) techniques, which help simplify the data and keep only the most relevant information. I then separate the road plane from the obstacles using RANSAC, and get a clearer view of the environment. Next, I group together points that belong to the same objects via Euclidean clustering and KD-Trees. And finally, I encapsulate the clusters within both regular and PCA (Principal Component Analysis) bounding boxes, to get a visual representation of the detected items [Figure 1].
 
 __Figure 1: PCA-Boxes-Enclosed Cluster Obstacles__
 !['LiDAR Obstacle Detection' Animated GIF](img/mov3.gif)
@@ -88,17 +88,32 @@ __Figure 2: Directory Structure Tree__
 
 ### Rendering Configurations
 
-To properly build and render PCL Viewer on Ubuntu 20.04-5 (UTM QEMU 7.0 aarch64), the following 
+To properly build PCL 1.11, PCL Viewer, and related objects on Ubuntu 20.04 (UTM QEMU 7.0 aarch64), the following steps are required:
 
-In UTM PCL some pcl rendering properties are size and width properties are incompatible with GPU acceleration properties
+1. Compile and install [`metslib`](https://github.com/coin-or/metslib) from source [1]. As far as I understand, this is more of a nice-to-have.
 
-Create a symlink to `vtk7` as `vtk` [1]:
+```bash
+cd /home/$whoami/workspace/udacity-sfend/
+wget https://www.coin-or.org/download/source/metslib/metslib-0.5.3.tgz
+tar xzvf metslib-0.5.3.tgz
+cd metslib-0.5.3
+./configure --prefix=/usr/local
+make
+sudo make install
+```
+
+2. Create symlinks for `vtk7` as `pvtk` [1]. In Ubuntu 20.04, `sudo apt install vtk7` installs VTK under `vtk7` folder, but PCL `cmake` looks for the files under `vtk`. `pvtk`, its Python bindings, are symlinked to Python 3.
 
 ```bash
 sudo ln /usr/bin/vtk7 /usr/bin/vtk
+sudo ln /usr/bin/python3 /usr/bin/pvtk
 ```
 
-PCL option `pcl::visualization::PCL_VISUALIZER_POINT_SIZE` does not render properly on Ubuntu 20.04-5 (UTM QEMU 7.0 aarch64), so specifying point size (integer) greater than 1 has no effect. This seems to be related to an incomplete VTK 7.1 installation on Ubuntu 20.04 [1] [2]. The consequence is that point clouds are practically invisible when rendered with PCL Viewer on the virtual machine, hence most of the pictures in this README file were captured from the provided Udacity workspace (Ubuntu 16.04, PCL 1.7).
+PCL option `pcl::visualization::PCL_VISUALIZER_POINT_SIZE` does not render properly on Ubuntu 20.04-5 (UTM QEMU 7.0 aarch64), so specifying point size (integer) greater than 1 has no effect (with the consequence that point clouds are practically invisible when rendered with PCL viewer on the VM).
+
+. This seems to be related to an incomplete VTK 7.1 installation on Ubuntu 20.04 [1] [2]. The consequence is that point clouds are practically invisible when rendered with PCL Viewer on the virtual machine, hence most of the pictures in this README file were captured from the provided Udacity workspace (Ubuntu 16.04, PCL 1.7).
+
+Disable GPU acceleration
 
 Display > Emulated Display Card > `virtio-ramfb-gl` (GPU Supported) `-gl` `virtio-ramfb`
 Do not use GPU acceleration and MESA version
