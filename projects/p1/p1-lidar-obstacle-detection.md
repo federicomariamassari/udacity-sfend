@@ -266,7 +266,7 @@ __Figure 5: Euclidean Clustering__
 
 ### Bounding Boxes
 
-Fitting bounding boxes to point cloud clusters is useful to visualize the edges to which the autonomous agent would expect to bump into the obstacle if these were touched. Two kinds of boxes are fitted as part of this project: "constant" bounding boxes, and minimum "PCA" bounding boxes.
+Bounding boxes allow to visualize the boundaries an autonomous agent would encounter if it were to come into contact with an obstacle. In this project, two kinds of bounding boxes are considered: regular and minimum (PCA-based) ones.
 
 #### Regular Bounding Boxes
 
