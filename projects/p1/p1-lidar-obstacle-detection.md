@@ -88,7 +88,7 @@ __Figure 2: Directory Structure Tree__
 
 ### Rendering Configurations
 
-Point Cloud Library and associated viewer have [specific build and rendering requirements](p1-preliminary-configs.md) on Ubuntu 20.04 (UTM QEMU 7.0 aarch64).
+Point Cloud Library and associated Viewer have specific [build and rendering requirements](p1-preliminary-configs.md) on Ubuntu 20.04 (UTM QEMU 7.0 aarch64).
 
 ### Main File
 
