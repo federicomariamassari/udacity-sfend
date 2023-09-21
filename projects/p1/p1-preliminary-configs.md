@@ -1,6 +1,6 @@
 # Project 1: Preliminary Configurations
 
-To properly build PCL 1.11, PCL Viewer, and related objects on Ubuntu 20.04 (UTM QEMU 7.0 aarch64), the following steps are required.
+To properly build PCL 1.11 and render PCL Viewer and related objects on Ubuntu 20.04 (UTM QEMU 7.0 aarch64), the following steps are required.
 
 ## Checklist
 
