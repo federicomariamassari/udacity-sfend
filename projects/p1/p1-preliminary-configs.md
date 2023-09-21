@@ -39,7 +39,9 @@ Some `pcl::visualization` rendering properties such as `PCL_VISUALIZER_POINT_SIZ
 
 ## Outstanding Issues
 
+`CMakeLists.txt` contains references to additional files that could not be found or installed. [1] suggests to simply `touch` these files, but this workaround would just suppress the warnings without providing any real benefit, so I did not follow it.
 
+- Missing files: `vtkParseOGLExt-7.1`, `libvtkRenderingPythonTkWidgets.so`
 
 ## Resources
 
