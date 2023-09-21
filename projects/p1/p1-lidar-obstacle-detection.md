@@ -88,43 +88,7 @@ __Figure 2: Directory Structure Tree__
 
 ### Rendering Configurations
 
-To properly build PCL 1.11, PCL Viewer, and related objects on Ubuntu 20.04 (UTM QEMU 7.0 aarch64), the following steps are required:
-
-1. Compile and install [`metslib`](https://github.com/coin-or/metslib) from source [1]. As far as I understand, this is more of a nice-to-have.
-
-```bash
-cd /home/$whoami/workspace/udacity-sfend/
-wget https://www.coin-or.org/download/source/metslib/metslib-0.5.3.tgz
-tar xzvf metslib-0.5.3.tgz
-cd metslib-0.5.3
-./configure --prefix=/usr/local
-make
-sudo make install
-```
-
-2. Create symlinks for `vtk7` as `pvtk` [1]. In Ubuntu 20.04, `sudo apt install vtk7` installs VTK under `vtk7` folder, but PCL CMake looks for the files in `vtk`. For lack of a better alternative, its Python bindings, `pvtk`, are simply a symlink to Python 3.
-
-```bash
-sudo ln /usr/bin/vtk7 /usr/bin/vtk
-sudo ln /usr/bin/python3 /usr/bin/pvtk
-```
-
-3. Disable GPU Acceleration from UTM's Virtual Machine properties. Select "Display" > "Emulated Display Card" > `virtio-ramfb`.
-
-. From UTM's virtual machine properties, select 
-
-from UTM's VM properties. 
-
-Switch to any card that does not contain `-gl` in its name.
-
-PCL option `pcl::visualization::PCL_VISUALIZER_POINT_SIZE` does not render properly on Ubuntu 20.04-5 (UTM QEMU 7.0 aarch64), so specifying point size (integer) greater than 1 has no effect (with the consequence that point clouds are practically invisible when rendered with PCL viewer on the VM).
-
-. This seems to be related to an incomplete VTK 7.1 installation on Ubuntu 20.04 [1] [2]. The consequence is that point clouds are practically invisible when rendered with PCL Viewer on the virtual machine, hence most of the pictures in this README file were captured from the provided Udacity workspace (Ubuntu 16.04, PCL 1.7).
-
-Disable GPU acceleration
-
-Display > Emulated Display Card > `virtio-ramfb-gl` (GPU Supported) `-gl` `virtio-ramfb`
-Do not use GPU acceleration and MESA version
+PCL and associated Viewer have [specific requirements](p1-preliminary-configs.md) on Ubuntu 20.04 (UTM QEMU 7.0 aarch64).
 
 ### Main File
 
