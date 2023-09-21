@@ -259,7 +259,7 @@ __Figure 4: RANSAC__
 
 ### Euclidean Clustering
 
-To discriminate among objects, points are then grouped together based on proximity using Euclidean clustering. The nearest neighbor search is optimized via $k$-dimensional trees [4], a data structure that splits points hierarchically based on a different dimension at each level: at root by $x$, at levels 1 and 2 by $y$ and $z$ respectively, then at level 3 by $x$ again, and so on. Visually, the splits are planes (red, blue, green), each cutting their corresponding levels into two equal parts. Time complexity is greatly reduced with KD-Trees, because Euclidean distances for points that are not in a close-enough region to the target are not computed. The outcome of clustering appears in Figure 5.
+To discriminate among objects, points are then grouped together based on proximity using Euclidean clustering [4]. The nearest neighbor search is optimized via $k$-dimensional trees [5], a data structure that splits points hierarchically based on a different dimension at each level: at root by $x$, at levels 1 and 2 by $y$ and $z$ respectively, then at level 3 by $x$ again, and so on. Visually, the splits are planes (red, blue, green), each cutting their corresponding levels into two equal parts. Time complexity is greatly reduced with KD-Trees, because Euclidean distances for points that are not in a close-enough region to the target are not computed. The outcome of clustering appears in Figure 5.
 
 __Figure 5: Euclidean Clustering__
 ![Euclidean Clustering](./img/img5.png)
@@ -304,9 +304,9 @@ PCA boxes solve the problem of excessive fitting of diagonal point clouds, but a
 1. https://knowledge.udacity.com/questions/609855
 2. https://en.wikipedia.org/wiki/Random_sample_consensus
 3. https://en.wikipedia.org/wiki/Euclidean_planes_in_three-dimensional_space
-4. https://en.wikipedia.org/wiki/K-d_tree
-7. https://en.wikipedia.org/wiki/K-means_clustering
-8. https://en.wikipedia.org/wiki/Minimum_bounding_box_algorithms
-9. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
+4. https://en.wikipedia.org/wiki/K-means_clustering
+5. https://en.wikipedia.org/wiki/K-d_tree
+6. https://en.wikipedia.org/wiki/Minimum_bounding_box_algorithms
+7. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
 
 [Home](../../README.md) | Next: 
