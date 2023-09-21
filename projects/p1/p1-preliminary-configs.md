@@ -6,11 +6,11 @@ To properly build PCL 1.11 and render PCL Viewer and related objects on Ubuntu 2
 
 1. Compile and install `metslib` from source
 2. Create symlinks to `vtk` and `pvtk`
-3. Disable GPU acceleration from UTM's VM properties
+3. Disable GPU acceleration from UTM's VM settings
 
 ## Configurations
 
-### Compile and Install `metslib` from Source
+### Compile and install `metslib` from source
 
 Optimization toolkit [`metslib`](https://github.com/coin-or/metslib) is referenced by PCL's `CMakeLists.txt` but not available by default on Ubuntu 20.04. As far as I understand, this is more of a nice-to-have [1].
 
@@ -24,7 +24,7 @@ make
 sudo make install
 ```
 
-### Create Symlinks to `vtk` and `pvtk`
+### Create symlinks to `vtk` and `pvtk`
 
 In Ubuntu 20.04, `sudo apt install vtk7` places VTK 7.1 inside `vtk7` folder, but PCL looks for the files in `vtk`. For lack of a better alternative, its Python bindings `pvtk` are simply a symbolic link to Python 3 [1] [2].
 
@@ -33,7 +33,7 @@ sudo ln /usr/bin/vtk7 /usr/bin/vtk
 sudo ln /usr/bin/python3 /usr/bin/pvtk
 ```
 
-### Disable GPU Acceleration from UTM's VM properties
+### Disable GPU acceleration from UTM's VM settings
 
 Some rendering properties of `pcl::visualization` such as `PCL_VISUALIZER_POINT_SIZE` or `PCL_VISUALIZER_LINE_LENGTH` are not compatible with UTM's default emulated display card (Apple Silicon: `virtio-ramfb-gl`). For these properties, specifying an integer value greater than 1 has no effect, hence point clouds and other geometries are practically invisible when rendered with PCL Viewer. To remove the incompatibility, disable GPU acceleration from UTM's Virtual Machine settings in "Display" → "Emulated Display Card". Most cards whose name does not contain `-gl` would work, but `virtio-ramfb` is recommended for Macintosh [3].
 
