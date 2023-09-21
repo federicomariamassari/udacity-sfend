@@ -206,7 +206,7 @@ Reducing the density of a point cloud is essential in applications that require 
 
 ### Region Of Interest (ROI)
 
-Region-based filtering consists, instead, in keeping only the core (a rectangular prism) of the driving environment discarding the edges, which have low significance for object detection and introduce unnecessary computational burden [3]. For "City Block", the region of interest (in meters) is: $X \in [-10; 30]$, $Y \in [-5; 6]$, $Z \in [-2; 1]$. That is, position the car roughly in the middle of the road, with ample view forward and enough backward, and since LiDAR is mounted on top of the vehicle, also enough at the bottom to keep the road plane itself.
+Region-based filtering consists, instead, in keeping only the core (a rectangular prism) of the driving environment discarding the edges, which have low significance for object detection and introduce unnecessary computational burden [1]. For "City Block", the region of interest (in meters) is: $X \in [-10; 30]$, $Y \in [-5; 6]$, $Z \in [-2; 1]$. That is, position the car roughly in the middle of the road, with ample view forward and enough backward, and since LiDAR is mounted on top of the vehicle, also enough at the bottom to keep the road plane itself.
 
 A comparison between unfiltered and filtered clouds is shown in Figure 3.
 
@@ -224,7 +224,7 @@ A comparison between unfiltered and filtered clouds is shown in Figure 3.
 
 ### RANSAC
 
-RANSAC (RANdom SAmple Consensus) [4], an iterative outlier detection method, is now used to distinguish between road and obstacles in the filtered point cloud. The maximum number of iterations is kept at 50 for all scenarios. For each iteration, three points $p_1 = (x_1, y_1, z_1)$, $p_2 = (x_2, y_2, z_2)$, $p_3 = (x_3, y_3, z_3)$ are randomly selected from the cloud, and a plane fit to them via the following equations [5]:
+RANSAC (RANdom SAmple Consensus) [2], an iterative outlier detection method, is now used to distinguish between road and obstacles in the filtered point cloud. The maximum number of iterations is kept at 50 for all scenarios. For each iteration, three points $p_1 = (x_1, y_1, z_1)$, $p_2 = (x_2, y_2, z_2)$, $p_3 = (x_3, y_3, z_3)$ are randomly selected from the cloud, and a plane fit to them via the following equations [3]:
 
 General form of the equation of a plane:
 
@@ -261,7 +261,7 @@ __Figure 4: RANSAC__
 
 To discriminate among objects, points are then grouped together based on proximity using Euclidean clustering.
 groups of points are then associated based on proximit
-To discriminate among objects, groups of points are then associated by proximity using Euclidean clustering. The nearest neighbor search is optimized via K-Dimensional Trees [6], a data structure that splits points hierarchically based on a different dimension at each level: 
+To discriminate among objects, groups of points are then associated by proximity using Euclidean clustering. The nearest neighbor search is optimized via K-Dimensional Trees [4], a data structure that splits points hierarchically based on a different dimension at each level: 
 
 
 organizes points in a hierarchical fashion, splitting the data based on a different dimension at each level: at root by $x$, at levels 1 and 2 by $y$ and $z$ respectively, then at level 3 by $x$ again, and so on. Visually, the splits are planes (red, blue, green) that cut each level into two subcells [Figure 5].
@@ -306,13 +306,10 @@ PCA boxes solve the problem of excessive fitting of diagonal point clouds, but a
 
 ## Resources
 
-1. https://github.com/RobustFieldAutonomyLab/LeGO-LOAM/issues/245
-2. https://github.com/dgrzech/sobfu/issues/15
-3. https://github.com/utmapp/UTM/discussions/5075
-3. https://knowledge.udacity.com/questions/609855
-4. https://en.wikipedia.org/wiki/Random_sample_consensus
-5. https://en.wikipedia.org/wiki/Euclidean_planes_in_three-dimensional_space
-6. https://en.wikipedia.org/wiki/K-d_tree
+1. https://knowledge.udacity.com/questions/609855
+2. https://en.wikipedia.org/wiki/Random_sample_consensus
+3. https://en.wikipedia.org/wiki/Euclidean_planes_in_three-dimensional_space
+4. https://en.wikipedia.org/wiki/K-d_tree
 7. https://en.wikipedia.org/wiki/K-means_clustering
 8. https://en.wikipedia.org/wiki/Minimum_bounding_box_algorithms
 9. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
