@@ -259,12 +259,7 @@ __Figure 4: RANSAC__
 
 ### Euclidean Clustering
 
-To discriminate among objects, points are then grouped together based on proximity using Euclidean clustering.
-groups of points are then associated based on proximit
-To discriminate among objects, groups of points are then associated by proximity using Euclidean clustering. The nearest neighbor search is optimized via K-Dimensional Trees [4], a data structure that splits points hierarchically based on a different dimension at each level: 
-
-
-organizes points in a hierarchical fashion, splitting the data based on a different dimension at each level: at root by $x$, at levels 1 and 2 by $y$ and $z$ respectively, then at level 3 by $x$ again, and so on. Visually, the splits are planes (red, blue, green) that cut each level into two subcells [Figure 5].
+To discriminate among objects, points are then grouped together based on proximity using Euclidean clustering. The nearest neighbor search is optimized via $k$-dimensional trees [4], a data structure that splits points hierarchically based on a different dimension at each level: at root by $x$, at levels 1 and 2 by $y$ and $z$ respectively, then at level 3 by $x$ again, and so on. Visually, the splits are planes (red, blue, green) that cut each level into two subcells.
 
 __Figure 5: Euclidean Clustering__
 ![Euclidean Clustering](./img/img5.png)
