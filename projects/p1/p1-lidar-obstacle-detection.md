@@ -278,7 +278,7 @@ By incorporating rotation to precisely align with the shape of the point cloud, 
 
 <table>
   <tr>
-  <td align="center"><b>Figure 6.A</b>: Regular Bounding Boxes Point Cloud overfitting</td>
+  <td align="center"><b>Figure 6.A</b>: Regular Bounding Boxes point cloud overfitting</td>
   <td align="center"><b>Figure 6.B</b>: PCA Bounding Boxes minimal fitting</td>
   <tr>
   </tr>
@@ -298,6 +298,13 @@ My take on Udacity's "PCA Boxes Challenge" is the following:
 2. From each resulting bounding box extract the rotation matrix and, from the latter, the corresponding Euler angles (ZYX) [10];
 3. Leave yaw (Z) unchanged, set pitch (Y) and roll (X) to zero; apply these angles to basic 3D rotation matrices [11] and multiply them (ZYX) to generate a new rotation matrix for the box;
 4. Convert the matrix to quaternion and apply the latter to the minimum bounding box.
+
+#### PCA Boxes Custom Algorithm
+
+1. From Codex Technicanum's implementation, replace `Eigen::SelfAdjointEigenSolver` with `Eigen::JacobiSVD` and find matrix V (and singular values S) instead. I generally found that the sign of the eigenvector components is more consistent in this case, and leads to better results visually when fitting the boxes. Overall, this is the step that improved my solution the most.
+
+2. Custom-sort eigenvectors. Before feeding the eigenvector matrix V to the affine transformation matrix (top-left 3x3 block), implement a custom sorting for your eigenvector columns. For each point cloud cluster, ensure the columns are sorted in descending order, with most significant eigenvector as first column. Note that, especially when some of the object dimensions are negligible (like X or Y for the side pole), sorting eigenvectors columns by corresponding singular value (largest to smallest) might not always lead to correct orientation. What I did was sorting descendingly by the range of point cloud across dimensions X, Y, Z separately. So for example, if the point cloud is visually largest across X, then Z, then Y, I calculated the ranges and sorted eigenvector columns accordingly (0, 2, 1). This procedure still requires manual correction at times, but it's generally more robust.
+
 
 ## Main issues
 
