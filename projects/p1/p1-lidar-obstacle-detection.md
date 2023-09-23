@@ -274,13 +274,27 @@ For regular bounding boxes, the minimum and maximum coordinates across all dimen
 
 #### Minimum Bounding Boxes
 
-By incorporating rotation to precisely align with the shape of the point cloud, minimum bounding boxes [6] solve the issue of overfitting diagonal clusters [Figure 6.B]. One way to fit these boxes, explored in this project, is through Principal Component Analysis (PCA), which aligns the points to the axes of maximum variation. PCA-based bounding boxes are however computationally expensive and might be unstable, rotating and swinging unpredictably based on the detected point cloud shape across frames. 
+By incorporating rotation to precisely align with the shape of the point cloud, minimum bounding boxes [6] solve the issue of overfitting diagonal clusters [Figure 6.B]. One way to fit these boxes, explored in this project, is through Principal Component Analysis (PCA), which aligns the points to their axes of maximum variation. PCA-based bounding boxes are however computationally expensive and might be unstable, rotating unpredictably based on the shape of the detected point cloud across frames.
 
+<table>
+  <tr>
+  <td align="center"><b>Figure 6.A</b>: Regular Bounding Boxes Point Cloud Overfitting</td>
+  <td align="center"><b>Figure 6.B</b>: PCA Bounding Boxes Minimal Fitting</td>
+  <tr>
+  </tr>
+  <tr>
+    <td align="center"><img align="center" src="img/img9a.png" width="475"/></td>
+    <td align="center"><img align="center" src="img/img9b.png" width="475"/></td>
+  </tr>
+</table>
 
+### PCA-Based Bounding Boxes
 
+An implementation of PCA bounding boxes with Point Cloud Library is available at Codex Technicanum [8]. 
 
+which is not feasible 
 
-An algorithm to define MBB with PCL exists at codex technicanum. The problem with this is that it includes pitch, roll, and yaw, but on roads the objects are constrained to lie on the XY plane. However it's not as easy to rotate the boxes.
+An algorithm to define MBB with PCL exists at codex technicanum. The problem with this is that it includes pitch, roll, and yaw, but on roads the objects are constrained to lie on the XY plane. However it's not as easy to rotate the boxes, nor it is possible to include all points in the cloud by simply rotating the previously found box.
 
 - Image of bounding box vs PCA bounding box for diagonal point clouds
 - Image of cross
@@ -312,6 +326,7 @@ An algorithm to define MBB with PCL exists at codex technicanum. The problem wit
 5. https://en.wikipedia.org/wiki/K-d_tree
 6. https://en.wikipedia.org/wiki/Minimum_bounding_box_algorithms
 7. https://en.wikipedia.org/wiki/Principal_component_analysis
-8. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
+8. http://codextechnicanum.blogspot.com/2015/04/find-minimum-oriented-bounding-box-of.html
+9. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
 
 [Home](../../README.md) | Next: 
