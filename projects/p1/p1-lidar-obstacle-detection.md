@@ -306,7 +306,7 @@ flowchart TD
     A[Select next cluster] --> B[Compute centroids and normalized covariance matrix];
     B --> C[Compute singular value decomposition];
     C --> D[Get point cloud ranges across X, Y, Z. Sort singular value descendingly based on range magnitude];
-    D --> E(Is sorted matrix of singular values a valid transformation matrix (determinant = 1)?);
+    D --> E{Is sorted matrix of singular values a valid transformation matrix (determinant = 1)?};
 ```
 
 1. From Codex Technicanum's implementation, replace `Eigen::SelfAdjointEigenSolver` with `Eigen::JacobiSVD` and find matrix V (and singular values S) instead. I generally found that the sign of the eigenvector components is more consistent in this case, and leads to better results visually when fitting the boxes. Overall, this is the step that improved my solution the most.
