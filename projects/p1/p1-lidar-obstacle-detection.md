@@ -290,8 +290,7 @@ By incorporating rotation to precisely align with the shape of the point cloud, 
 
 ### PCA-Based Bounding Boxes
 
-An implementation of PCA bounding boxes with Point Cloud Library is available at Codex Technicanum [8] [9]. That solution, which is applied to sorghum plants and includes rotations along all axes (X: roll, Y: pitch, Z: yaw), cannot be readily adopted since autonomous agents such as self-driving cars and non-holonomic robots are constrained to lie on the XY-plane (so that only rotation along Z is admissible).
-
+An implementation of PCA bounding boxes with Point Cloud Library is available at Codex Technicanum [8] [9]. That solution, applied to sorghum plants, includes rotation along all axes (X: roll, Y: pitch, Z: yaw), so it cannot be readily adopted for non-holonomic robots such as self-driving cars, which are constrained to lie on the XY-plane (with Z-axis rotation being the only admissible one).
 
 An algorithm to define MBB with PCL exists at codex technicanum. The problem with this is that it includes pitch, roll, and yaw, but on roads the objects are constrained to lie on the XY plane. However it's not as easy to rotate the boxes, nor it is possible to include all points in the cloud by simply rotating the previously found box.
 
