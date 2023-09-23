@@ -290,10 +290,14 @@ By incorporating rotation to precisely align with the shape of the point cloud, 
 
 ### PCA-Based Bounding Boxes
 
-An implementation of PCA bounding boxes with Point Cloud Library is available at Codex Technicanum [8] [9]. Because that solution, applied to sorghum plants, includes rotation along all axes (X: roll, Y: pitch, Z: yaw), it cannot be readily applied to non-holonomic robots such as self-driving cars, which are constrained to lie on the XY-plane and only rotate along Z. Proper alignment of the boxes to the road plain is, however, is a surprisingly difficult task.
+An implementation of PCA bounding boxes with Point Cloud Library is available at Codex Technicanum [8] [9]. Because that solution, applied to sorghum plants, includes rotation along all axes (X: roll, Y: pitch, Z: yaw), it cannot be readily applied to non-holonomic robots such as self-driving cars, which are constrained to lie on the XY-plane and only rotate along Z. Proper alignment of the boxes to the road plane is, however, a surprisingly difficult task.
 
+My take on Udacity's "PCA Boxes Challenge" is as follows:
 
-Implement a slight variation of CT solution with more robust retrieval and sorting of the eigenvectors; and extract the Euler angles; reconstruct the object with 0 roll and pitch.
+1. Implement a slight variation of Codex Technicanum's algorithm, with more robust retrieval and sorting of the eigenvectors;
+2. From each resulting bounding box, extract the rotation matrix and, from the latter, the Euler angles (ZYX) [10];
+3. Set pitch (Y) and roll (X) to zero, keep yaw (Z) as it is. Use Axis-Angle to create a new rotation matrix, then quaternion, and apply the latter to the bounding box.
+
 
 - Image of cross
 
@@ -326,6 +330,7 @@ Implement a slight variation of CT solution with more robust retrieval and sorti
 7. https://en.wikipedia.org/wiki/Principal_component_analysis
 8. http://codextechnicanum.blogspot.com/2015/04/find-minimum-oriented-bounding-box-of.html
 9. https://github.com/Frogee/SorghumReconstructionAndPhenotyping/blob/master/boundingBox.h
-10. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
+10. https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
+11. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
 
 [Home](../../README.md) | Next: 
