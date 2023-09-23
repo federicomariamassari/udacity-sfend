@@ -302,7 +302,7 @@ My take on Udacity's "PCA Boxes Challenge" is the following:
 #### PCA Boxes Custom Algorithm
 
 __Figure 7: PCA Boxes Flowchart__
-![PCA Boxes Flowchart](img/img10.png)
+![[PCA Boxes Flowchart|width=300px]](img/img10.png)
 
 1. From Codex Technicanum's implementation, replace `Eigen::SelfAdjointEigenSolver` with `Eigen::JacobiSVD` and find matrix V (and singular values S) instead. I generally found that the sign of the eigenvector components is more consistent in this case, and leads to better results visually when fitting the boxes. Overall, this is the step that improved my solution the most.
 
