@@ -302,7 +302,7 @@ My take on Udacity's "PCA Boxes Challenge" is the following:
 #### PCA Boxes Custom Algorithm
 
 __Figure 7: PCA Boxes Flowchart__
-<div style="text-align: center;">
+<div style="display: flex; justify-content: center;">
   <img align="center" src="img/img10.png" width="425"/>
 </div>
 
