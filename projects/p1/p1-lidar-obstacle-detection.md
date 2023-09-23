@@ -296,8 +296,8 @@ My take on Udacity's "PCA Boxes Challenge" is the following:
 
 1. Implement a slight variation of Codex Technicanum's algorithm, with more robust retrieval and sorting of the eigenvectors;
 2. From each resulting bounding box extract the rotation matrix and, from the latter, the corresponding Euler angles (ZYX) [10];
-3. Leave yaw (Z) unchanged, set pitch (Y) and roll (X) to zero; apply these angles to basic 3D rotation matrices [11] and multiply them (ZYX) to generate the new rotation matrix for the box;
-4. Convert to quaternion and apply to the minimum bounding box.
+3. Leave yaw (Z) unchanged, set pitch (Y) and roll (X) to zero; apply these angles to basic 3D rotation matrices [11] and multiply them (ZYX) to generate a new rotation matrix for the box;
+4. Convert the matrix to quaternion and apply the latter to the minimum bounding box.
 
 ## Main issues
 
