@@ -301,16 +301,8 @@ My take on Udacity's "PCA Boxes Challenge" is the following:
 
 #### PCA Boxes Custom Algorithm
 
-```mermaid
-flowchart TD
-    A[Select next cluster] --> B[Compute centroids and normalized covariance matrix];
-    B --> C[Compute singular value decomposition];
-    C --> D[Get point cloud ranges across X, Y, Z. Sort singular vector columns descendingly based on associated range magnitude];
-    D --> E{Is sorted matrix of singular vectors a valid transformation matrix?};
-    E -- No --> F[Multiply least significant singular vector by -1];
-    E -- Yes --> G[Continue];
-    F --> E;
-```
+__Figure 7: PCA Boxes Flowchart__
+![PCA Boxes Flowchart](img/img10.png)
 
 1. From Codex Technicanum's implementation, replace `Eigen::SelfAdjointEigenSolver` with `Eigen::JacobiSVD` and find matrix V (and singular values S) instead. I generally found that the sign of the eigenvector components is more consistent in this case, and leads to better results visually when fitting the boxes. Overall, this is the step that improved my solution the most.
 
@@ -325,8 +317,8 @@ flowchart TD
 
 <table>
   <tr>
-  <td align="center"><b>Figure 7.A</b>: Regular Bounding Boxes</td>
-  <td align="center"><b>Figure 7.B</b>: PCA Bounding Boxes</td>
+  <td align="center"><b>Figure 8.A</b>: Regular Bounding Boxes</td>
+  <td align="center"><b>Figure 8.B</b>: PCA Bounding Boxes</td>
   <tr>
   </tr>
   <tr>
