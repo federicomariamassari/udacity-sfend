@@ -290,9 +290,8 @@ By incorporating rotation to precisely align with the shape of the point cloud, 
 
 ### PCA-Based Bounding Boxes
 
-An implementation of PCA bounding boxes with Point Cloud Library is available at Codex Technicanum [8]. 
+An implementation of PCA bounding boxes with Point Cloud Library is available at Codex Technicanum [8] [9]. That solution, which is applied to sorghum plants and includes rotations along all axes (X: roll, Y: pitch, Z: yaw), cannot be readily adopted since autonomous agents such as self-driving cars and non-holonomic robots are constrained to lie on the XY-plane (so that only rotation along Z is admissible).
 
-which is not feasible 
 
 An algorithm to define MBB with PCL exists at codex technicanum. The problem with this is that it includes pitch, roll, and yaw, but on roads the objects are constrained to lie on the XY plane. However it's not as easy to rotate the boxes, nor it is possible to include all points in the cloud by simply rotating the previously found box.
 
@@ -327,6 +326,7 @@ An algorithm to define MBB with PCL exists at codex technicanum. The problem wit
 6. https://en.wikipedia.org/wiki/Minimum_bounding_box_algorithms
 7. https://en.wikipedia.org/wiki/Principal_component_analysis
 8. http://codextechnicanum.blogspot.com/2015/04/find-minimum-oriented-bounding-box-of.html
-9. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
+9. https://github.com/Frogee/SorghumReconstructionAndPhenotyping/blob/master/boundingBox.h
+10. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
 
 [Home](../../README.md) | Next: 
