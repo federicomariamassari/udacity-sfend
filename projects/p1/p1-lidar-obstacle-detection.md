@@ -270,13 +270,17 @@ Bounding boxes allow to visualize the boundaries an autonomous agent would encou
 
 #### Regular Bounding Boxes
 
-For regular bounding boxes, the minimum and maximum coordinates across all dimensions (length $x$, width $y$, height $z$) define the vertices of the rectangular prism that will encapsulate the point cloud cluster. These boxes are computationally inexpensive, as only eight points are required to fit the cluster, but if the cloud extends diagonally, the box will unnecessarily include a lot of empty space, with areas actually free to pass through marked as occupied.
+For regular bounding boxes, the minimum and maximum coordinates across all dimensions (length $x$, width $y$, height $z$) define the vertices of the rectangular prism that will encapsulate the point cloud cluster. These boxes are computationally inexpensive, as only eight points are required to fit the cluster, but if the cloud extends diagonally the box will unnecessarily include a lot of empty space, with areas actually free to pass through marked as occupied [Figure 6.A].
 
 #### Minimum Bounding Boxes
 
-An alternative is minimum bounding boxes. A technique to fit these uses Principal Component Analysis (PCA), while other, more advanced techniques such as convex hull [1] are also available but not covered in this project.
+By incorporating rotation to precisely align with the shape of the point cloud, minimum bounding boxes [6] solve the issue of overfitting diagonal clusters [Figure 6.B]. One way to fit these boxes, explored in this project, is through Principal Component Analysis (PCA), which aligns the points to the axes of maximum variation. PCA-based bounding boxes are however computationally expensive and might be unstable, rotating and swinging unpredictably based on the detected point cloud shape across frames. 
 
-PCA boxes solve the problem of excessive fitting of diagonal point clouds, but are computationally expensive and might be unstable, depending on the detected point cloud across frames. PCA boxes also rotate and swing unpredictably, as the only requirement is ?? [2].
+
+
+
+
+An algorithm to define MBB with PCL exists at codex technicanum. The problem with this is that it includes pitch, roll, and yaw, but on roads the objects are constrained to lie on the XY plane. However it's not as easy to rotate the boxes.
 
 - Image of bounding box vs PCA bounding box for diagonal point clouds
 - Image of cross
@@ -289,8 +293,8 @@ PCA boxes solve the problem of excessive fitting of diagonal point clouds, but a
 
 <table>
   <tr>
-  <td align="center"><b>Figure 3.A</b>: Regular Bounding Boxes</td>
-  <td align="center"><b>Figure 3.B</b>: PCA Bounding Boxes</td>
+  <td align="center"><b>Figure 7.A</b>: Regular Bounding Boxes</td>
+  <td align="center"><b>Figure 7.B</b>: PCA Bounding Boxes</td>
   <tr>
   </tr>
   <tr>
@@ -307,6 +311,7 @@ PCA boxes solve the problem of excessive fitting of diagonal point clouds, but a
 4. https://en.wikipedia.org/wiki/K-means_clustering
 5. https://en.wikipedia.org/wiki/K-d_tree
 6. https://en.wikipedia.org/wiki/Minimum_bounding_box_algorithms
-7. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
+7. https://en.wikipedia.org/wiki/Principal_component_analysis
+8. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
 
 [Home](../../README.md) | Next: 
