@@ -278,8 +278,8 @@ By incorporating rotation to precisely align with the shape of the point cloud, 
 
 <table>
   <tr>
-  <td align="center"><b>Figure 6.A</b>: Regular Bounding Boxes Point Cloud Overfitting</td>
-  <td align="center"><b>Figure 6.B</b>: PCA Bounding Boxes Minimal Fitting</td>
+  <td align="center"><b>Figure 6.A</b>: Regular Bounding Boxes Point Cloud overfitting</td>
+  <td align="center"><b>Figure 6.B</b>: PCA Bounding Boxes minimal fitting</td>
   <tr>
   </tr>
   <tr>
@@ -290,11 +290,11 @@ By incorporating rotation to precisely align with the shape of the point cloud, 
 
 ### PCA-Based Bounding Boxes
 
-An implementation of PCA bounding boxes with Point Cloud Library is available at Codex Technicanum [8] [9]. That solution, applied to sorghum plants, includes rotation along all axes (X: roll, Y: pitch, Z: yaw), so it cannot be readily adopted for non-holonomic robots such as self-driving cars, which are constrained to lie on the XY-plane (with Z-axis rotation being the only admissible one).
+An implementation of PCA bounding boxes with Point Cloud Library is available at Codex Technicanum [8] [9]. Because that solution, applied to sorghum plants, includes rotation along all axes (X: roll, Y: pitch, Z: yaw), it cannot be readily applied to non-holonomic robots such as self-driving cars, which are constrained to lie on the XY-plane and only rotate along Z. Proper alignment of the boxes to the road plain is, however, is a surprisingly difficult task.
 
-An algorithm to define MBB with PCL exists at codex technicanum. The problem with this is that it includes pitch, roll, and yaw, but on roads the objects are constrained to lie on the XY plane. However it's not as easy to rotate the boxes, nor it is possible to include all points in the cloud by simply rotating the previously found box.
 
-- Image of bounding box vs PCA bounding box for diagonal point clouds
+Implement a slight variation of CT solution with more robust retrieval and sorting of the eigenvectors; and extract the Euler angles; reconstruct the object with 0 roll and pitch.
+
 - Image of cross
 
 ## Main issues
