@@ -275,7 +275,13 @@ __Figure 7: PCA Boxes Flowchart__
   <img align="center" src="img/img5.png" width="800"/>
 </div>
 
+Here's a detailed explanation:
 
+1. Start by fully implementing Codex Technicanum's solution [9].
+2. From this, replace `Eigen::SelfAdjointEigenSolver` with `Eigen::JacobiSVD` and find the matrix of right-singular vectors $V$ (and the corresponding singular values $S$) instead. Singular Value Decomposition (SVD) [12] is a more robust generalization of the eigendecomposition, and the signs of the singular vectors (which are equivalent to the eigenvectors) are consistent and lead to better results visually when fitting the boxes.
+3. Before feeding the matrix of right-singular vectors $V$ to the 4D affine transformation matrix (top-left $3x3$ block), implement a custom sorting for your eigenvector columns.
+
+A comparison between regular and PCA-based bounding boxes appears in Figure 8.
 
 <table>
   <tr>
@@ -288,9 +294,6 @@ __Figure 7: PCA Boxes Flowchart__
     <td align="center"><img align="center" src="img/mov3b.gif" width="475"/></td>
   </tr>
 </table>
-
-
-
 
 ## Outstanding issues
 
@@ -312,6 +315,7 @@ __Figure 7: PCA Boxes Flowchart__
 9. https://github.com/Frogee/SorghumReconstructionAndPhenotyping/blob/master/boundingBox.h
 10. https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
 11. https://en.wikipedia.org/wiki/Rotation_matrix#Basic_3D_rotations
-12. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
+12. https://en.wikipedia.org/wiki/Singular_value_decomposition
+13. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
 
 [Home](../../README.md) | Next: 
