@@ -23,7 +23,7 @@ __[Link to code](projects/p1/)__ | [Starter Code from Udacity](https://github.co
 
 <table>
   <tr>
-    <td align="center"><img align="center" src="projects/p1/img/img0.png" width="500"/></td>
+    <td align="center"><img align="center" src="projects/p1/img/img2a.png" width="500"/></td>
     <td align="center"><img align="center" src="projects/p1/img/img1.png" width="500"/></td>
   </tr>
 </table>
