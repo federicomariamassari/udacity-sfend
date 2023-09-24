@@ -30,7 +30,7 @@ __[Link to code](projects/p1/)__ | [Starter Code from Udacity](https://github.co
 
 ### How to Build and Run the Project
 
-Clone the repository locally, for example inside `/home/$whoami/workspace` (with `$whoami` the username of the current user). Then build and run the main project as follows. To build and run `quiz` instead, see the project's README file.
+Clone the repository locally, for example inside `/home/$whoami/workspace` (with `$whoami` the username of the current user). Ensure PCL and associated Viewer are [installed correctly](/udacity-sfend/projects/p1/p1-preliminary-configs.md), then build and run the main project as per below commands. To build and run `quiz` instead, see the project's README file.
 
 ```bash
 cd /home/$whoami/workspace/udacity-rsend/projects/p1
