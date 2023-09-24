@@ -282,8 +282,8 @@ __Figure 6: PCA Boxes Flowchart__
 Here's a detailed explanation of the algorithm:
 
 1. Start by fully implementing Codex Technicanum's solution [9].
-2. From this, replace `Eigen::SelfAdjointEigenSolver` with `Eigen::JacobiSVD` and find the matrix of right-singular vectors $V$ (and the corresponding singular values $S$) instead. Singular Value Decomposition (SVD) [12] is a robust generalization of the eigendecomposition, and the singular vectors (equivalent to the eigenvectors) have signs which are more consistent and lead to better results visually when fitting the boxes.
-3. Before feeding $V$ to the 4D affine transformation matrix (top-left $3x3$ block), custom-sort its singular vectors
+2. From this, replace `Eigen::SelfAdjointEigenSolver` with `Eigen::JacobiSVD` and find the matrix of right-singular vectors $V$ (and corresponding singular values $S$) instead. Singular Value Decomposition (SVD) [12] is a robust generalization of eigendecomposition, and the singular vectors (equivalent to the eigenvectors) have signs which are more consistent and lead to better outcome visually when fitting the boxes.
+3. Before feeding $V$ to the 4D affine transformation matrix (top-left $3\times3$ block), custom-sort its singular vectors
 
 A comparison between regular and PCA-based bounding boxes appears in Figure 7.
 
