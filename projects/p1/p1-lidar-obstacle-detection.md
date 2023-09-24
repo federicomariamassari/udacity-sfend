@@ -248,16 +248,16 @@ Bounding boxes allow to visualize the boundaries an autonomous agent would encou
 
 #### Regular Bounding Boxes
 
-For regular bounding boxes, the minimum and maximum coordinates across all dimensions (length $x$, width $y$, height $z$) define the vertices of the rectangular prism that will encapsulate the point cloud cluster. These boxes are computationally inexpensive, as only eight points are required to fit the cluster, but if the cloud extends diagonally the box will unnecessarily include a lot of empty space, with areas actually free to pass through marked as occupied [Figure 6.A].
+For regular bounding boxes, the minimum and maximum coordinates across all dimensions (length $x$, width $y$, height $z$) define the vertices of the rectangular prism that will encapsulate the point cloud cluster. These boxes are computationally inexpensive, as only eight points are required to fit the cluster, but if the cloud extends diagonally the box will unnecessarily include a lot of empty space, with areas actually free to pass through marked as occupied [Figure 5.A].
 
 #### Minimum Bounding Boxes
 
-By incorporating rotation to precisely align with the shape of the point cloud, minimum bounding boxes [6] solve the issue of overfitting diagonal clusters [Figure 6.B]. One way to fit these boxes, explored in this project, is through Principal Component Analysis (PCA), which aligns the points to their axes of maximum variation. PCA-based bounding boxes are however computationally expensive and might be unstable, rotating unpredictably based on the shape of the detected point cloud across frames.
+By incorporating rotation to precisely align with the shape of the point cloud, minimum bounding boxes [6] solve the issue of overfitting diagonal clusters [Figure 5.B]. One way to fit these boxes, explored in this project, is through Principal Component Analysis (PCA), which aligns the points to their axes of maximum variation. PCA-based bounding boxes are however computationally expensive and might be unstable, rotating unpredictably based on the shape of the detected point cloud across frames.
 
 <table>
   <tr>
-  <td align="center"><b>Figure 6.A</b>: Regular Bounding Boxes point cloud overfitting</td>
-  <td align="center"><b>Figure 6.B</b>: PCA Bounding Boxes minimal fitting</td>
+  <td align="center"><b>Figure 5.A</b>: Regular Bounding Boxes point cloud overfitting</td>
+  <td align="center"><b>Figure 5.B</b>: PCA Bounding Boxes minimal fitting</td>
   <tr>
   </tr>
   <tr>
@@ -268,13 +268,16 @@ By incorporating rotation to precisely align with the shape of the point cloud, 
 
 ### PCA-Based Bounding Boxes
 
-An implementation of PCA bounding boxes with Point Cloud Library is available at Codex Technicanum (CT) [8] [9]. Because that solution, applied to sorghum plants, includes rotation along all axes (X: roll, Y: pitch, Z: yaw), it cannot be readily applied to non-holonomic robots such as self-driving cars, which are constrained to lie on the XY-plane and only rotate along Z. Proper alignment of the boxes to the road plane is, however, a surprisingly difficult task. In my take on Udacity's "PCA Boxes Challenge", I slightly vary CT's algorithm to account for more robust retrieval and sorting of the eigenvectors in order to achieve a correct orientation of the bounding boxes. This approach is flowcharted in Figure 7.
+An implementation of PCA bounding boxes with Point Cloud Library is available at Codex Technicanum (CT) [8] [9]. Because that solution, applied to sorghum plants, includes rotation along all axes (X: roll, Y: pitch, Z: yaw), it cannot be readily applied to non-holonomic robots such as self-driving cars, which are constrained to lie on the XY-plane and only rotate along Z. Proper alignment of the boxes to the road plane is, however, a surprisingly difficult task. In my take on Udacity's "PCA Boxes Challenge", I slightly vary CT's algorithm to account for more robust retrieval and sorting of the eigenvectors in order to achieve a correct orientation of the bounding boxes. This approach is flowcharted in Figure 6.
 
-__Figure 7: PCA Boxes Flowchart__
+---
+
+__Figure 6: PCA Boxes Flowchart__
 <div style="display: flex; justify-content: center;">
   <img align="center" src="img/img5.png" width="800"/>
 </div>
 
+---
 
 Here's a detailed explanation of the algorithm:
 
@@ -282,13 +285,12 @@ Here's a detailed explanation of the algorithm:
 2. From this, replace `Eigen::SelfAdjointEigenSolver` with `Eigen::JacobiSVD` and find the matrix of right-singular vectors $V$ (and the corresponding singular values $S$) instead. Singular Value Decomposition (SVD) [12] is a robust generalization of the eigendecomposition, and the singular vectors (equivalent to the eigenvectors) have signs which are more consistent and lead to better results visually when fitting the boxes.
 3. Before feeding $V$ to the 4D affine transformation matrix (top-left $3x3$ block), custom-sort its singular vectors
 
-
-A comparison between regular and PCA-based bounding boxes appears in Figure 8.
+A comparison between regular and PCA-based bounding boxes appears in Figure 7.
 
 <table>
   <tr>
-  <td align="center"><b>Figure 8.A</b>: Regular Bounding Boxes</td>
-  <td align="center"><b>Figure 8.B</b>: PCA Bounding Boxes</td>
+  <td align="center"><b>Figure 7.A</b>: Regular Bounding Boxes</td>
+  <td align="center"><b>Figure 7.B</b>: PCA Bounding Boxes</td>
   <tr>
   </tr>
   <tr>
