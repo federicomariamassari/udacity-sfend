@@ -9,7 +9,7 @@ In autonomous systems, such as robots or self-driving cars, LiDAR (Light Detecti
 In this initial project, I filter, segment, and cluster point clouds from LiDAR scans to detect incoming vehicles and obstacles within a driving lane. For each frame, I first reduce the density of the cloud using voxel grid and region of interest (ROI) techniques, which help simplify the data and keep only the most relevant information. I then separate the road plane from the obstacles using RANSAC, and get a clearer view of the environment. Next, I group together points that belong to the same objects via Euclidean clustering and KD-Trees. And finally, I encapsulate the clusters within both regular and PCA (Principal Component Analysis) bounding boxes, to get a visual representation of the detected items [Figure 1].
 
 __Figure 1: PCA-Boxes-Enclosed Cluster Obstacles__
-!['LiDAR Obstacle Detection' Animated GIF](img/mov3.gif)
+!['LiDAR Obstacle Detection' Animated GIF](img/mov2.gif)
 
 The project analyses driving scenes of increasing complexity:
 
@@ -224,45 +224,23 @@ A comparison between unfiltered and filtered clouds is shown in Figure 3.
 
 ### RANSAC
 
-RANSAC (RANdom SAmple Consensus) [2], an iterative outlier detection method, is now used to distinguish between road and obstacles in the filtered point cloud. The maximum number of iterations is kept at 50 for all scenarios. For each iteration, three points $p_1 = (x_1, y_1, z_1)$, $p_2 = (x_2, y_2, z_2)$, $p_3 = (x_3, y_3, z_3)$ are randomly selected from the cloud, and a plane fit to them via the following equations [3]:
-
-General form of the equation of a plane:
-
-$$
-Ax + By + Cz + D = 0
-$$
-
-Coefficients $A$, $B$, $C$, $D$ (obtained via cross-product):
-
-```math
-\begin{align*}
-&A = (y_2 - y_1)(z_3 - z_1) - (z_2 - z_1)(y_3 - y_1) \\
-\\
-&B = (z_2 - z_1)(x_3 - x_1) - (x_2 - x_1)(z_3 - z_1) \\
-\\
-&C = (x_2 - x_1)(y_3 - y_1) - (y_2 - y_1)(x_3 - x_1) \\
-\\
-&D = -(Ax_1 + By_1 + Cz_1)
-\end{align*}
-```
-
-A point is then labelled as "outlier" if its distance to the plane:
-
-$$
-distance = \frac{|Ax + By + Cz + D|}{\sqrt{A^2 + B^2 + C^2}}
-$$
-
-is greater than the specified threshold (e.g., 15 cm in "City Block"). The iteration with the largest number of inliers to the plane is selected as the road, while all outliers are marked as obstacles [Figure 4].
-
-__Figure 4: RANSAC__
-![RANSAC](./img/img4.png)
+RANSAC (RANdom SAmple Consensus) [2], an iterative outlier detection method, is now used to distinguish between road and obstacles in the filtered point cloud. The maximum number of iterations is kept at 50 for all scenarios. For each iteration, three points are randomly selected from the cloud, and a plane fit to them [3]. A point is then labelled as "outlier" if its distance to the plane is greater than the specified threshold (15 cm in "City Block"). The iteration with the largest number of inliers to the plane is selected as the road, while all outliers are marked as obstacles [Figure 4.A].
 
 ### Euclidean Clustering
 
-To discriminate among objects, points are then grouped together based on proximity using Euclidean clustering [4]. The nearest neighbor search is optimized via $k$-dimensional trees [5], a data structure that splits points hierarchically based on a different dimension at each level: at root by $x$, at levels 1 and 2 by $y$ and $z$ respectively, then at level 3 by $x$ again, and so on. Visually, the splits are planes (red, blue, green), each cutting their corresponding levels into two equal parts. Time complexity is greatly reduced with KD-Trees, because Euclidean distances for points that are not in a close-enough region to the target are not computed. The outcome of clustering appears in Figure 5.
+To discriminate among objects, points are then grouped together based on proximity using Euclidean clustering [4]. The nearest neighbor search is optimized via $k$-dimensional trees [5], a data structure that splits points hierarchically based on a different dimension at each level: at root by $x$, at levels 1 and 2 by $y$ and $z$ respectively, then at level 3 by $x$ again, and so on. Visually, the splits are planes (red, blue, green), each cutting their corresponding levels into two equal parts. Time complexity is greatly reduced with KD-Trees, because Euclidean distances for points that are not in a close-enough region to the target are not computed. The outcome of clustering appears in Figure 4.B.
 
-__Figure 5: Euclidean Clustering__
-![Euclidean Clustering](./img/img5.png)
+<table>
+  <tr>
+  <td align="center"><b>Figure 4.A</b>: RANSAC</td>
+  <td align="center"><b>Figure 4.B</b>: Euclidean Clustering</td>
+  <tr>
+  </tr>
+  <tr>
+    <td align="center"><img align="center" src="img/img3a.png" width="475"/></td>
+    <td align="center"><img align="center" src="img/img3b.png" width="475"/></td>
+  </tr>
+</table>
 
 ### Bounding Boxes
 
@@ -283,37 +261,21 @@ By incorporating rotation to precisely align with the shape of the point cloud, 
   <tr>
   </tr>
   <tr>
-    <td align="center"><img align="center" src="img/img9a.png" width="475"/></td>
-    <td align="center"><img align="center" src="img/img9b.png" width="475"/></td>
+    <td align="center"><img align="center" src="img/img4a.png" width="475"/></td>
+    <td align="center"><img align="center" src="img/img4b.png" width="475"/></td>
   </tr>
 </table>
 
 ### PCA-Based Bounding Boxes
 
-An implementation of PCA bounding boxes with Point Cloud Library is available at Codex Technicanum (CT) [8] [9]. Because that solution, applied to sorghum plants, includes rotation along all axes (X: roll, Y: pitch, Z: yaw), it cannot be readily applied to non-holonomic robots such as self-driving cars, which are constrained to lie on the XY-plane and only rotate along Z. Proper alignment of the boxes to the road plane is, however, a surprisingly difficult task. In my take on Udacity's "PCA Boxes Challenge", I slightly vary CT's algorithm to account for more robust retrieval and sorting of the eigenvectors in order to achieve a correct orientation of the bounding boxes. The complete program is flowcharted in Figure 7.
+An implementation of PCA bounding boxes with Point Cloud Library is available at Codex Technicanum (CT) [8] [9]. Because that solution, applied to sorghum plants, includes rotation along all axes (X: roll, Y: pitch, Z: yaw), it cannot be readily applied to non-holonomic robots such as self-driving cars, which are constrained to lie on the XY-plane and only rotate along Z. Proper alignment of the boxes to the road plane is, however, a surprisingly difficult task. In my take on Udacity's "PCA Boxes Challenge", I slightly vary CT's algorithm to account for more robust retrieval and sorting of the eigenvectors in order to achieve a correct orientation of the bounding boxes. This approach is flowcharted in Figure 7.
 
 __Figure 7: PCA Boxes Flowchart__
 <div style="display: flex; justify-content: center;">
-  <img align="center" src="img/img10a.png" width="800"/>
+  <img align="center" src="img/img5.png" width="800"/>
 </div>
 
-My take on Udacity's "PCA Boxes Challenge" is the following:
 
-1. Implement a slight variation of Codex Technicanum's algorithm, with more robust retrieval and sorting of the eigenvectors;
-2. From each resulting bounding box extract the rotation matrix and, from the latter, the corresponding Euler angles (ZYX) [10];
-3. Leave yaw (Z) unchanged, set pitch (Y) and roll (X) to zero; apply these angles to basic 3D rotation matrices [11] and multiply them (ZYX) to generate a new rotation matrix for the box;
-4. Convert the matrix to quaternion and apply the latter to the minimum bounding box.
-
-1. From Codex Technicanum's implementation, replace `Eigen::SelfAdjointEigenSolver` with `Eigen::JacobiSVD` and find matrix V (and singular values S) instead. I generally found that the sign of the eigenvector components is more consistent in this case, and leads to better results visually when fitting the boxes. Overall, this is the step that improved my solution the most.
-
-2. Custom-sort eigenvectors. Before feeding the eigenvector matrix V to the affine transformation matrix (top-left 3x3 block), implement a custom sorting for your eigenvector columns. For each point cloud cluster, ensure the columns are sorted in descending order, with most significant eigenvector as first column. Note that, especially when some of the object dimensions are negligible (like X or Y for the side pole), sorting eigenvectors columns by corresponding singular value (largest to smallest) might not always lead to correct orientation. What I did was sorting descendingly by the range of point cloud across dimensions X, Y, Z separately. So for example, if the point cloud is visually largest across X, then Z, then Y, I calculated the ranges and sorted eigenvector columns accordingly (0, 2, 1). This procedure still requires manual correction at times, but it's generally more robust.
-
-
-## Main issues
-
-- Calibration of parameters: RANSAC inliers threshold, Euclidean clustering point-proximity tolerance level, minimum number of points in a cluster (minimum number of points to detect the poles on the road, but also detect spurious clusters which are instead part of another larger cloud).
-- Using PCA boxes in point 2, non-linear helps, but it is not enough especially because, due to the high variability of points in the point cloud clusters, the principal axes are not always correctly aligned, so additional corrective steps are needed.
-- Ego car: Instead of extracting the point cloud associated to ego car at each frame, to avoid flickering and reduce computational burden, the very first frame is analysed and the location kept constant for all subsequent stills.
 
 <table>
   <tr>
@@ -322,10 +284,20 @@ My take on Udacity's "PCA Boxes Challenge" is the following:
   <tr>
   </tr>
   <tr>
-    <td align="center"><img align="center" src="./img/mov2a.gif" width="475"/></td>
-    <td align="center"><img align="center" src="./img/mov2b.gif" width="475"/></td>
+    <td align="center"><img align="center" src="img/mov3a.gif" width="475"/></td>
+    <td align="center"><img align="center" src="img/mov3b.gif" width="475"/></td>
   </tr>
 </table>
+
+
+
+
+## Outstanding issues
+
+- Calibration of parameters: RANSAC inliers threshold, Euclidean clustering point-proximity tolerance level, minimum number of points in a cluster (minimum number of points to detect the poles on the road, but also detect spurious clusters which are instead part of another larger cloud).
+- Using PCA boxes in point 2, non-linear helps, but it is not enough especially because, due to the high variability of points in the point cloud clusters, the principal axes are not always correctly aligned, so additional corrective steps are needed.
+- Ego car: Instead of extracting the point cloud associated to ego car at each frame, to avoid flickering and reduce computational burden, the very first frame is analysed and the location kept constant for all subsequent stills.
+
 
 ## Resources
 
