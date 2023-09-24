@@ -290,7 +290,12 @@ By incorporating rotation to precisely align with the shape of the point cloud, 
 
 ### PCA-Based Bounding Boxes
 
-An implementation of PCA bounding boxes with Point Cloud Library is available at Codex Technicanum [8] [9]. Because that solution, applied to sorghum plants, includes rotation along all axes (X: roll, Y: pitch, Z: yaw), it cannot be readily applied to non-holonomic robots such as self-driving cars, which are constrained to lie on the XY-plane and only rotate along Z. Proper alignment of the boxes to the road plane is, however, a surprisingly difficult task.
+An implementation of PCA bounding boxes with Point Cloud Library is available at Codex Technicanum (CT) [8] [9]. Because that solution, applied to sorghum plants, includes rotation along all axes (X: roll, Y: pitch, Z: yaw), it cannot be readily applied to non-holonomic robots such as self-driving cars, which are constrained to lie on the XY-plane and only rotate along Z. Proper alignment of the boxes to the road plane is, however, a surprisingly difficult task. In my take on Udacity's "PCA Boxes Challenge", I slightly vary CT's algorithm to account for more robust retrieval and sorting of the eigenvectors, which allow for a correct orientation of the bounding boxes.
+
+__Figure 7: PCA Boxes Flowchart__
+<div style="display: flex; justify-content: center;">
+  <img align="center" src="img/img10a.png" width="800"/>
+</div>
 
 My take on Udacity's "PCA Boxes Challenge" is the following:
 
@@ -298,13 +303,6 @@ My take on Udacity's "PCA Boxes Challenge" is the following:
 2. From each resulting bounding box extract the rotation matrix and, from the latter, the corresponding Euler angles (ZYX) [10];
 3. Leave yaw (Z) unchanged, set pitch (Y) and roll (X) to zero; apply these angles to basic 3D rotation matrices [11] and multiply them (ZYX) to generate a new rotation matrix for the box;
 4. Convert the matrix to quaternion and apply the latter to the minimum bounding box.
-
-#### PCA Boxes Custom Algorithm
-
-__Figure 7: PCA Boxes Flowchart__
-<div style="display: flex; justify-content: center;">
-  <img align="center" src="img/img10a.png" width="800"/>
-</div>
 
 1. From Codex Technicanum's implementation, replace `Eigen::SelfAdjointEigenSolver` with `Eigen::JacobiSVD` and find matrix V (and singular values S) instead. I generally found that the sign of the eigenvector components is more consistent in this case, and leads to better results visually when fitting the boxes. Overall, this is the step that improved my solution the most.
 
