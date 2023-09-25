@@ -268,7 +268,7 @@ By incorporating rotation to precisely align with the shape of the point cloud, 
 
 ### PCA-Based Bounding Boxes
 
-An implementation of PCA bounding boxes with Point Cloud Library is available at Codex Technicanum (CT) [8] [9]. Because that solution, applied to sorghum plants, includes rotation along all axes (X: roll, Y: pitch, Z: yaw), it cannot be readily applied to non-holonomic robots such as self-driving cars, which are constrained to lie on the XY-plane and only rotate along Z. Proper alignment of the boxes to the road plane is, however, a surprisingly difficult task. In my take on Udacity's "PCA Boxes Challenge", I slightly vary CT's algorithm to account for more robust retrieval and sorting of the eigenvectors in order to achieve a correct orientation of the bounding boxes. This approach is flowcharted in Figure 6.
+An implementation of PCA bounding boxes with Point Cloud Library is available at Codex Technicanum (CT) [8] [9]. Because that solution, applied to sorghum plants, includes rotation along all axes (X: roll, Y: pitch, Z: yaw), it cannot be readily applied to non-holonomic robots such as self-driving cars, which are constrained to lie on the XY-plane and only rotate along Z. Proper alignment of the boxes to the road plane is, however, a surprisingly difficult task. In my take on Udacity's "PCA Boxes Challenge", I slightly vary CT's algorithm to account for more robust retrieval and sorting of the orthogonal vectors in order to achieve a correct orientation of the bounding boxes. This approach is flowcharted in Figure 6.
 
 ---
 
