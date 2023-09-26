@@ -283,7 +283,7 @@ Here's a detailed explanation of the algorithm:
 
 1. Start by fully implementing Codex Technicanum's solution [9].
 2. From this, replace `Eigen::SelfAdjointEigenSolver` with `Eigen::JacobiSVD` and find the matrix of right-singular vectors $V$ (and corresponding singular values $S$) instead. Singular Value Decomposition (SVD) [12] is a robust generalization of eigendecomposition, and the singular vectors (equivalent to the eigenvectors) have signs which are more consistent and lead to better outcome visually when fitting the boxes.
-3. Before feeding $V$ to the 4D affine transformation matrix (top-left $3\times3$ block), custom-sort its singular vectors
+3. Before feeding $V$ to the 4D affine transformation matrix (top-left $3\times3$ block), custom-sort its singular vector columns as follows: associate the first column of $V$ to dimension $x$ of the point cloud cluster, the second one to $y$, and the last one to $z$. Then, rank the dimensions of the clusters in descending order based on point ranges, and sort the columns of $V$ accordingly: for instance, if the point cloud is visually largest across $x$, then $z$, then $y$, arrange the columns as (0, 2, 1). The reason is that the point clouds in City Block largely vary in shape and direction: some are big, rectangular prisms with main axis X (the cars), while others are almost uni-dimensional, vertical objects spreading along main axis Z (the side pole).
 
 A comparison between regular and PCA-based bounding boxes appears in Figure 7.
 
