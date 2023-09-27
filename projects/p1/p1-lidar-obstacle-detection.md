@@ -323,6 +323,8 @@ A comparison between regular and PCA-based bounding boxes appears in Figure 7.
 - Using PCA boxes in point 2, non-linear helps, but it is not enough especially because, due to the high variability of points in the point cloud clusters, the principal axes are not always correctly aligned, so additional corrective steps are needed.
 - Ego car: Instead of extracting the point cloud associated to ego car at each frame, to avoid flickering and reduce computational burden, the very first frame is analysed and the location kept constant for all subsequent stills.
 
+__Figure 8: Wrongly-Oriented Bounding Box__
+![](img/img6.png)
 
 ## Resources
 
