@@ -301,7 +301,7 @@ Once the bounding boxes are fitted to the clusters, they can be flattened. From 
 
 #### Reconstruct the Original Object Flattened
 
-Set roll (X) and pitch (Y) to zero, keep yaw (Z) as it was extracted. Feed the angles into basic 3D rotation matrices [12] and multiply them in a ZYX fashion to obtain a new rotation matrix for the box, aligned on the XY-plane. Finally, convert the rotation matrix into a new quaternion and pass it to the box.
+Set roll (X) and pitch (Y) to zero, keep yaw (Z) as it was extracted. Feed the angles into basic 3D rotation matrices [12] and multiply them in a ZYX fashion to obtain a new rotation matrix for the box, aligned to the XY-plane. Finally, convert the rotation matrix into a new quaternion and pass it to the box.
 
 A comparison between regular and PCA-based bounding boxes appears in Figure 7.
 
