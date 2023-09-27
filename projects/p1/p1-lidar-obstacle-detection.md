@@ -285,19 +285,23 @@ Start by fully implementing Codex Technicanum's solution [9].
 
 #### Singular Value Decomposition
 
-From this algorithm, replace `Eigen::SelfAdjointEigenSolver` with `Eigen::JacobiSVD` and find the matrix of right-singular vectors $V$ (and corresponding singular values $S$) instead. Singular Value Decomposition (SVD) [12] is a robust generalization of eigendecomposition, and the singular vectors (equivalent to the eigenvectors) have signs which are more consistent and lead to better outcome visually when fitting the boxes.
+From this algorithm, replace `Eigen::SelfAdjointEigenSolver` with `Eigen::JacobiSVD` and find the matrix of right-singular vectors $V$ (and corresponding singular values $S$) instead. Singular Value Decomposition (SVD) [10] is a robust generalization of eigendecomposition, and the singular vectors (equivalent to the eigenvectors) have signs which are more consistent and lead to better outcome visually when fitting the boxes.
 
 #### Custom-Sort Singular Values
 
-Before feeding $V$ to the 4D affine transformation matrix (top-left $3\times3$ block), sort in place its singular vector columns as follows: associate the first column of $V$ to dimension $x$ of the point cloud cluster, the second one to $y$, and the last one to $z$. Then, rank the dimensions of the clusters in descending order based on point ranges, and sort the singular vectors accordingly: for instance, if the point cloud is visually largest across $x$, then $z$, then $y$, arrange the columns as (0, 2, 1). This step is important because the point clouds in City Block largely vary in shape and direction: some are big, rectangular prisms with main axis $x$ (the cars), while others are almost uni-dimensional, vertical objects spreading along main axis $z$ (the side pole). When transposed to enter the 4D affine transformation matrix, the top row of $V$ would correspond to the most significant singular value, which is exactly what we want.
+Before feeding $V$ to the 4D affine transformation matrix (top-left $3\times3$ block), sort in place its singular vector columns as follows: associate the first column of $V$ to dimension $x$ of the point cloud cluster, the second one to $y$, and the last one to $z$. Then, rank the dimensions of the clusters in descending order based on point ranges, and sort the singular vectors accordingly: for instance, if the point cloud is visually largest across $x$, then $z$, then $y$, arrange the columns as (0, 2, 1). This step is important because the point clouds in City Block largely vary in shape and direction: some are big, rectangular prisms with main axis $x$ (the cars), while others are almost uni-dimensional, vertical objects spreading along main axis $z$ (the side pole). When transposed to enter the 4D affine transformation matrix, the top row of $V$ would map to the most significant singular value, which is exactly what we want.
 
 #### Ensure Validity of the Rotation Matrix
 
 Once the singular vectors are sorted, ensure $V$ is still a valid rotation matrix. Among the other properties, it must satisfy $A \times A^T = I(3)$ and $\det(A) = 1$. I found that the former is generally preserved, but the latter is not, leading to a reflection matrix ($\det(A) = -1$). If this is the case, multiply the components of the least significant singular vector (which is not always the one associated with $z$) by $-1$. The line in CT's solution in which column 0 is crossed with column 1 to obtain column 2 can also be safely removed.
 
-#### Get Rotation Matrix and Euler Angles
+#### Get Rotation Matrix and Euler Angles from Quaternion
 
-At this point, the resulting bounding boxes can now be flattened.
+Once the bounding boxes are fitted to the clusters, they can be flattened. From the quaternion extract the rotation matrix and, from the latter, the Euler angles [11]. How these are retrieved is important: ZYX is not the same as XYZ. In this project, I chose ZYX.
+
+#### Reconstruct the Original Object Flattened
+
+Set roll (X) and pitch (Y) to zero, keep yaw (Z) as it was extracted. Feed the angles into basic 3D rotation matrices [12] and multiply them in a ZYX fashion to obtain a new rotation matrix for the box, aligned on the XY-plane. Finally, convert the rotation matrix into a new quaternion and pass it to the box.
 
 A comparison between regular and PCA-based bounding boxes appears in Figure 7.
 
@@ -331,9 +335,9 @@ A comparison between regular and PCA-based bounding boxes appears in Figure 7.
 7. https://en.wikipedia.org/wiki/Principal_component_analysis
 8. http://codextechnicanum.blogspot.com/2015/04/find-minimum-oriented-bounding-box-of.html
 9. https://github.com/Frogee/SorghumReconstructionAndPhenotyping/blob/master/boundingBox.h
-10. https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
-11. https://en.wikipedia.org/wiki/Rotation_matrix#Basic_3D_rotations
-12. https://en.wikipedia.org/wiki/Singular_value_decomposition
+10. https://en.wikipedia.org/wiki/Singular_value_decomposition
+11. https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
+12. https://en.wikipedia.org/wiki/Rotation_matrix#Basic_3D_rotations
 13. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
 
 [Home](../../README.md) | Next: 
