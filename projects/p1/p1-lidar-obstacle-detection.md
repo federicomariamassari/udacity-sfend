@@ -268,7 +268,7 @@ By incorporating rotation to precisely align with the shape of the point cloud, 
 
 ### PCA-Based Bounding Boxes
 
-An implementation of PCA bounding boxes with Point Cloud Library is available at Codex Technicanum (CT) [8] [9]. Because that solution, applied to sorghum plants, includes rotation along all axes (X: roll, Y: pitch, Z: yaw), it cannot be readily applied to non-holonomic robots such as self-driving cars, which are constrained to lie on the XY-plane and only rotate along Z. Proper alignment of the boxes to the road plane is, however, a surprisingly difficult task. In my take on Udacity's "PCA Boxes Challenge", I slightly vary CT's algorithm to account for more robust retrieval and sorting of the orthogonal vectors in order to achieve a correct orientation of the bounding boxes. This approach is flowcharted in Figure 6.
+An implementation of PCA bounding boxes with Point Cloud Library is available at Codex Technicanum (CT) [8] [9]. Because that solution, applied to sorghum plants, includes rotation along all axes (X: roll, Y: pitch, Z: yaw), it cannot be readily applied to non-holonomic robots such as self-driving cars, which are constrained to lie on the XY-plane and only rotate along Z. Proper alignment of the boxes to the road plane is, however, a surprisingly difficult task. In my take on Udacity's "PCA Boxes Challenge", I slightly vary CT's algorithm to account for more robust retrieval and sorting of the orthogonal vectors in order to achieve a correct orientation of the bounding boxes. This approach is flowcharted in Figure 6. A detailed explanation of the algorithm will follow.
 
 ---
 
@@ -279,12 +279,22 @@ __Figure 6: PCA Boxes Flowchart__
 
 ---
 
-Here's a detailed explanation of the algorithm:
+#### Fully implement Codex Technicanum's solution
 
-1. Start by fully implementing Codex Technicanum's solution [9].
-2. From this, replace `Eigen::SelfAdjointEigenSolver` with `Eigen::JacobiSVD` and find the matrix of right-singular vectors $V$ (and corresponding singular values $S$) instead. Singular Value Decomposition (SVD) [12] is a robust generalization of eigendecomposition, and the singular vectors (equivalent to the eigenvectors) have signs which are more consistent and lead to better outcome visually when fitting the boxes.
+Start by fully implementing Codex Technicanum's solution [9].
+
+#### Perform Singular Value Decomposition
+
+From this, replace `Eigen::SelfAdjointEigenSolver` with `Eigen::JacobiSVD` and find the matrix of right-singular vectors $V$ (and corresponding singular values $S$) instead. Singular Value Decomposition (SVD) [12] is a robust generalization of eigendecomposition, and the singular vectors (equivalent to the eigenvectors) have signs which are more consistent and lead to better outcome visually when fitting the boxes.
+
+#### Custom-sort singular values based on ranges
+
 3. Before feeding $V$ to the 4D affine transformation matrix (top-left $3\times3$ block), sort in place its singular vector columns as follows: associate the first column of $V$ to dimension $x$ of the point cloud cluster, the second one to $y$, and the last one to $z$. Then, rank the dimensions of the clusters in descending order based on point ranges, and sort the singular vectors accordingly: for instance, if the point cloud is visually largest across $x$, then $z$, then $y$, arrange the columns as (0, 2, 1). This step is important because the point clouds in City Block largely vary in shape and direction: some are big, rectangular prisms with main axis $x$ (the cars), while others are almost uni-dimensional, vertical objects spreading along main axis $z$ (the side pole). When transposed to enter the 4D affine transformation matrix, the top row of $V$ would correspond to the most significant singular value, which is exactly what we want.
-4. Once the singular vectors are sorted, ensure $V$ is still a valid rotation matrix. Among the other properties, it must satisfy $A \times A^T = I(3)$ and $\det(A) = 1$. I found that the former is generally preserved, but the latter is not, leading to a reflection matrix ($\det(A) = -1$). If this is the case, multiply the components of the least significant singular vector (which is not always the one associated to $z$) by $-1$. The line in CT's solution in which column 0 is crossed with column 1 to obtain column 2 can also be safely removed.
+
+### Ensure validity of the rotation matrix
+
+Once the singular vectors are sorted, ensure $V$ is still a valid rotation matrix. Among the other properties, it must satisfy $A \times A^T = I(3)$ and $\det(A) = 1$. I found that the former is generally preserved, but the latter is not, leading to a reflection matrix ($\det(A) = -1$). If this is the case, multiply the components of the least significant singular vector (which is not always the one associated with $z$) by $-1$. The line in CT's solution in which column 0 is crossed with column 1 to obtain column 2 can also be safely removed.
+5. At this point, the resulting bounding boxes can now be flattened.
 
 A comparison between regular and PCA-based bounding boxes appears in Figure 7.
 
