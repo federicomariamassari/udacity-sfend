@@ -35,7 +35,7 @@ sudo ln /usr/bin/python3 /usr/bin/pvtk
 
 ### Disable GPU acceleration from UTM's VM settings
 
-Some `pcl::visualization` rendering properties such as `PCL_VISUALIZER_POINT_SIZE` or `PCL_VISUALIZER_LINE_LENGTH` are not compatible with UTM's default emulated display card (Apple Silicon: `virtio-ramfb-gl`). For these, specifying an integer value greater than 1 has no effect, so point clouds and other geometries are practically invisible when rendered with PCL Viewer. To remove the incompatibility, disable GPU acceleration from UTM's Virtual Machine settings in "Display" → "Emulated Display Card". Most cards whose name does not contain `-gl` work, but `virtio-ramfb` is recommended for M1+ Macintosh [3].
+Some `pcl::visualization` rendering properties such as `PCL_VISUALIZER_POINT_SIZE` or `PCL_VISUALIZER_LINE_LENGTH` are not compatible with UTM's default emulated display card (Apple Silicon: `virtio-ramfb-gl`). For these, specifying an integer value greater than 1 has no effect, so point clouds and other geometries are practically invisible when rendered with PCL Viewer. To remove the incompatibility, disable GPU acceleration from UTM's Virtual Machine settings in "Display" → "Emulated Display Card". Most cards whose name does not contain `-gl` work, but `virtio-ramfb` is recommended for M1+ Macintosh computers [3].
 
 ## Outstanding Issues
 
