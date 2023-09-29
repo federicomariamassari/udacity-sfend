@@ -4,7 +4,7 @@
 
 ## Overview
 
-In autonomous systems, such as robots or self-driving cars, LiDAR (Light Detection And Ranging) is commonly used as a way to accurately measure distances and create detailed three-dimensional maps of the surrounding environment. LiDAR targets surfaces with laser beams (photon pulses of a few nanoseconds) and measures the time it takes for the beams to bounce back; when surfaces are hit, Point Cloud Data (PCD) are generated.
+In autonomous systems such as robots or self-driving cars, LiDAR (Light Detection And Ranging) is commonly used as a way to accurately measure distances and create detailed three-dimensional maps of the surrounding environment. LiDAR targets surfaces with laser beams (photon pulses of a few nanoseconds) and measures the time it takes for the beams to bounce back; when surfaces are hit, Point Cloud Data (PCD) are generated.
 
 In this initial project, I filter, segment, and cluster point clouds from LiDAR scans to detect incoming vehicles and obstacles within a driving lane. For each frame, I first reduce the density of the cloud using voxel grid and region of interest (ROI) techniques, which help simplify the data and keep only the most relevant information. I then separate the road plane from the obstacles using RANSAC, and get a clearer view of the environment. Next, I group together points that belong to the same objects via Euclidean clustering and KD-Trees. And finally, I encapsulate the clusters within both regular and PCA (Principal Component Analysis) bounding boxes, to get a visual representation of the detected items [Figure 1].
 
@@ -317,13 +317,17 @@ A comparison between regular and PCA-based bounding boxes appears in Figure 7.
   </tr>
 </table>
 
-## Outstanding issues
+## Outstanding Issues
+
+### Wrongly-Oriented PCA Bounding Boxes
+
+The current implementation of PCA bounding boxes is not
 
 - Calibration of parameters: RANSAC inliers threshold, Euclidean clustering point-proximity tolerance level, minimum number of points in a cluster (minimum number of points to detect the poles on the road, but also detect spurious clusters which are instead part of another larger cloud).
 - Using PCA boxes in point 2, non-linear helps, but it is not enough especially because, due to the high variability of points in the point cloud clusters, the principal axes are not always correctly aligned, so additional corrective steps are needed.
 - Ego car: Instead of extracting the point cloud associated to ego car at each frame, to avoid flickering and reduce computational burden, the very first frame is analysed and the location kept constant for all subsequent stills.
 
-__Figure 8: Wrongly-Oriented Bounding Box__
+__Figure 8: Wrongly-Oriented LHS Bounding Box (Tracking a Cyclist)__
 ![](img/img6.png)
 
 ## Resources
