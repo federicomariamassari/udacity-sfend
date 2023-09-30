@@ -320,16 +320,16 @@ A comparison between regular and PCA-based bounding boxes appears in Figure 7.
 ## Resources
 
 1. https://knowledge.udacity.com/questions/609855
-2. https://en.wikipedia.org/wiki/Random_sample_consensus
-3. https://en.wikipedia.org/wiki/Euclidean_planes_in_three-dimensional_space
-4. https://en.wikipedia.org/wiki/K-means_clustering
-5. https://en.wikipedia.org/wiki/K-d_tree
-6. https://en.wikipedia.org/wiki/Minimum_bounding_box_algorithms
-7. https://en.wikipedia.org/wiki/Principal_component_analysis
+2. [Wikipedia: Random sample consensus](https://en.wikipedia.org/wiki/Random_sample_consensus)
+3. [Wikipedia: Euclidean planes in three-dimensional space](https://en.wikipedia.org/wiki/Euclidean_planes_in_three-dimensional_space)
+4. [Wikipedia: K-means clustering](https://en.wikipedia.org/wiki/K-means_clustering)
+5. [Wikipedia: K-dtree](https://en.wikipedia.org/wiki/K-d_tree)
+6. [Wikipedia: Minimum bounding box algorithms](https://en.wikipedia.org/wiki/Minimum_bounding_box_algorithms)
+7. [Wikipedia: Principal component analysis](https://en.wikipedia.org/wiki/Principal_component_analysis)
 8. http://codextechnicanum.blogspot.com/2015/04/find-minimum-oriented-bounding-box-of.html
 9. https://github.com/Frogee/SorghumReconstructionAndPhenotyping/blob/master/boundingBox.h
-10. https://en.wikipedia.org/wiki/Singular_value_decomposition
-11. https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
-12. https://en.wikipedia.org/wiki/Rotation_matrix#Basic_3D_rotations
+10. [Wikipedia: Singular value decomposition](https://en.wikipedia.org/wiki/Singular_value_decomposition)
+11. [Wikipedia: Conversion between quaternions and Euler angles](https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles)
+12. [Wikipedia: Singular value decomposition](https://en.wikipedia.org/wiki/Rotation_matrix#Basic_3D_rotations)
 
 [Home](../../README.md) | Next: 
