@@ -330,6 +330,6 @@ A comparison between regular and PCA-based bounding boxes appears in Figure 7.
 9. https://github.com/Frogee/SorghumReconstructionAndPhenotyping/blob/master/boundingBox.h
 10. [Wikipedia: Singular value decomposition](https://en.wikipedia.org/wiki/Singular_value_decomposition)
 11. [Wikipedia: Conversion between quaternions and Euler angles](https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles)
-12. [Wikipedia: Singular value decomposition](https://en.wikipedia.org/wiki/Rotation_matrix#Basic_3D_rotations)
+12. [Wikipedia: Basic 3D rotations](https://en.wikipedia.org/wiki/Rotation_matrix#Basic_3D_rotations)
 
 [Home](../../README.md) | Next: 
