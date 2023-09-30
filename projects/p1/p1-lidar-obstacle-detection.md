@@ -317,19 +317,6 @@ A comparison between regular and PCA-based bounding boxes appears in Figure 7.
   </tr>
 </table>
 
-## Outstanding Issues
-
-### Wrongly-Oriented PCA Bounding Boxes
-
-The current implementation of PCA bounding boxes is not
-
-- Calibration of parameters: RANSAC inliers threshold, Euclidean clustering point-proximity tolerance level, minimum number of points in a cluster (minimum number of points to detect the poles on the road, but also detect spurious clusters which are instead part of another larger cloud).
-- Using PCA boxes in point 2, non-linear helps, but it is not enough especially because, due to the high variability of points in the point cloud clusters, the principal axes are not always correctly aligned, so additional corrective steps are needed.
-- Ego car: Instead of extracting the point cloud associated to ego car at each frame, to avoid flickering and reduce computational burden, the very first frame is analysed and the location kept constant for all subsequent stills.
-
-__Figure 8: Wrongly-Oriented LHS Bounding Box (Tracking a Cyclist)__
-![](img/img6.png)
-
 ## Resources
 
 1. https://knowledge.udacity.com/questions/609855
@@ -344,6 +331,5 @@ __Figure 8: Wrongly-Oriented LHS Bounding Box (Tracking a Cyclist)__
 10. https://en.wikipedia.org/wiki/Singular_value_decomposition
 11. https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
 12. https://en.wikipedia.org/wiki/Rotation_matrix#Basic_3D_rotations
-13. Dimitrov, Knauer, Kriegel, Rote: "On the Bounding Boxes Obtained by Principal Component Analysis" (2014 Revision) - [Link](https://www.researchgate.net/publication/235758825_On_the_bounding_boxes_obtained_by_principal_component_analysis)
 
 [Home](../../README.md) | Next: 
