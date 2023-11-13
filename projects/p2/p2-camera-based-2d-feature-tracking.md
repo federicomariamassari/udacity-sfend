@@ -14,11 +14,12 @@ A data ring buffer guarantees efficient memory management by limiting the number
 
 ### MP.2 Keypoint Detection
 
-
+The main reference for this section is [3].
 
 ## Resources
 
 1. https://knowledge.udacity.com/questions/644337
 2. https://cplusplus.com/reference/vector/vector/erase/
+3. https://docs.opencv.org/4.2.0/d5/d51/group__features2d__main.html
 
 [Home](../../README.md) | Previous: [LiDAR Obstacle Detection](../p1/p1-lidar-obstacle-detection.md) | Next: 
