@@ -14,7 +14,7 @@ A data ring buffer guarantees efficient memory management by limiting the number
 
 ### MP.2: Keypoint Detection
 
-Keypoint detection, description, matching, and selection are implemented in `matching2D_Student.cpp`. The Harris and Shi-Tomasi detectors have _ad hoc_ methods, while SIFT (and SURF), FAST, ORB, BRISK, and AKAZE are all included in `detKeypointsModern`. Algorithm selection is performed via string comparison, using `std::string::compare` instead of `==` to both conform with the starter code and to allow for input case-insensitivity (source: Udacity GPT). Harris corner detection and non-maxima suppression are based on the Udacity solution [3]; for modern algorithms, which are plugged into the generic `cv::FeatureDetector` class, the main references are [4] and [5]. To improve readability, arguments are not explicitly passed to the function signatures if they use the default values; instead, reference to the official documentation is made in the code.
+Keypoint detection, description, matching, and selection are implemented in `matching2D_Student.cpp`. The Harris and Shi-Tomasi detectors have _ad hoc_ methods, while SIFT (and SURF), FAST, ORB, BRISK, and AKAZE are all included in `detKeypointsModern`. Algorithm selection is performed via string comparison, using `std::string::compare` instead of `==` to both conform with the starter code and to allow for input case-insensitivity (source: Udacity GPT). Harris corner detection and non-maxima suppression are based on the Udacity solution [3]; for modern algorithms, which are plugged in the generic `cv::FeatureDetector` class, the main references are [4] and [5]. To improve readability, arguments are not explicitly passed to the function signatures if they use the default values; instead, reference to the official documentation is made in the code.
 
 Additionally, I decided to include (but analyse separately) SURF, which was the required method for project P4 [Map My World](https://github.com/federicomariamassari/udacity-rsend/blob/main/projects/p4/p4-map-my-world.md) of the Robotics Software Engineer Nanodegree, and I was curious to understand how it would fare against the competition.
 
@@ -24,7 +24,7 @@ For this task, template class `cv::Rect` is used to remove all keypoints outside
 
 ### MP.4: Keypoint Descriptors
 
-Descriptors BRIEF, ORB, FREAK, AKAZE, SIFT (and SURF)
+Descriptors SIFT (and SURF), BRIEF, ORB, FREAK, and AKAZE are implemented, with default arguments, from [4] and [5]. They complement the already available BRISK. Similarly to the detectors' case, the descriptors are plugged in the generic class `cv::DescriptorExtractor`, which provides a clean interface. Exceptions are raised in case of detector/descriptor incompatibilities, such as SIFT and ORB, or AKAZE and everything else [7].
 
 ## Resources
 
@@ -34,5 +34,6 @@ Descriptors BRIEF, ORB, FREAK, AKAZE, SIFT (and SURF)
 4. https://docs.opencv.org/4.2.0/d5/d51/group__features2d__main.html
 5. https://docs.opencv.org/4.2.0/d2/dca/group__xfeatures2d__nonfree.html
 6. https://docs.opencv.org/4.2.0/d2/d44/classcv_1_1Rect__.html
+7. https://knowledge.udacity.com/questions/105392
 
 [Home](../../README.md) | Previous: [LiDAR Obstacle Detection](../p1/p1-lidar-obstacle-detection.md) | Next: 
