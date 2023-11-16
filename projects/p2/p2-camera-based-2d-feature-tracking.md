@@ -30,9 +30,11 @@ Descriptors SIFT (and SURF), BRIEF, ORB, FREAK, and AKAZE are implemented, with 
 
 The main reference for matching is [8], with abstract class `cv::DescriptorMatcher` used as base for all matchers. Validation criteria are added to both Brute Force (part of the starter code) and FLANN: for Brute Force, by ensuring that the Hamming distance is only applied to binary algorithms, using instead the L2-norm (vector norm) for Histogram Of Gradients -based methods SIFT and SURF (having previously labelled them as such) [9]; for FLANN, by converting the input descriptor source and reference into 32-bit floating point numbers ahead of the processing step [10].
 
+For the k-Nearest Neighbor selector, the main source is [11].
+
 ### MP.6: Description Distance Ratio
 
-The implementation of the description distance ratio for k-Nearest Neighbors is taken from Udacity' solution to [11].
+The implementation of the description distance ratio for k-Nearest Neighbors is taken from Udacity' solution to [12].
 
 ### MP.7: Performance Evaluation 1
 
@@ -48,6 +50,7 @@ The implementation of the description distance ratio for k-Nearest Neighbors is 
 8. https://docs.opencv.org/4.2.0/d8/d9b/group__features2d__match.html
 9. https://docs.opencv.org/4.2.0/d3/da1/classcv_1_1BFMatcher.html
 10. https://knowledge.udacity.com/questions/211123
-11. Exercise - Descriptor Matching, Tracking Image Features Lesson 12, Udacity Sensor Fusion Nanodegree
+11. https://docs.opencv.org/4.2.0/db/d39/classcv_1_1DescriptorMatcher.html
+12. Exercise - Descriptor Matching, Tracking Image Features Lesson 12, Udacity Sensor Fusion Nanodegree
 
 [Home](../../README.md) | Previous: [LiDAR Obstacle Detection](../p1/p1-lidar-obstacle-detection.md) | Next: 
