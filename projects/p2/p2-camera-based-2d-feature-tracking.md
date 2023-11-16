@@ -6,15 +6,11 @@
 
 This project was originally developed on a UTM QEMU 7.0 Virtual Machine running Ubuntu 20.04-5 LTS on Apple Silicon architecture, and later ported to the Udacity workspace. It uses OpenCV 4.2.0, [built from source](https://github.com/federicomariamassari/udacity-rsend/blob/main/projects/p4/p4-preliminary-config.md#3-rebuild-opencv-from-source-with-patented-modules) to enable patented algorithms SIFT/SURF.
 
-# Mid-Term Report
-
-## Data Buffer
+## Mid-Term Report
 
 ### MP.1: Data Buffer Optimization
 
 A data ring buffer guarantees efficient memory management by limiting the number of images simultaneously present in the holding data structure, preventing the structure from growing excessively in size. Here, the buffer is a C++ vector with maximum size two; if the vector is full, we erase the earliest pushed-back image first (FIFO), then add the next element [1]. Time complexity is linear on the element erased (basically constant, since it's always the first one and no search is involved), and linear on moving the remaining element to position 0 [2].
-
-## Keypoints
 
 ### MP.2: Keypoint Detection
 
@@ -26,21 +22,17 @@ SURF is also included (but analysed separately) as it was the required method fo
 
 For this task, template class `cv::Rect` is used to remove all keypoints outside an area in pixels centered on the preceding vehicle (x=535, y=180, width=180, height=150). All keypoints whose coordinates belong to the rectangle are pushed back in a new vector, which is then reassigned to the original object. It is worth mentioning that the pre-defined area includes the side mirror of a vehicle on the left, as well as the shadow of the preceding car itself, with implications for the analysis.
 
-## Descriptors
-
 ### MP.4: Keypoint Descriptors
 
 Descriptors SIFT (and SURF), BRIEF, ORB, FREAK, and AKAZE are implemented, with default arguments, from [4] and [5]. They complement the already available BRISK. Similarly to the detectors' case, the descriptors are plugged in the generic class `cv::DescriptorExtractor`, which provides a clean interface. Exceptions are raised in case of detector/descriptor incompatibilities, such as SIFT and ORB, or AKAZE and everything else [7].
 
 ### MP.5: Descriptor Matching
 
-The main reference for matching is [8], with abstract class `cv::DescriptorMatcher` used as base for all matchers. Validation criteria are added to both Brute Force (part of the starter code) and FLANN: for Brute Force, by ensuring that the Hamming distance is only applied to binary algorithms, using instead the L2-norm (vector norm) for Histogram Of Gradients -based methods SIFT and SURF (having previously labelled them as such) [9]; for FLANN, by converting the input descriptor source and reference into 32-bit floating point numbers [10].
+The main reference for matching is [8], with abstract class `cv::DescriptorMatcher` used as base for all matchers. Validation criteria are added to both Brute Force (part of the starter code) and FLANN: for Brute Force, by ensuring that the Hamming distance is only applied to binary algorithms, using instead the L2-norm (vector norm) for Histogram Of Gradients -based methods SIFT and SURF (having previously labelled them as such) [9]; for FLANN, by converting the input descriptor source and reference into 32-bit floating point numbers ahead of the processing step [10].
 
 ### MP.6: Description Distance Ratio
 
 The implementation of the description distance ratio for k-Nearest Neighbors is taken from Udacity' solution to [11].
-
-## Performance
 
 ### MP.7: Performance Evaluation 1
 
