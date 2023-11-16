@@ -38,6 +38,11 @@ The implementation of the description distance ratio for k-Nearest Neighbors is 
 
 ### MP.7: Performance Evaluation 1
 
+| Metrics | Harris | Shi-Tomasi | FAST | BRISK | ORB | AKAZE | SIFT | SURF |
+|:----------|------:|------:|------:|
+| Avg keypoint detection time (ms) | 6.19476 | 6.19476 | 6.19476 | 6.19476 | 6.19476 | 6.19476 | 6.19476 | 6.19476 |
+| __Total running time__ | __276.084__ | __276.084__ | __276.084__ | __276.084__ | __276.084__ | __276.084__ | __276.084__ | __276.084__ |
+
 ## Resources
 
 1. https://knowledge.udacity.com/questions/644337
