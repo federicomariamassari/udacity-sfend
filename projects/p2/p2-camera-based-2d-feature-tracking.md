@@ -42,18 +42,18 @@ caption: distribution of keypoints' neighborhood size
 
 | Metrics | Harris | Shi-Tomasi | FAST | BRISK | ORB | AKAZE | SIFT | SURF |
 |:----------|------:|------:|------:|------:|------:|------:|------:|------:|
-| Avg keypoint detection time (ms) | 8.48296 | 8.04698 | | | | | | |
-| Total no. of keypoints | 247 | 1179 | | | | | | |
-| Avg. no. keypoints (lower bound) | 24 | 117 | | | | | | |
-| Mean | 6 | 4 | | | | | | |
-| Median | 6 | 4 | | | | | | |
-| Standard deviation | 0 | 0 | | | | | | |
-| Min | 6 | 4 | | | | | |
-| Max | 6 | 4 | | | | | |
-| Range | 0 | 0 | | | | | |
-| 25th percentile | 6 | 4 | | | | | |
-| 75th percentile | 6 | 4 | | | | | |
-| IQR | 0 | 0 | | | | | | |
+| Avg keypoint detection time (ms) | 8.48296 | 8.04698 | 0.917401 | 42.3672 | 6.59652 | | | |
+| Total no. of keypoints | 247 | 1179 | 1491 | 2762 | 1161 | | | |
+| Avg. no. keypoints (lower bound) | 24 | 117 | 149 | 276 | 116 | | | |
+| Mean | 6 | 4 | 7 | 21.9444 | 55.9928 | | | |
+| Median | 6 | 4 | 7 | 15.5217 | 44.64 | | | |
+| Standard deviation | 0 | 0 | 0 | 14.6207 | 25.1258 | | | |
+| Min | 6 | 4 | 7 | 8.4 | 31 | | |
+| Max | 6 | 4 | 7 | 72 | 111.079 | | |
+| Range | 0 | 0 | 0 | 63.6 | 80.0786 | | |
+| 25th percentile | 6 | 4 | 7 | 12.3061 | 37.2 | | |
+| 75th percentile | 6 | 4 | 7 | 27 | 77.1379 | | |
+| IQR | 0 | 0 | 0 | 14.6939 | 39.9379 | | | |
 
 ## Resources
 
