@@ -38,10 +38,22 @@ The implementation of the description distance ratio for k-Nearest Neighbors is 
 
 ### MP.7: Performance Evaluation 1
 
+caption: distribution of keypoints' neighborhood size
+
 | Metrics | Harris | Shi-Tomasi | FAST | BRISK | ORB | AKAZE | SIFT | SURF |
 |:----------|------:|------:|------:|------:|------:|------:|------:|------:|
-| Avg keypoint detection time (ms) | 6.19476 | 6.19476 | 6.19476 | 6.19476 | 6.19476 | 6.19476 | 6.19476 | 6.19476 |
-| __Total running time__ | __276.084__ | __276.084__ | __276.084__ | __276.084__ | __276.084__ | __276.084__ | __276.084__ | __276.084__ |
+| Avg keypoint detection time (ms) | 8.48296 | 8.04698 | | | | | | |
+| Total no. of keypoints | 247 | 1179 | | | | | | |
+| Avg. no. keypoints (lower bound) | 24 | 117 | | | | | | |
+| Mean | 6 | 4 | | | | | | |
+| Median | 6 | 4 | | | | | | |
+| Standard deviation | 0 | 0 | | | | | | |
+| Min | 6 | 4 | | | | | |
+| Max | 6 | 4 | | | | | |
+| Range | 0 | 0 | | | | | |
+| 25th percentile | 6 | 4 | | | | | |
+| 75th percentile | 6 | 4 | | | | | |
+| IQR | 0 | 0 | | | | | | |
 
 ## Resources
 
