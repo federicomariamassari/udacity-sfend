@@ -5,15 +5,11 @@
 using namespace std;
 
 
-/* Detect keypoints in an image using the traditional Shi-Thomasi detector [1].
- *
- * Resources:
- * [1] - Shi, Tomasi: "Good Features to Track" (1994)
- */
-void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis)
+void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, const cv::Mat &img, vector<double>& detTickCounts, 
+  const bool bVis, const bool bPrintMsg)
 {
   // Compute detector parameters based on image size
-  int blockSize = 4;  // Size of an average block for computing a derivative covariation matrix over each pixel neighborhood
+  int blockSize = 4;  // Average block size to compute derivative covariation matrix over each pixel neighborhood
   double maxOverlap = 0.0;  // Maximum permissible % overlap between two features
   double minDistance = (1.0 - maxOverlap) * blockSize;
   int maxCorners = img.rows * img.cols / max(1.0, minDistance);  // Maximum number of keypoints
@@ -25,7 +21,8 @@ void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool b
   // Apply corner detection
   double t = (double) cv::getTickCount();
   vector<cv::Point2f> corners;
-  cv::goodFeaturesToTrack(img, corners, maxCorners, qualityLevel, minDistance, cv::Mat(), blockSize, bUseHarrisDetector, k);
+  cv::goodFeaturesToTrack(img, corners, maxCorners, qualityLevel, minDistance, cv::Mat(), blockSize, 
+    bUseHarrisDetector, k);
 
   // Add corners to result vector
   for (auto it = corners.begin(); it != corners.end(); ++it)
@@ -37,7 +34,12 @@ void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool b
   }
 
   t = ((double) cv::getTickCount() - t) / cv::getTickFrequency();
-  cout << "Shi-Tomasi detection with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
+
+  // Capture statistic to enable average time spent on keypoint detection analysis
+  detTickCounts.push_back(t);
+
+  if (bPrintMsg)
+    cout << "Shi-Tomasi detection with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
 
   // Visualize results
   if (bVis)
@@ -46,25 +48,16 @@ void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool b
     cv::drawKeypoints(img, keypoints, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
     string windowName = "Shi-Tomasi Corner Detector Results";
     cv::namedWindow(windowName, 6);
-    imshow(windowName, visImage);  // highgui methods do not require cv namespace specification
+    imshow(windowName, visImage);  // highgui methods don't require cv namespace specification (source: Udacity GPT)
     cv::waitKey(0);
   }
 }
 
-/* Perform Harris' corner detection (1988) with non-maxima suppression (NMS) [1].
- * Adapted from solution to "Harris Corner Detection", Tracking Image Features: Lesson 5, Udacity [2].
- * 
- * Resources:
- *
- * [1] - Harris, Stephens: "A Combined Corner and Edge Detector" (1988)
- * [2] - Harris Corner Detection (Tracking Image Features: Lesson 5), Udacity Sensor Fusion Nanodegree
- * [3] - Addendum - NMS Algorithm (Tracking Image Features: Lesson 6), Udacity Sensor Fusion Nanodegree
- * [4] - Harris Corner Detector Tutorial (https://docs.opencv.org/4.2.0/d4/d7d/tutorial_harris_detector.html)
- */
-void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis)
+void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, const cv::Mat &img, vector<double>& detTickCounts, 
+  const bool bVis, const bool bPrintMsg)
 {
   int blockSize = 2;  // Size of pixel neighborhood considered for corner detection (W)
-  int apertureSize = 3;  // Aperture size for the Sobel operator
+  int apertureSize = 3;  // Aperture size for the Sobel operator (must be odd)
   int minResponse = 100;  // Pixel is marked as corner iff R = det(H_w) - k*(tr(H_w))^2 >= minResponse
   double k = 0.04;  // Empirical constant in [0.04-0.06]
 
@@ -120,7 +113,10 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
   }
 
   t = ((double) cv::getTickCount() - t) / cv::getTickFrequency();
-  cout << "Harris corner detection with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
+  detTickCounts.push_back(t);
+  
+  if (bPrintMsg)
+    cout << "Harris corner detection with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
 
   if (bVis)
   {
@@ -133,12 +129,8 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
   }
 }
 
-/* Detect image keypoints using modern algorithms: SIFT, SURF, FAST, ORB, BRISK, AKAZE [1].
- *
- * Resources:
- * [1] - https://docs.opencv.org/4.2.0/d5/d51/group__features2d__main.html
- */
-void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std::string detectorType, bool bVis)
+void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, const cv::Mat &img, const std::string detectorType, 
+  vector<double>& detTickCounts, const bool bVis, const bool bPrintMsg)
 {
   cv::Ptr<cv::FeatureDetector> detector;
   
@@ -147,7 +139,7 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
     int threshold = 30;
     bool bUseNonMaxSuppression = true;  // For uniform comparison with Harris, Shi-Tomasi
 
-    cv::FastFeatureDetector::DetectorType type = cv::FastFeatureDetector::TYPE_9_16;  // TYPE_5_8, TYPE_7_12
+    cv::FastFeatureDetector::DetectorType type = cv::FastFeatureDetector::TYPE_9_16;  // TYPE_5_8, TYPE_7_12, TYPE_9_16
     detector = cv::FastFeatureDetector::create(threshold, bUseNonMaxSuppression, type);
 
   } else if (detectorType.compare("BRISK") == 0)  // https://docs.opencv.org/4.2.0/de/dbf/classcv_1_1BRISK.html
@@ -170,7 +162,8 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
     int patchSize = 31;
     int fastThreshold = 20;
 
-    detector = cv::ORB::create(nFeatures, scaleFactor, nLevels, edgeFeatures, firstLevel, WTA_K, scoreType, patchSize, fastThreshold);
+    detector = cv::ORB::create(nFeatures, scaleFactor, nLevels, edgeFeatures, firstLevel, WTA_K, scoreType, patchSize, 
+      fastThreshold);
 
   } else if (detectorType.compare("AKAZE") == 0)  // https://docs.opencv.org/4.2.0/d8/d30/classcv_1_1AKAZE.html
   {
@@ -182,7 +175,8 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
     int nOctaveLayers = 4;
     cv::KAZE::DiffusivityType diffusivity = cv:: KAZE::DIFF_PM_G2;
 
-    detector = cv::AKAZE::create(descriptorType, descriptorSize, descriptorChannels, threshold, nOctaves, nOctaveLayers, diffusivity);
+    detector = cv::AKAZE::create(descriptorType, descriptorSize, descriptorChannels, threshold, nOctaves, 
+      nOctaveLayers, diffusivity);
 
   } else if (detectorType.compare("SIFT") == 0)  // https://docs.opencv.org/4.x/d7/d60/classcv_1_1SIFT.html
   {
@@ -193,9 +187,10 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
     double sigma = 1.6;
     bool enable_precise_upscale = false;
 
-    detector = cv::SIFT::create(nFeatures, nOctaveLayers, contrastThreshold, edgeThreshold, sigma, enable_precise_upscale);
+    detector = cv::SIFT::create(nFeatures, nOctaveLayers, contrastThreshold, edgeThreshold, sigma, 
+      enable_precise_upscale);
 
-  } else if (detectorType.compare("SURF") == 0)  // https://docs.opencv.org/4.2.0/d5/df7/classcv_1_1xfeatures2d_1_1SURF.html
+  } else if (detectorType.compare("SURF") == 0) // https://docs.opencv.org/4.2.0/d5/df7/classcv_1_1xfeatures2d_1_1SURF.html
   {
     double hessianThreshold = 100;
     int nOctaves = 4;
@@ -206,14 +201,17 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
     detector = cv::xfeatures2d::SURF::create(hessianThreshold, nOctaves, nOctaveLayers, extended, upright);
 
   } else 
-    throw invalid_argument("Invalid detector type. Must be among: SHITOMASI, HARRIS, SIFT, SURF, FAST, ORB, BRISK, AKAZE.");
+    throw invalid_argument("Invalid detector. Must be among: SHITOMASI, HARRIS, SIFT, SURF, FAST, ORB, BRISK, AKAZE.");
 
   // Perform and time keypoint detection
   double t = (double) cv::getTickCount();
   detector->detect(img, keypoints);
   t = ((double) cv::getTickCount() - t) / cv::getTickFrequency();
 
-  cout << detectorType + " with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
+  detTickCounts.push_back(t);
+
+  if (bPrintMsg)
+    cout << detectorType + " with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
 
   if (bVis)
   {
@@ -226,10 +224,19 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
   }
 }
 
-/* Use one among several state-of-art descriptors to uniquely identify keypoints.
- */ 
-void descKeypoints(vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &descriptors, string descriptorType)
+void descKeypoints(vector<cv::KeyPoint> &keypoints, const cv::Mat &img, cv::Mat &descriptors, const string detectorType, 
+  const string descriptorType, vector<double>& descTickCounts, const bool bPrintMsg)
 {
+  if ((detectorType == "SIFT" && descriptorType == "ORB") || (detectorType == "ORB" && descriptorType == "SIFT"))
+  {
+    // https://knowledge.udacity.com/questions/105392
+    string errorMsg = detectorType + " detector does not work with " + descriptorType + " descriptor.";
+    throw invalid_argument(errorMsg);
+  }
+
+  if (descriptorType == "AKAZE" && detectorType != "AKAZE")
+    throw invalid_argument("AKAZE descriptor only works with AKAZE detector.");
+
   cv::Ptr<cv::DescriptorExtractor> extractor;
 
   if (descriptorType.compare("BRISK") == 0)
@@ -267,35 +274,53 @@ void descKeypoints(vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &descr
   extractor->compute(img, keypoints, descriptors);
   t = ((double) cv::getTickCount() - t) / cv::getTickFrequency();
 
-  cout << descriptorType << " Descriptor extraction in " << 1000 * t / 1.0 << " ms" << endl;
+  descTickCounts.push_back(t);
+
+  if (bPrintMsg)
+    cout << descriptorType << " Descriptor extraction in " << 1000 * t / 1.0 << " ms" << endl;
 }
 
-/* Find best matches for keypoints in two camera images based on several matching methods.
- *
- * Resources:
- *
- * [1] - https://docs.opencv.org/4.2.0/d8/d9b/group__features2d__match.html
- * [2] - Exercise - Descriptor Matching (Tracking Image Features: Lesson 12), Udacity Sensor Fusion Nanodegree
- * [3] - https://knowledge.udacity.com/questions/118373
- */
-void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::KeyPoint> &kPtsRef, cv::Mat &descSource, cv::Mat &descRef,
-  std::vector<cv::DMatch> &matches, std::string descriptorType, std::string matcherType, std::string selectorType)
+void matchDescriptors(const vector<cv::KeyPoint> &kPtsSource, const vector<cv::KeyPoint> &kPtsRef, 
+  const cv::Mat &descSource, const cv::Mat &descRef, vector<cv::DMatch> &matches, const string descriptorType,
+  string descriptorGroup, const string matcherType, const string selectorType, int &infoCounter, const bool bPrintMsg)
 {
   // Configure matcher
   bool crossCheck = false;
   cv::Ptr<cv::DescriptorMatcher> matcher;  // https://docs.opencv.org/4.2.0/db/d39/classcv_1_1DescriptorMatcher.html
 
-  if (descriptorType.compare("DES_BINARY") == 1 || descriptorType.compare("DES_HOG") == 1)
+  if (descriptorGroup.compare("DES_BINARY") != 0 && descriptorGroup.compare("DES_HOG") != 0)
   {
-    string errorMsg = "Invalid descriptor group " + descriptorType + ". Choose between: DES_BINARY, DES_HOG";
+    string errorMsg = "Invalid descriptor group " + descriptorGroup + ". Choose between: DES_BINARY, DES_HOG";
     throw invalid_argument(errorMsg);
   }
 
+
+
+  // --------------------------------------------------------------------------------------------------------------------- TODO: Add DES_* to MP.8 table?
+  // --------------------------------------------------------------------------------------------------------------------- TODO: Implement SURF descriptor?
+
+
+
+
   if (matcherType.compare("MAT_BF") == 0)  // https://docs.opencv.org/4.2.0/d3/da1/classcv_1_1BFMatcher.html
   {
+    // https://answers.opencv.org/question/10046/feature-2d-feature-matching-fails-with-assert-statcpp/
+    // https://knowledge.udacity.com/questions/117307
+    if ((descriptorType.compare("SIFT") == 0 || descriptorType.compare("SURF") == 0) 
+      && descriptorGroup.compare("DES_BINARY") == 0)
+    {
+      descriptorGroup = "DES_HOG";
+
+      if (infoCounter == 0)
+      {
+        cerr << "(!) WARNING: DES_BINARY is incompatible with SIFT/SURF. Switching to DES_HOG for " << 
+          descriptorType << "." << endl;
+          infoCounter++;
+      }
+    }
+
     // Use Hamming norm for binary descriptors and L2 norm for histogram-of-gradients ones
-    // https://docs.opencv.org/4.2.0/d3/da1/classcv_1_1BFMatcher.html
-    int normType = descriptorType.compare("DES_BINARY") == 0 ? cv::NORM_HAMMING : cv::NORM_L2;
+    int normType = descriptorGroup.compare("DES_BINARY") == 0 ? cv::NORM_HAMMING : cv::NORM_L2;
 
     matcher = cv::BFMatcher::create(normType, crossCheck);
   }
@@ -327,7 +352,9 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
     matcher->match(descSource, descRef, matches); // Finds the best match for each descriptor in desc1
 
     t = ((double) cv::getTickCount() - t) / cv::getTickFrequency();
-    cout << selectorType << " with n = " << matches.size() << " matches in " << 1000 * t / 1.0 << " ms" << endl;
+    
+    if (bPrintMsg)
+      cout << selectorType << " with n = " << matches.size() << " matches in " << 1000 * t / 1.0 << " ms" << endl;  // TODO: REFACTOR?
   }
 
   else if (selectorType.compare("SEL_KNN") == 0)
@@ -337,7 +364,9 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
     matcher->knnMatch(descSource, descRef, knnMatches, 2);
 
     t = ((double) cv::getTickCount() - t) / cv::getTickFrequency();
-    cout << selectorType << " with n = " << knnMatches.size() << " matches in " << 1000 * t / 1.0 << " ms" << endl;
+    
+    if (bPrintMsg)
+      cout << selectorType << " with n = " << knnMatches.size() << " matches in " << 1000 * t / 1.0 << " ms" << endl;
 
     // Minimum descriptor distance ratio test (based on solution to [2])
     float minDescDistanceRatio = 0.8;
@@ -349,7 +378,8 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
         matches.push_back((*it)[0]);
     }
 
-    cout << "Number of keypoints removed = " << knnMatches.size() - matches.size() << endl;
+    if (bPrintMsg)
+      cout << "Number of keypoints removed = " << knnMatches.size() - matches.size() << endl;
   }
 
   else
@@ -357,4 +387,272 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
     string errorMsg = "Invalid selector type " + selectorType + ". Choose between: SEL_NN, SEL_KNN";
     throw invalid_argument(errorMsg);
   }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*********************************************************************************************************************
+ * CUSTOM ADDITIONS
+ *********************************************************************************************************************/
+
+DataFrame loadImageIntoBuffer(const string filename, vector<DataFrame>& dataBuffer, const int dataBufferSize)
+{
+  // Load image from file and convert to grayscale
+  cv::Mat img, imgGray;
+  img = cv::imread(filename);
+  cv::cvtColor(img, imgGray, cv::COLOR_BGR2GRAY);
+
+  // TASK MP.1: Implement ring buffer of size dataBufferSize
+
+  DataFrame frame;
+  frame.cameraImg = imgGray;
+
+  if (dataBuffer.size() == dataBufferSize)
+
+    // https://knowledge.udacity.com/questions/644337
+    dataBuffer.erase(dataBuffer.begin());
+  
+  dataBuffer.push_back(frame);
+
+  // End of TASK MP.1
+
+  return frame;
+}
+
+vector<cv::KeyPoint> detectKeypoints(const string detectorType, cv::Mat& img, vector<double>& detTickCounts, 
+  const bool bVis, const bool bPrintMsg)
+{
+  // To hold 2D keypoints extracted from current image
+  vector<cv::KeyPoint> keypoints;
+
+  // TASK MP.2: Add keypoints HARRIS, FAST, BRISK, ORB, AKAZE, SIFT and enable string-based selection on detectorType
+
+  if (detectorType.compare("SHITOMASI") == 0)
+    detKeypointsShiTomasi(keypoints, img, detTickCounts, bVis, bPrintMsg);
+
+  else if (detectorType.compare("HARRIS") == 0)
+    detKeypointsHarris(keypoints, img, detTickCounts, bVis, bPrintMsg);
+
+  else
+    detKeypointsModern(keypoints, img, detectorType, detTickCounts, bVis, bPrintMsg);
+
+  // End of TASK MP.2
+
+  return keypoints;
+}
+
+void focusOnArea(std::vector<cv::KeyPoint>& keypoints, const bool bFocusOnVehicle, const bool bPrintMsg)
+{
+  // TASK MP.3: Only keep keypoints in a rectangle centered on the preceding vehicle
+
+  // Will also include side mirror of left vehicle and partial shadow of the car in front
+  cv::Rect vehicleRect(535, 180, 180, 150);
+
+  if (bFocusOnVehicle)
+  {
+    vector<cv::KeyPoint> rectKeyPoints;
+
+    for (const auto& keypoint : keypoints)
+    {
+      if (vehicleRect.contains(keypoint.pt))
+        rectKeyPoints.push_back(keypoint);
+    }
+
+    keypoints = rectKeyPoints;
+
+    if (bPrintMsg)
+      cout << "Number of keypoints in the region of interest = " << keypoints.size() << endl;
+  }
+
+  // End of TASK MP.3
+}
+
+void limitKeypoints(vector<cv::KeyPoint>& keypoints, const string detector, const int maxKeypoints)
+{
+  if (detector.compare("SHITOMASI") == 0)
+
+    // There is no response info, so keep the first 50 as they are sorted in descending quality order
+    keypoints.erase(keypoints.begin() + maxKeypoints, keypoints.end());
+
+  cv::KeyPointsFilter::retainBest(keypoints, maxKeypoints);
+  cout << "(!) NOTE: Keypoints have been limited!" << endl;
+}
+
+void extractNeighborhoodSizes(const vector<cv::KeyPoint>& keypoints, vector<double>& neighborhoodSizes)  // MP.7
+{
+  for (const auto& keypoint : keypoints)
+    neighborhoodSizes.push_back(keypoint.size);
+}
+
+double percentile(const vector<double>& vec, const float p)  // MP.7
+{
+  int vec_size = vec.size();
+  double res;
+
+  switch(vec_size % 2)
+  {
+    case 0:
+      res = vec[vec_size * p];
+      break;
+
+    case 1:
+      res = 0.5 * (vec[floor(vec_size * p)] + vec[floor(vec_size * p) + 1]);
+      break;
+  }
+
+  return res;
+}
+
+double computeMode(const vector<double>& vec)  // MP.7
+{
+  double mode;
+  double counter = 1;
+  double running_max = 1;
+
+  for (size_t i=0; i < (vec.size()-1); i++)
+  {
+    if (vec[i+1] == vec[i])
+    {
+      counter++;
+      running_max = (counter > running_max) ? counter : running_max;
+      mode = vec[i];
+    }
+    else
+      counter = 1;
+  }
+
+  return mode;
+}
+
+void computeStatistics(Stats& s, vector<double>& vec)  // MP.7
+{
+  // Ensure input distribution is sorted before computing statistics
+  sort(vec.begin(), vec.end());
+
+  double mean = accumulate(vec.begin(), vec.end(), 0.) / vec.size();
+
+  double squared_dev = accumulate(vec.begin(), vec.end(), 0., 
+    [mean](double sum, const double x) { return sum + pow(x - mean, 2); });
+
+  double mode = computeMode(vec);
+
+  // Append detector's statistics to passed Stats struct
+  s.vec_size.push_back(vec.size());
+  s.kpt_img.push_back(vec.size() / s.img_count);
+
+  s.mean.push_back(mean);
+  s.median.push_back(percentile(vec, .50));
+  s.mode.push_back(mode);
+
+  s.std_dev.push_back(sqrt(squared_dev / (vec.size() - 1)));  // Sample standard deviation
+
+  s.min.push_back(vec[0]);
+  s.max.push_back(vec.back());
+  s.range.push_back(vec.back() - vec[0]);
+
+  double p25 = percentile(vec, .25);
+  double p75 = percentile(vec, .75);
+
+  s.p25.push_back(p25);
+  s.p75.push_back(p75);
+  s.iqr.push_back(p75 - p25);
+}
+
+template<typename T>
+void printLine(const std::pair<const std::string, std::vector<T>>& p)  // MP.7
+{
+  cout << left << setw(30) << p.first;
+
+  for (const auto& value : p.second)
+    cout << right << setw(12) <<  value;
+
+  cout << endl;
+}
+
+template<typename T>
+void printLine(const vector<T> v, const int& imgEndIndex)  // MP.8-9
+{
+  int counter = 0;
+  for (const auto& value : v)
+  {
+    cout << right << ((counter < imgEndIndex) ? setw(6) : setw(12)) << value;
+    counter++;
+  }
+  cout << endl;
+}
+
+void printStatistics(const vector<string>& detectors, const Stats& s)  // MP.7
+{
+  // Populate pairs
+  pair<string, vector<string>> header("DETECTOR", detectors);
+
+  vector<pair<string, vector<double>>> v {
+
+    pair<string, vector<double>>("Average # keypoints/image", s.kpt_img),
+    pair<string, vector<double>>("Average detection time (ms)", s.avg_det_time),
+    pair<string, vector<double>>("Average description time (ms)", s.avg_desc_time),
+
+    pair<string, vector<double>>("Mean", s.mean),
+    pair<string, vector<double>>("Median", s.median),
+    pair<string, vector<double>>("Mode", s.mode),
+
+    pair<string, vector<double>>("Standard deviation", s.std_dev),
+
+    pair<string, vector<double>>("Min", s.min),
+    pair<string, vector<double>>("Max", s.max),
+    pair<string, vector<double>>("Range", s.range),
+
+    pair<string, vector<double>>("25th percentile", s.p25),
+    pair<string, vector<double>>("75th percentile", s.p75),
+    pair<string, vector<double>>("IQR", s.iqr)
+  };
+
+  // Custom length based on the number of detectors
+  cout << string(30 + 12*detectors.size(), '*') << endl;
+
+  printLine<string>(header);
+
+  cout << string(30 + 12*detectors.size(), '*') << endl;
+
+  printLine<int>(pair<string, vector<int>>("Total # of keypoints", s.vec_size));
+
+  for (const auto& pair : v)
+    printLine<double>(pair);
+}
+
+void printStatistics(const map<string, vector<double>>& m, const int& imgEndIndex, const string sep)  // MP.8-9
+{
+  // Print header
+  vector<string> header {"0-1", "1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8-9", "# MATCHES", "DET.TIME", 
+    "DESC.TIME", "TOTAL TIME"};
+
+  cout << string(6 * (12 + imgEndIndex), '*') << endl;
+  cout << left << setw(12) << "DETECTOR" << left << setw(12) << "DESCRIPTOR";
+
+  printLine(header, imgEndIndex);
+  cout << string(6 * (12 + imgEndIndex), '*') << endl;
+
+  for (const auto& pair : m)
+  {
+    // Source: Udacity GPT
+    string s = pair.first;
+    size_t pos = s.find(sep);
+
+    // Detector, descriptor
+    cout << left << setw(12) << s.substr(0, pos) << left << setw(12) << s.substr(pos + sep.length());
+    
+    // Breakdown of matched keypoints and total time spent
+    printLine(pair.second, imgEndIndex);
+
+  cout << endl;
 }
