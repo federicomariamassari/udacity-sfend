@@ -241,7 +241,7 @@ void printStatistics(const std::vector<std::string>& detectors, const Stats& s);
 /**
  * @brief MP.8-9: Pretty-print matched keypoints' statistics and total detection-description time.
  * 
- * @param detector The structure holding the key-value pairs to print.
+ * @param m The structure holding the key-value pairs to print.
  * @param imgEndIndex The cutoff for custom spacing.
  * @param sep The map key delimiter separating detector and descriptor names.
  */
