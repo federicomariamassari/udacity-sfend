@@ -55,13 +55,11 @@ caption: distribution of keypoints' neighborhood size
 | 75th percentile | 6 | 4 | 7 | 27 | 77.1379 | 8.07261 | 4.83003 | 30 |
 | IQR | 0 | 0 | 0 | 14.6939 | 39.9379 | 2.36441 | 2.65333 | 14 |
 
-__Figure 1.A: FAST-BRIEF Keypoint Matching__
+__Figure 1: FAST-BRIEF (Top), FAST-ORB (Middle), FAST-BRISK (Bottom) Keypoint Matching__
 ![FAST-BRIEF](./img/FAST_BRIEF_0007.png)
 
-__Figure 1.B: FAST-ORB Keypoint Matching__
 ![FAST-ORB](./img/FAST_ORB_0007.png)
 
-__Figure 1.C: FAST-BRISK Keypoint Matching__
 ![FAST-BRISK](./img/FAST_BRISK_0007.png)
 
 ## Resources
