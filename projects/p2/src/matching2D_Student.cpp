@@ -294,14 +294,6 @@ void matchDescriptors(const vector<cv::KeyPoint> &kPtsSource, const vector<cv::K
     throw invalid_argument(errorMsg);
   }
 
-
-
-  // --------------------------------------------------------------------------------------------------------------------- TODO: Add DES_* to MP.8 table?
-  // --------------------------------------------------------------------------------------------------------------------- TODO: Implement SURF descriptor?
-
-
-
-
   if (matcherType.compare("MAT_BF") == 0)  // https://docs.opencv.org/4.2.0/d3/da1/classcv_1_1BFMatcher.html
   {
     // https://answers.opencv.org/question/10046/feature-2d-feature-matching-fails-with-assert-statcpp/
@@ -354,7 +346,7 @@ void matchDescriptors(const vector<cv::KeyPoint> &kPtsSource, const vector<cv::K
     t = ((double) cv::getTickCount() - t) / cv::getTickFrequency();
     
     if (bPrintMsg)
-      cout << selectorType << " with n = " << matches.size() << " matches in " << 1000 * t / 1.0 << " ms" << endl;  // TODO: REFACTOR?
+      cout << selectorType << " with n = " << matches.size() << " matches in " << 1000 * t / 1.0 << " ms" << endl;
   }
 
   else if (selectorType.compare("SEL_KNN") == 0)
@@ -653,6 +645,7 @@ void printStatistics(const map<string, vector<double>>& m, const int& imgEndInde
     
     // Breakdown of matched keypoints and total time spent
     printLine(pair.second, imgEndIndex);
+  }
 
   cout << endl;
 }
