@@ -2,7 +2,6 @@
 #define matching2D_hpp
 
 #include <stdio.h>
-
 #include <iomanip>
 #include <iostream>
 #include <cmath>
@@ -10,7 +9,8 @@
 #include <map>  // MP.8-9: To pretty-print matched keypoints' statistics and total detection-description time
 #include <numeric>
 #include <sstream>
-#include <utility>  // MP.7: To pretty-print detectors' statistics and key, value pairs
+#include <stdexcept>
+#include <utility>  // MP.7: To pretty-print keypoints' neighborhood sizes statistics as key-value pairs
 #include <vector>
 
 #include <opencv2/core.hpp>
@@ -24,7 +24,7 @@
 
 
 /**
- * Detect keypoints in an image using the traditional Shi-Thomasi (1994) detector [1]. Part of the starter code.
+ * @brief Detect keypoints in an image using the traditional Shi-Thomasi (1994) detector [1]. Part of the starter code.
  *
  * @param keypoints The structure that will hold the Shi-Tomasi -detected keypoints.
  * @param img The input grayscale image.
@@ -40,7 +40,7 @@ void detKeypointsShiTomasi(std::vector<cv::KeyPoint> &keypoints, const cv::Mat &
   const bool bVis=false, const bool bPrintMsg=true);
 
 /** 
- * Perform Harris' corner detection (1988) with non-maxima suppression (NMS) [1].
+ * @brief Perform Harris' corner detection (1988) with non-maxima suppression (NMS) [1].
  * Adapted from solution to "Harris Corner Detection", Tracking Image Features: Lesson 5, Udacity [2].
  * 
  * @param keypoints The structure that will hold the Harris-detected keypoints.
@@ -60,7 +60,7 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, const cv::Mat &img
   const bool bVis=false, const bool bPrintMsg=true);
 
 /**
- * Detect image keypoints using modern algorithms: SIFT, SURF, FAST, ORB, BRISK, AKAZE [1].
+ * @brief Detect image keypoints using modern algorithms: SIFT, SURF, FAST, ORB, BRISK, AKAZE [1].
  *
  * @param keypoints The structure that will hold the detected keypoints.
  * @param img The input grayscale image.
@@ -77,7 +77,7 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, const cv::Mat &img
   std::vector<double>& detTickCounts, const bool bVis=false, const bool bPrintMsg=true);
 
 /**
- * Use one among several state-of-art descriptors to uniquely identify keypoints.
+ * @brief Use one among several state-of-art descriptors to uniquely identify keypoints.
  * 
  * @param keypoints The structure that holds the detected keypoints.
  * @param img The input grayscale image.
@@ -92,7 +92,7 @@ void descKeypoints(std::vector<cv::KeyPoint> &keypoints, const cv::Mat &img, cv:
   const bool bPrintMsg=true);
 
 /**
- * Find (best) matches for keypoints in two camera images based on several matching methods.
+ * @brief Find (best) matches for keypoints in two camera images based on several matching methods.
  *
  * @param kPtsSource The structure holding the keypoints detected in the source image.
  * @param kPtsRef The structure holding the keypoints detected in the reference (i.e., destination) image.
@@ -117,13 +117,12 @@ void matchDescriptors(const std::vector<cv::KeyPoint> &kPtsSource, const std::ve
   std::string descriptorGroup, const std::string matcherType, const std::string selectorType, int &infoCounter, 
   const bool bPrintMsg=true);
 
-
 /*********************************************************************************************************************
  * CUSTOM ADDITIONS
  *********************************************************************************************************************/
 
 /** 
- * MP.7: Holds basic statistics of keypoints' neighborhood distributions, for all detectors.
+ * @brief MP.7: Holds basic statistics of keypoints' neighborhood distributions, for all detectors.
  */
 struct Stats {
 
@@ -131,12 +130,12 @@ struct Stats {
 
   // Vectors are chosen to ease printing on Terminal
   std::vector<int> vec_size;
-  std::vector<double> kpt_img, avg_det_time, avg_desc_time;
+  std::vector<double> kpt_img, avg_det_time;
   std::vector<double> mean, median, mode, std_dev, min, max, range, p25, p75, iqr;
 };
 
 /** 
- * MP.1: Load image into a ring buffer of custom size. Discard oldest element if full (FIFO).
+ * @brief MP.1: Load image into a ring buffer of custom size. Discard oldest element if full (FIFO).
  * 
  * @param filename Name, including full path, of the image to load.
  * @param dataBuffer The data structure to serve as ring buffer.
@@ -148,7 +147,7 @@ DataFrame loadImageIntoBuffer(const std::string filename, std::vector<DataFrame>
   const int dataBufferSize);
 
 /**
- * MP.2: Detect image keypoints and time the extraction process. A layer on top of the detection methods.
+ * @brief MP.2: Detect image keypoints and time the extraction process. A layer on top of the detection methods.
  * 
  * @param detectorType The name of the detector.
  * @param img The input grayscale image.
@@ -162,7 +161,7 @@ std::vector<cv::KeyPoint> detectKeypoints(const std::string detectorType, cv::Ma
   std::vector<double>& detTickCounts, const bool bVis=false, const bool bPrintMsg=true);
 
 /**
- * MP.3: Remove keypoints outside of a rectangle area centered on the vehicle ahead.
+ * @brief MP.3: Remove keypoints outside of a rectangle area centered on the vehicle ahead.
  * 
  * @param keypoints The data structure holding the keypoints.
  * @param bFocusOnVehicle Whether to restrict the focus to the preceding vehicle.
@@ -171,7 +170,7 @@ std::vector<cv::KeyPoint> detectKeypoints(const std::string detectorType, cv::Ma
 void focusOnArea(std::vector<cv::KeyPoint>& keypoints, const bool bFocusOnVehicle=true, const bool bPrintMsg=true);
 
 /**
- * Optional: Limit number of keypoints (helpful for debugging and learning).
+ * @brief Optional: Limit number of keypoints (helpful for debugging and learning).
  * 
  * @param keypoints The data structure holding the keypoints.
  * @param detector The name of the detector.
@@ -180,7 +179,7 @@ void focusOnArea(std::vector<cv::KeyPoint>& keypoints, const bool bFocusOnVehicl
 void limitKeypoints(std::vector<cv::KeyPoint>& keypoints, const std::string detector, const int maxKeypoints=50);
 
 /**
- * MP.7: Extract keypoints' neighborhood sizes for a single detector.
+ * @brief MP.7: Extract keypoints' neighborhood sizes for a single detector.
  * 
  * @param keypoints The data structure holding the keypoints.
  * @param neighborhoodSizes The structure to hold the neighborhood sizes of all detected keypoints.
@@ -188,7 +187,7 @@ void limitKeypoints(std::vector<cv::KeyPoint>& keypoints, const std::string dete
 void extractNeighborhoodSizes(const std::vector<cv::KeyPoint>& keypoints, std::vector<double>& neighborhoodSizes);
 
 /**
- * MP.7: Calculate percentile p on a detector's sorted distribution of keypoints' neighborhood sizes.
+ * @brief MP.7: Calculate percentile p on a detector's sorted distribution of keypoints' neighborhood sizes.
  * 
  * @param vec The sorted vector of keypoints' neighborhood sizes.
  * @param p The desired decimal percentile.
@@ -198,7 +197,7 @@ void extractNeighborhoodSizes(const std::vector<cv::KeyPoint>& keypoints, std::v
 double percentile(const std::vector<cv::KeyPoint>& vec, const float p);
 
 /**
- * MP.7: Simplified mode calculation assuming input vector is sorted.
+ * @brief MP.7: Simplified mode calculation assuming input vector is sorted.
  * 
  * @param vec The sorted vector on which to compute the mode.
  * 
@@ -207,7 +206,7 @@ double percentile(const std::vector<cv::KeyPoint>& vec, const float p);
 double computeMode(const std::vector<double>& vec);
 
 /**
- * MP.7: Calculate keypoints' neighborhood distribution statistics for a single detector.
+ * @brief MP.7: Calculate keypoints' neighborhood distribution statistics for a single detector.
  * 
  * @param s The structure to hold the input vectors' statistics. 
  * @param vec The structure holding the keypoints' neighborhood sizes.
@@ -215,7 +214,7 @@ double computeMode(const std::vector<double>& vec);
 void computeStatistics(Stats& s, std::vector<double>& vec);
 
 /**
- * Print a key, value pair of an input map.
+ * @brief Print a key, value pair of an input map.
  * 
  * @param p The input pair, with string key and mutable-type value.
  */
@@ -223,7 +222,7 @@ template<typename T>
 void printLine(const std::pair<const std::string, typename std::vector<T>>& p);
 
 /**
- * Print the elements of a vector with custom spacing.
+ * @brief Print the elements of a vector with custom spacing.
  * 
  * @param v The input vector.
  * @param imgEndIndex The cutoff for custom spacing.
@@ -232,7 +231,7 @@ template<typename T>
 void printLine(const std::vector<T> v, const int& imgEndIndex);
 
 /**
- * MP.7: Pretty-print detectors' statistics.
+ * @brief MP.7: Pretty-print detectors' statistics.
  * 
  * @param detector The structure holding the detector name(s).
  * @param s The structure holding the statistics to print.
@@ -240,7 +239,7 @@ void printLine(const std::vector<T> v, const int& imgEndIndex);
 void printStatistics(const std::vector<std::string>& detectors, const Stats& s);
 
 /**
- * MP.8-9: Pretty-print matched keypoints' statistics and total detection-description time.
+ * @brief MP.8-9: Pretty-print matched keypoints' statistics and total detection-description time.
  * 
  * @param detector The structure holding the detector name(s).
  * @param s The structure holding the statistics to print.
@@ -248,6 +247,5 @@ void printStatistics(const std::vector<std::string>& detectors, const Stats& s);
  */
 void printStatistics(const std::map<std::string, std::vector<double>>& m, const int& imgEndIndex, 
   const std::string sep="-");
-
 
 #endif /* matching2D_hpp */

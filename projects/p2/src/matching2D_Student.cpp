@@ -1,5 +1,3 @@
-#include <numeric>
-#include <stdexcept>
 #include "matching2D.hpp"
 
 using namespace std;
@@ -305,9 +303,9 @@ void matchDescriptors(const vector<cv::KeyPoint> &kPtsSource, const vector<cv::K
 
       if (infoCounter == 0)
       {
-        cerr << "(!) WARNING: DES_BINARY is incompatible with SIFT/SURF. Switching to DES_HOG for " << 
+        cerr << "(!) WARNING: " << descriptorGroup << " is incompatible with SIFT/SURF. Switching to DES_HOG for " << 
           descriptorType << "." << endl;
-          infoCounter++;
+        infoCounter++;
       }
     }
 
@@ -580,7 +578,6 @@ void printStatistics(const vector<string>& detectors, const Stats& s)  // MP.7
 
     pair<string, vector<double>>("Average # keypoints/image", s.kpt_img),
     pair<string, vector<double>>("Average detection time (ms)", s.avg_det_time),
-    pair<string, vector<double>>("Average description time (ms)", s.avg_desc_time),
 
     pair<string, vector<double>>("Mean", s.mean),
     pair<string, vector<double>>("Median", s.median),

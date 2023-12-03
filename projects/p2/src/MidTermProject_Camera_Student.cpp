@@ -27,17 +27,21 @@ using namespace std;
  */
 struct Options
 {
-  string detectorType = "HARRIS";  // HARRIS, SHITOMASI, FAST, BRISK, ORB, AKAZE, SIFT, SURF
-  string descriptorType = "AKAZE";  // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
-  string descriptorGroup = "DES_HOG";  // DES_HOG, DES_BINARY
+  string detectorType = "FAST";  // HARRIS, SHITOMASI, FAST, BRISK, ORB, AKAZE, SIFT, SURF
+  string descriptorType = "BRIEF";  // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
+  string descriptorGroup = "DES_BINARY";  // DES_HOG, DES_BINARY
 
-  string matcherType = "MAT_FLANN";  // MAT_BF, MAT_FLANN
+  string matcherType = "MAT_BF";  // MAT_BF, MAT_FLANN
   string selectorType = "SEL_KNN";  // SEL_NN, SEL_KNN
+  
+  bool bCompareDetectors = false;  // true for MP.7, false to print statistics on a single detector
+  bool bCompareDescriptors = false; // true for MP.8-9, false to use a single descriptor
 
-  bool bVis = true;  // true to display images
-  bool bCompareDetectors = true;  // true for MP.7, false to print statistics on a single detector
-  bool bCompareDescriptors = true; // true for MP.8, false to use a single descriptor
+  bool bVis = false;  // true to display the full array of keypoints found in each image
+  bool bVisMatches = true;  // true to view matched keypoints among image pairs (single detector-descriptor only,
+                            // adds a significant overhead to tick counts)
 
+  bool bSaveImagePairs = false;  // true to write image pairs in the current working directory
   bool bLimitKpts = false;  // true to limit the number of keypoints (helpful for debugging and learning)
 };
 
@@ -60,7 +64,7 @@ int main(int argc, const char *argv[])
   cout << "Descriptor group: " << options.descriptorGroup << endl;
   cout << "Feature matcher: " << options.matcherType << endl;
   cout << "Selector type: " << options.selectorType << endl;
-
+  
   // Data location
   string dataPath = "../";
   string sep = string(80, '*');
@@ -149,7 +153,7 @@ int main(int argc, const char *argv[])
         /* DETECT IMAGE KEYPOINTS */
 
         // MP.2: Umbrella function that includes all possible detector choices
-        vector<cv::KeyPoint> keypoints = detectKeypoints(detectorType, frame.cameraImg, detTickCounts, false, 
+        vector<cv::KeyPoint> keypoints = detectKeypoints(detectorType, frame.cameraImg, detTickCounts, options.bVis, 
           bPrintLogs);
 
         // MP.3: Restrict the focus on the preceding vehicle
@@ -229,9 +233,7 @@ int main(int argc, const char *argv[])
           if(!(options.bCompareDetectors || options.bCompareDescriptors))
           {
             // Visualize matches between current and previous image
-            options.bVis = true;
-
-            if (options.bVis)
+            if (options.bVisMatches)
             {
               cv::Mat matchImg = ((dataBuffer.end() - 1)->cameraImg).clone();
               cv::drawMatches((dataBuffer.end() - 2)->cameraImg, (dataBuffer.end() - 2)->keypoints, 
@@ -242,11 +244,15 @@ int main(int argc, const char *argv[])
               cv::namedWindow(windowName, 7);
               imshow(windowName, matchImg);
 
+              if (options.bSaveImagePairs)  // Save matched keypoints image pairs in current working directory
+              {
+                string saveAs = detectorType + "_" + descriptorType + "_" + imgNumber.str() + imgFileType;
+                imwrite(saveAs, matchImg);
+              }
+
               cout << "Press any key to continue to next image" << endl;
               cv::waitKey(0);  // Wait for key to be pressed
             }
-
-            options.bVis = false;
           }
         }
 
@@ -258,13 +264,10 @@ int main(int argc, const char *argv[])
       neighborhoodSizesMatrix.push_back(neighborhoodSizes);
 
       // MP.9: Total time taken for keypoint detection and descriptor for the chosen combination
-      double sumDetTickCounts = accumulate(detTickCounts.begin(), detTickCounts.end(), 0.) * 1000;  // In ms
-      double avgDetTickCount = sumDetTickCounts / detTickCounts.size();
-      avgDetTickCounts.push_back(avgDetTickCount);
-
+      double sumDetTickCounts = accumulate(detTickCounts.begin(), detTickCounts.end(), 0.) * 1000;  // in ms
       double sumDescTickCounts = accumulate(descTickCounts.begin(), descTickCounts.end(), 0.) * 1000;
-      double avgDescTickCount = sumDescTickCounts / descTickCounts.size();
-      avgDescTickCounts.push_back(avgDescTickCount);
+
+      avgDetTickCounts.push_back(sumDetTickCounts / detTickCounts.size());
 
       // Disregard invalid detector-descriptor combinations
       if (!featureTrackingRes.empty())
@@ -287,8 +290,7 @@ int main(int argc, const char *argv[])
       // MP.7: Create structure to hold statistics on keypoints' neighborhood distribution(s)
       Stats stats;
       stats.img_count = imgCount;
-      stats.avg_det_time = avgDetTickCounts;
-      stats.avg_desc_time = avgDescTickCounts;
+      stats.avg_det_time = avgDetTickCounts;  // Will use averages from last detector-descriptor combination
 
       cout << endl;
       cout << "(MP.7) Performance Evaluation 1: Distribution of Keypoints' Neighborhood Sizes" << endl;
@@ -304,7 +306,6 @@ int main(int argc, const char *argv[])
     }
 
     isTableDisplayed = true;  // Display MP.7 table only once when also performing MP.8
-
   }
 
   // https://knowledge.udacity.com/questions/118373
