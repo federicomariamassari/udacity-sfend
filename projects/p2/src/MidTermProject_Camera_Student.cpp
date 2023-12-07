@@ -34,8 +34,8 @@ struct Options
   string matcherType = "MAT_BF";  // MAT_BF, MAT_FLANN
   string selectorType = "SEL_KNN";  // SEL_NN, SEL_KNN
   
-  bool bCompareDetectors = false;  // true for MP.7, false to print statistics on a single detector
-  bool bCompareDescriptors = false; // true for MP.8-9, false to use a single descriptor
+  bool bCompareDetectors = true;  // true for MP.7, false to print statistics on a single detector
+  bool bCompareDescriptors = true; // true for MP.8-9, false to use a single descriptor
 
   bool bVis = false;  // true to display the full array of keypoints found in each image
   bool bVisMatches = true;  // true to view matched keypoints among image pairs (single detector-descriptor only,
@@ -130,6 +130,9 @@ int main(int argc, const char *argv[])
       // MP.8-9: Vector of matched keypoints and total time taken for the current detector-descriptor combination
       vector<double> featureTrackingRes;
 
+      // MP.8: To keep track of the rejected outliers
+      vector<double> rejected;
+
       // To display a particular warning or info message only once
       int warningCounter = 0;
       int infoCounter = 0;
@@ -217,7 +220,7 @@ int main(int argc, const char *argv[])
 
           matchDescriptors((dataBuffer.end()-2)->keypoints, (dataBuffer.end()-1)->keypoints, 
             (dataBuffer.end()-2)->descriptors, (dataBuffer.end()-1)->descriptors, matches, descriptorType, 
-            options.descriptorGroup, options.matcherType, options.selectorType, infoCounter, bPrintLogs);
+            options.descriptorGroup, options.matcherType, options.selectorType, rejected, infoCounter, bPrintLogs);
 
           // End of tasks MP.5-MP.6 (see matching2D.cpp)
 
@@ -272,9 +275,12 @@ int main(int argc, const char *argv[])
       // Disregard invalid detector-descriptor combinations
       if (!featureTrackingRes.empty())
       {
-        // MP.8: Sum the number of matched keypoints across image pairs
+        // MP.8: Sum the number of matched keypoints and rejected outliers across image pairs
         double totalMatches = accumulate(featureTrackingRes.begin(), featureTrackingRes.end(), 0.);
         featureTrackingRes.push_back(totalMatches);
+
+        double totalRejected = accumulate(rejected.begin(), rejected.end(), 0.);
+        featureTrackingRes.push_back(totalRejected);
 
         // MP.9: Also push back total time spent on detection, description, and combined
         featureTrackingRes.push_back(sumDetTickCounts);
@@ -316,7 +322,8 @@ int main(int argc, const char *argv[])
 
   printStatistics(featureTrackingResMap, imgEndIndex);
 
-  cout << "(*) Brute force matching, k-nearest neighbors (k=2), descriptor distance ratio: 0.8." << endl << endl;
+  cout << "(*) Brute force matching, k-nearest neighbors (k=2), descriptor distance ratio: 0.8. " << 
+    "Unfiltered matches = # MATCHES + REJECTED." << endl << endl;
 
   return 0;
 }
