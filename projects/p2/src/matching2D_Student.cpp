@@ -281,10 +281,10 @@ void descKeypoints(vector<cv::KeyPoint> &keypoints, const cv::Mat &img, cv::Mat 
 void matchDescriptors(const vector<cv::KeyPoint> &kPtsSource, const vector<cv::KeyPoint> &kPtsRef, 
   const cv::Mat &descSource, const cv::Mat &descRef, vector<cv::DMatch> &matches, const string descriptorType,
   string descriptorGroup, const string matcherType, const string selectorType, vector<double>& rejected, 
-  int &infoCounter, const bool bPrintMsg)
+  int &infoCounter, const float minDescDistanceRatio, const bool bPrintMsg)
 {
   // Configure matcher
-  bool crossCheck = false;
+  bool crossCheck = false;  // false to avoid bypassing caught BF error (https://knowledge.udacity.com/questions/243086)
   cv::Ptr<cv::DescriptorMatcher> matcher;  // https://docs.opencv.org/4.2.0/db/d39/classcv_1_1DescriptorMatcher.html
 
   if (descriptorGroup.compare("DES_BINARY") != 0 && descriptorGroup.compare("DES_HOG") != 0)
@@ -358,9 +358,6 @@ void matchDescriptors(const vector<cv::KeyPoint> &kPtsSource, const vector<cv::K
     
     if (bPrintMsg)
       cout << selectorType << " with n = " << knnMatches.size() << " matches in " << 1000 * t / 1.0 << " ms" << endl;
-
-    // Minimum descriptor distance ratio test (based on solution to [2])
-    float minDescDistanceRatio = 0.8;
 
     // Computed on k-nearest neighbors, not brute force [3]
     for (auto it = knnMatches.begin(); it != knnMatches.end(); ++it)
@@ -467,7 +464,6 @@ void limitKeypoints(vector<cv::KeyPoint>& keypoints, const string detector, cons
     keypoints.erase(keypoints.begin() + maxKeypoints, keypoints.end());
 
   cv::KeyPointsFilter::retainBest(keypoints, maxKeypoints);
-  cout << "(!) NOTE: Keypoints have been limited!" << endl;
 }
 
 void extractNeighborhoodSizes(const vector<cv::KeyPoint>& keypoints, vector<double>& neighborhoodSizes)  // MP.7

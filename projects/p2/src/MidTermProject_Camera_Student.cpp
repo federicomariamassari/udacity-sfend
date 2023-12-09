@@ -33,6 +33,8 @@ struct Options
 
   string matcherType = "MAT_BF";  // MAT_BF, MAT_FLANN
   string selectorType = "SEL_KNN";  // SEL_NN, SEL_KNN
+
+  float minDescDistanceRatio = 0.8;  // Minimum descriptor distance ratio test, 0. <= x <= 1.
   
   bool bCompareDetectors = true;  // true for MP.7, false to print statistics on a single detector
   bool bCompareDescriptors = true; // true for MP.8-9, false to use a single descriptor
@@ -53,10 +55,16 @@ int main(int argc, const char *argv[])
   {
     options.matcherType = "MAT_BF";
     options.selectorType = "SEL_KNN";
+    options.minDescDistanceRatio = 0.8;
 
-    string msg = "Setting matcherType='" + options.matcherType + "' and selectorType='" + options.selectorType + "'.";
+    string msg = "Setting matcherType='" + options.matcherType + "' and selectorType='" + options.selectorType + "', "
+     + "minimum descriptor distance ratio: " + to_string(options.minDescDistanceRatio);
+
     cerr << endl << "(!) WARNING: Description comparison is ON. " << msg << endl;
   }
+
+  if (options.bLimitKpts)
+    cerr << endl << "(!) WARNING: Limit Keypoints is ON. Keypoints will be limited!" << endl;
 
   cout << endl;
   cout << "Keypoint detector: " << options.detectorType << endl;
@@ -220,7 +228,8 @@ int main(int argc, const char *argv[])
 
           matchDescriptors((dataBuffer.end()-2)->keypoints, (dataBuffer.end()-1)->keypoints, 
             (dataBuffer.end()-2)->descriptors, (dataBuffer.end()-1)->descriptors, matches, descriptorType, 
-            options.descriptorGroup, options.matcherType, options.selectorType, rejected, infoCounter, bPrintLogs);
+            options.descriptorGroup, options.matcherType, options.selectorType, rejected, infoCounter, 
+            options.minDescDistanceRatio, bPrintLogs);
 
           // End of tasks MP.5-MP.6 (see matching2D.cpp)
 

@@ -105,6 +105,8 @@ void descKeypoints(std::vector<cv::KeyPoint> &keypoints, const cv::Mat &img, cv:
  * @param selectorType The best matches' selector's name.
  * @param rejected The structure that keeps track of the rejected outliers [4].
  * @param infoCounter To avoid cluttering the console when an info message has already been printed for an image.
+ * @param minDescDistanceRatio Minimum descriptor distance ratio test (based on solution to [2]).
+ * @param crossCheck If true, only return features in both images matching each other.
  * @param bPrintMsg Whether to print logs.
  * 
  * Resources:
@@ -112,12 +114,12 @@ void descKeypoints(std::vector<cv::KeyPoint> &keypoints, const cv::Mat &img, cv:
  * [1] - https://docs.opencv.org/4.2.0/dg8/d9b/group__features2d__match.html
  * [2] - Exercise - Descriptor Matching (Tracking Image Features: Lesson 12), Udacity Sensor Fusion Nanodegree
  * [3] - https://knowledge.udacity.com/questions/118373
- * [4] - Tareen, Saleem: A Comparative Analysis of SIFT, SURF, KAZE, AKAZE, ORB and BRISK (2018).
+ * [4] - Tareen, Saleem: "A Comparative Analysis of SIFT, SURF, KAZE, AKAZE, ORB and BRISK" (2018)
  */
 void matchDescriptors(const std::vector<cv::KeyPoint> &kPtsSource, const std::vector<cv::KeyPoint> &kPtsRef, 
   const cv::Mat &descSource, const cv::Mat &descRef, std::vector<cv::DMatch> &matches, const std::string descriptorType, 
   std::string descriptorGroup, const std::string matcherType, const std::string selectorType, 
-  std::vector<double>& rejected, int &infoCounter, const bool bPrintMsg=true);
+  std::vector<double>& rejected, int &infoCounter, const float minDescDistanceRatio=0.8, const bool bPrintMsg=true);
 
 /*********************************************************************************************************************
  * CUSTOM ADDITIONS
