@@ -42,7 +42,7 @@ int main(int argc, const char *argv[])
     string msg = "Setting matcherType='" + options.matcherType + "' and selectorType='" + options.selectorType + "', "
      + "minimum descriptor distance ratio: " + to_string(options.minDescDistanceRatio);
 
-    cerr << endl << "(!) WARNING: Description comparison is ON. " << msg << endl;
+    cerr << endl << "(!) WARNING: Descriptor comparison is ON. " << msg << endl;
   }
 
   if (options.bLimitKpts)
