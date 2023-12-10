@@ -46,7 +46,7 @@ A stream of incoming obstacles, encapsulated in PCA bounding boxes, is rendered 
 
 ![PCA Bounding Boxes](./projects/p1/img/mov1.gif)
 
-## [Project 2: Camera-Based 2D Feature Tracking (Mid-Term)](projects/p2/p2-camera-based-2d-feature-tracking.md)
+## [Project 2: Camera-Based 2D Feature Tracking](projects/p2/p2-camera-based-2d-feature-tracking.md)
 
 __Acquired familiarity with:__ OpenCV 4.x, Gnumeric.
 
