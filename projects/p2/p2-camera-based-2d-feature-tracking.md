@@ -4,7 +4,7 @@
 
 ## Preliminary Considerations
 
-This project was originally developed on a UTM QEMU 7.0 Virtual Machine running Ubuntu 20.04-5 LTS on Apple Silicon architecture (aarch64), and later ported to the Udacity workspace. It uses OpenCV 4.2.0, [built from source](https://github.com/federicomariamassari/udacity-rsend/blob/main/projects/p4/p4-preliminary-config.md#3-rebuild-opencv-from-source-with-patented-modules) to enable patented algorithms SIFT/SURF.
+This project was originally developed on a UTM QEMU 7.0 Virtual Machine running Ubuntu 20.04-5 LTS on Apple Silicon architecture (aarch64), and later ported to the Udacity workspace. It uses OpenCV 4.2.0, [built from source](https://github.com/federicomariamassari/udacity-rsend/blob/main/projects/p4/p4-preliminary-config.md#3-rebuild-opencv-from-source-with-patented-modules) to enable patented algorithms SIFT/SURF. For easier debugging and experimentation, the main parameters have been factored out in an [`Options` struct](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p2/src/MidTermProject_Camera_Student.cpp#L10) and can be changed for a range of outcomes.
 
 ## Mid-Term Report
 
@@ -34,11 +34,11 @@ For the k-Nearest Neighbor selector, the main source is [11].
 
 ### MP.6: Description Distance Ratio
 
-The implementation of the description distance ratio for k-Nearest Neighbors is taken from Udacity' solution to [12].
+The implementation of the description distance ratio for k-Nearest Neighbors is taken from Udacity's solution to [12].
 
 ### MP.7: Performance Evaluation 1
 
-caption: distribution of keypoints' neighborhood size
+caption: distribution of keypoints' neighborhood size (default arguments)
 
 | Metrics | Harris | Shi-Tomasi | FAST | BRISK | ORB | AKAZE | SIFT | SURF |
 |:----------|------:|------:|------:|------:|------:|------:|------:|------:|
@@ -56,7 +56,7 @@ caption: distribution of keypoints' neighborhood size
 | 75th percentile | 6 | 4 | 7 | 27 | 77.1379 | 8.07261 | 4.83003 | 30 |
 | IQR | 0 | 0 | 0 | 14.6939 | 39.9379 | 2.36441 | 2.65333 | 14 |
 
-(*) Single experiment.
+(*) Single experiment, [`bCompareDetectors = true`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p2/src/MidTermProject_Camera_Student.cpp#L21).
 
 __Figure 1: FAST-BRIEF (Top), FAST-ORB (Middle), FAST-BRISK (Bottom) Keypoint Matching__
 ![FAST-BRIEF](./img/FAST_BRIEF_0007.png)
