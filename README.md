@@ -52,6 +52,8 @@ __Acquired familiarity with:__ OpenCV 4.x, Gnumeric.
 
 ### Overview
 
+__[Link to code](projects/p2/)__ | [Starter Code from Udacity](https://github.com/udacity/SFND_2D_Feature_Tracking)
+
 ### How to Build and Run the Project
 
 As a prerequisite, build OpenCV 4.2.0 [from source](https://github.com/federicomariamassari/udacity-rsend/blob/main/projects/p4/p4-preliminary-config.md#3-rebuild-opencv-from-source-with-patented-modules) to enable patented algorithms SIFT and SURF.
@@ -63,5 +65,3 @@ cmake ..
 make
 ./2D_feature_tracking
 ```
-
-__[Link to code](projects/p2/)__ | [Starter Code from Udacity](https://github.com/udacity/SFND_2D_Feature_Tracking)

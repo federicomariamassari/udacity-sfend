@@ -6,6 +6,31 @@
 
 This project was originally developed on a UTM QEMU 7.0 Virtual Machine running Ubuntu 20.04-5 LTS on Apple Silicon architecture (aarch64), and later ported to the Udacity workspace. It uses OpenCV 4.2.0, [built from source](https://github.com/federicomariamassari/udacity-rsend/blob/main/projects/p4/p4-preliminary-config.md#3-rebuild-opencv-from-source-with-patented-modules) to enable patented algorithms SIFT/SURF. For easier debugging and experimentation, the main parameters have been factored out in an [`Options` struct](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p2/src/MidTermProject_Camera_Student.cpp#L10) and can be changed for a range of outcomes.
 
+__Figure 1: Directory Structure Tree__
+
+```bash
+.
+├── build
+│   ├── ...
+│   └── 2D_feature_tracking
+├── CMakeLists.txt
+├── images
+│   └── KITTI
+│       └── 2011_09_26
+│           └── image_00
+│               └── data
+│                   ├── 0000000000.png
+│                   ├── ...
+│                   └── 0000000009.png
+├── analysis
+│   └── Book1.xls
+└── src
+    ├── dataStructures.h
+    ├── matching2D.hpp
+    ├── matching2D_Student.cpp
+    └── MidTermProject_Camera_Student.cpp
+```
+
 ## Mid-Term Report
 
 ### MP.1: Data Buffer Optimization
@@ -43,7 +68,7 @@ __Figure 1: Distribution of Keypoints' Neighborhood Size__
 | Metrics | Harris | Shi-Tomasi | FAST | BRISK | ORB | AKAZE | SIFT | SURF |
 |:----------|------:|------:|------:|------:|------:|------:|------:|------:|
 | Total no. of keypoints | 247 | 1179 | 2207 | 2762 | 1161 | 1670 | 1386 | 2150 |
-| Keypoints per image (lower bound) | 24 | 117 | 220 | 276 | 116 | 167 | 138 | 215 |
+| Keypoints/image (lower bound) | 24 | 117 | 220 | 276 | 116 | 167 | 138 | 215 |
 | Avg keypoint detection time* (ms) | 5.13568 | 4.11741 | 0.862544 | 38.2281 | 4.34509 | 41.7808 | 40.887 | 17.0413 |
 | Mean | 6 | 4 | 7 | 21.9444 | 55.9928 | 7.69915 | 5.03739 | 28.2967 |
 | Median | 6 | 4 | 7 | 15.5217 | 44.64 | 5.70819 | 3.19932 | 21 |
