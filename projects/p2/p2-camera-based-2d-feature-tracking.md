@@ -10,7 +10,7 @@ This project was originally developed on a UTM QEMU 7.0 Virtual Machine running 
 
 ### MP.1: Data Buffer Optimization
 
-A data ring buffer guarantees efficient memory management by limiting the number of images simultaneously present in the holding data structure, preventing the structure from growing excessively in size. Here, the buffer is a C++ vector with maximum size two; if the vector is full, we erase the earliest pushed-back image first (FIFO), then add the next element [1]. Time complexity is linear on the element erased (basically constant, since it's always the first one and no search is involved), and linear on moving the remaining element to position 0 [2].
+A data ring buffer guarantees efficient memory management by limiting the number of images simultaneously present in the holding data structure, preventing the structure from growing excessively in size. Here, the buffer is a C++ vector with maximum size two; if the vector is full, we erase the earliest pushed-back image first (FIFO), then add the next element [1]. Time complexity is linear on the element erased and linear on moving the remaining element from position 1 to position 0 [2]; one can even say both operations occur in constant time, since the deleted object is always the first one with no search involved, and a one-place move is performed.
 
 ### MP.2: Keypoint Detection
 
