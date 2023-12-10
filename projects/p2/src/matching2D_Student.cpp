@@ -13,7 +13,7 @@ void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, const cv::Mat &img, 
   int maxCorners = img.rows * img.cols / max(1.0, minDistance);  // Maximum number of keypoints
 
   double qualityLevel = 0.01;  // Minimal accepted quality of image corners
-  double k = 0.04;  // Free parameter of the Harris detector
+  double k = 0.04;  // Free parameter of the Harris detector (unused with bUseHarrisDetector = false)
   bool bUseHarrisDetector = false;
 
   // Apply corner detection
@@ -51,13 +51,13 @@ void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, const cv::Mat &img, 
   }
 }
 
-void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, const cv::Mat &img, vector<double>& detTickCounts, 
+void detKeypointsHarris(vector<cv::KeyPoint> &keypoints, const cv::Mat &img, vector<double>& detTickCounts, 
   const bool bVis, const bool bPrintMsg)
 {
   int blockSize = 2;  // Size of pixel neighborhood considered for corner detection (W)
   int apertureSize = 3;  // Aperture size for the Sobel operator (must be odd)
   int minResponse = 100;  // Pixel is marked as corner iff R = det(H_w) - k*(tr(H_w))^2 >= minResponse
-  double k = 0.04;  // Empirical constant in [0.04-0.06]
+  double k = 0.04;  // Empirical constant in [0.04-0.06], keep low for best outcome/time trade-off
 
   cv::Mat dst, dstNorm, dstNormScaled;
   dst = cv::Mat::zeros(img.size(), CV_32FC1);
@@ -127,76 +127,39 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, const cv::Mat &img
   }
 }
 
-void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, const cv::Mat &img, const std::string detectorType, 
+void detKeypointsModern(vector<cv::KeyPoint> &keypoints, const cv::Mat &img, const string detectorType, 
   vector<double>& detTickCounts, const bool bVis, const bool bPrintMsg)
 {
   cv::Ptr<cv::FeatureDetector> detector;
   
   if (detectorType.compare("FAST") == 0)  // https://docs.opencv.org/4.2.0/df/d74/classcv_1_1FastFeatureDetector.html
   {
-    int threshold = 30;
-    bool bUseNonMaxSuppression = true;  // For uniform comparison with Harris, Shi-Tomasi
+    int threshold = 20;  // Improved accuracy compared to default 10
+    bool bUseNonMaxSuppression = true;  // For uniform comparison with Harris and Shi-Tomasi
+    cv::FastFeatureDetector::DetectorType type = cv::FastFeatureDetector::TYPE_9_16;
 
-    cv::FastFeatureDetector::DetectorType type = cv::FastFeatureDetector::TYPE_9_16;  // TYPE_5_8, TYPE_7_12, TYPE_9_16
     detector = cv::FastFeatureDetector::create(threshold, bUseNonMaxSuppression, type);
 
   } else if (detectorType.compare("BRISK") == 0)  // https://docs.opencv.org/4.2.0/de/dbf/classcv_1_1BRISK.html
   {
-    int threshold = 30;
-    int octaves = 3;
-    float patternScale = 1.f;
-
-    detector = cv::BRISK::create(threshold, octaves, patternScale);
+    // Keeping default parameter values for most implementations
+    detector = cv::BRISK::create();
 
   } else if (detectorType.compare("ORB") == 0)  // https://docs.opencv.org/4.2.0/db/d95/classcv_1_1ORB.html
   {
-    int nFeatures = 500;
-    float scaleFactor = 1.2f;
-    int nLevels = 8;
-    int edgeFeatures = 31;
-    int firstLevel = 0;
-    int WTA_K = 2;
-    cv::ORB::ScoreType scoreType = cv::ORB::HARRIS_SCORE;
-    int patchSize = 31;
-    int fastThreshold = 20;
-
-    detector = cv::ORB::create(nFeatures, scaleFactor, nLevels, edgeFeatures, firstLevel, WTA_K, scoreType, patchSize, 
-      fastThreshold);
+    detector = cv::ORB::create();
 
   } else if (detectorType.compare("AKAZE") == 0)  // https://docs.opencv.org/4.2.0/d8/d30/classcv_1_1AKAZE.html
   {
-    cv::AKAZE::DescriptorType descriptorType = cv::AKAZE::DESCRIPTOR_MLDB; 
-    int descriptorSize = 0;
-    int descriptorChannels = 3;
-    float threshold = .001f; 
-    int nOctaves = 4;
-    int nOctaveLayers = 4;
-    cv::KAZE::DiffusivityType diffusivity = cv:: KAZE::DIFF_PM_G2;
-
-    detector = cv::AKAZE::create(descriptorType, descriptorSize, descriptorChannels, threshold, nOctaves, 
-      nOctaveLayers, diffusivity);
+    detector = cv::AKAZE::create();
 
   } else if (detectorType.compare("SIFT") == 0)  // https://docs.opencv.org/4.x/d7/d60/classcv_1_1SIFT.html
   {
-    int nFeatures = 0;
-    int nOctaveLayers = 3;
-    double contrastThreshold = 0.04;
-    double edgeThreshold = 10;
-    double sigma = 1.6;
-    bool enable_precise_upscale = false;
-
-    detector = cv::SIFT::create(nFeatures, nOctaveLayers, contrastThreshold, edgeThreshold, sigma, 
-      enable_precise_upscale);
+    detector = cv::SIFT::create();
 
   } else if (detectorType.compare("SURF") == 0) // https://docs.opencv.org/4.2.0/d5/df7/classcv_1_1xfeatures2d_1_1SURF.html
   {
-    double hessianThreshold = 100;
-    int nOctaves = 4;
-    int nOctaveLayers = 3;
-    bool extended = false;
-    bool upright = false;
-
-    detector = cv::xfeatures2d::SURF::create(hessianThreshold, nOctaves, nOctaveLayers, extended, upright);
+    detector = cv::xfeatures2d::SURF::create();
 
   } else 
     throw invalid_argument("Invalid detector. Must be among: SHITOMASI, HARRIS, SIFT, SURF, FAST, ORB, BRISK, AKAZE.");
@@ -265,7 +228,7 @@ void descKeypoints(vector<cv::KeyPoint> &keypoints, const cv::Mat &img, cv::Mat 
     extractor = cv::xfeatures2d::SURF::create();
 
   else
-    throw invalid_argument("Invalid descriptor type. Must be among: BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT.");
+    throw invalid_argument("Invalid descriptor type. Must be among: BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT, SURF.");
 
   // Perform and time feature description
   double t = (double) cv::getTickCount();
@@ -430,7 +393,7 @@ vector<cv::KeyPoint> detectKeypoints(const string detectorType, cv::Mat& img, ve
   return keypoints;
 }
 
-void focusOnArea(std::vector<cv::KeyPoint>& keypoints, const bool bFocusOnVehicle, const bool bPrintMsg)
+void focusOnArea(vector<cv::KeyPoint>& keypoints, const bool bFocusOnVehicle, const bool bPrintMsg)
 {
   // TASK MP.3: Only keep keypoints in a rectangle centered on the preceding vehicle
 
@@ -547,7 +510,7 @@ void computeStatistics(Stats& s, vector<double>& vec)  // MP.7
 }
 
 template<typename T>
-void printLine(const std::pair<const std::string, std::vector<T>>& p)  // MP.7
+void printLine(const pair<const string, vector<T>>& p)  // MP.7
 {
   cout << left << setw(30) << p.first;
 

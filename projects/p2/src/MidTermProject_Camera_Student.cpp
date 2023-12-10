@@ -10,7 +10,7 @@ using namespace std;
 struct Options
 {
   string detectorType = "FAST";  // HARRIS, SHITOMASI, FAST, BRISK, ORB, AKAZE, SIFT, SURF
-  string descriptorType = "BRIEF";  // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
+  string descriptorType = "BRIEF";  // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT, SURF
   string descriptorGroup = "DES_BINARY";  // DES_HOG, DES_BINARY
 
   string matcherType = "MAT_BF";  // MAT_BF, MAT_FLANN
@@ -145,7 +145,7 @@ int main(int argc, const char *argv[])
 
         /* DETECT IMAGE KEYPOINTS */
 
-        // MP.2: Umbrella function that includes all possible detector choices
+        // MP.2: Wrapper function that includes all possible detector choices
         vector<cv::KeyPoint> keypoints = detectKeypoints(detectorType, frame.cameraImg, detTickCounts, options.bVis, 
           bPrintLogs);
 
@@ -164,6 +164,7 @@ int main(int argc, const char *argv[])
           cout << "#2: DETECT KEYPOINTS done" << endl;
 
         // MP.7: Cumulate neighborhood sizes for average statistics
+        // Diameter is constant for Harris, Shi-Tomasi, and FAST (https://knowledge.udacity.com/questions/1021073)
         extractNeighborhoodSizes(keypoints, neighborhoodSizes);
 
         /* EXTRACT KEYPOINT DESCRIPTORS */
