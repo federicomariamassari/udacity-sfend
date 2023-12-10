@@ -38,13 +38,13 @@ The implementation of the description distance ratio for k-Nearest Neighbors is 
 
 ### MP.7: Performance Evaluation 1
 
-caption: distribution of keypoints' neighborhood size (default arguments)
+__Figure 1: Distribution of Keypoints' Neighborhood Size (Default Arguments)__
 
 | Metrics | Harris | Shi-Tomasi | FAST | BRISK | ORB | AKAZE | SIFT | SURF |
 |:----------|------:|------:|------:|------:|------:|------:|------:|------:|
-| Total no. of keypoints | 247 | 1179 | 1491 | 2762 | 1161 | 1670 | 1386 | 2150 |
-| Keypoints per image (lower bound) | 24 | 117 | 149 | 276 | 116 | 167 | 138 | 215 |
-| Avg keypoint detection time* (ms) | 4.625 | 3.18327 | 0.637949 | 38.1851 | 4.25557 | 40.847 | 37.5851 | 15.9139 |
+| Total no. of keypoints | 247 | 1179 | 2207 | 2762 | 1161 | 1670 | 1386 | 2150 |
+| Keypoints per image (lower bound) | 24 | 117 | 220 | 276 | 116 | 167 | 138 | 215 |
+| Avg keypoint detection time* (ms) | 5.13568 | 4.11741 | 0.862544 | 38.2281 | 4.34509 | 41.7808 | 40.887 | 17.0413 |
 | Mean | 6 | 4 | 7 | 21.9444 | 55.9928 | 7.69915 | 5.03739 | 28.2967 |
 | Median | 6 | 4 | 7 | 15.5217 | 44.64 | 5.70819 | 3.19932 | 21 |
 | Mode | 6 | 4 | 7 | 72 | 111.079 | 22.8328 | 42.8487 | 128 |
