@@ -28,7 +28,7 @@ Descriptors SIFT (and SURF), BRIEF, ORB, FREAK, and AKAZE are implemented, with 
 
 ### MP.5: Descriptor Matching
 
-The main reference for matching is [8], with abstract class `cv::DescriptorMatcher` used as base for all matchers. Validation criteria are added to both Brute Force (part of the starter code) and FLANN: for Brute Force, by ensuring that the Hamming distance is only applied to binary algorithms, using instead the L2-norm (vector norm) for Histogram Of Gradients -based methods SIFT and SURF (having previously labelled them as such) [9]; for FLANN, by converting the input descriptor source and reference into 32-bit floating point numbers ahead of the processing step [10].
+The main reference for matching is [8], with abstract class `cv::DescriptorMatcher` used as base for all matchers. Validation criteria are added to both Brute Force (part of the starter code) and FLANN: for Brute Force, by ensuring that the Hamming distance is only applied to binary algorithms, using instead the L2-norm (vector norm) for Histogram Of Gradients -based methods SIFT and SURF (having previously [labelled them as such](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p2/src/matching2D_Student.cpp#L300)) [9]; for FLANN, by converting the input descriptor source and reference into 32-bit floating point numbers ahead of the processing step [10].
 
 For the k-Nearest Neighbor selector, the main source is [11].
 
