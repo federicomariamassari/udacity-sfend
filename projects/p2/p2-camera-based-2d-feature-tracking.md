@@ -42,11 +42,12 @@ caption: distribution of keypoints' neighborhood size
 
 | Metrics | Harris | Shi-Tomasi | FAST | BRISK | ORB | AKAZE | SIFT | SURF |
 |:----------|------:|------:|------:|------:|------:|------:|------:|------:|
-| Avg keypoint detection time (ms) | 8.48296 | 8.04698 | 0.917401 | 42.3672 | 6.59652 | 52.7699 | 46.6504 | 22.8567 |
 | Total no. of keypoints | 247 | 1179 | 1491 | 2762 | 1161 | 1670 | 1386 | 2150 |
-| Avg. no. keypoints (lower bound) | 24 | 117 | 149 | 276 | 116 | 167 | 138 | 215 |
+| Keypoints per image (lower bound) | 24 | 117 | 149 | 276 | 116 | 167 | 138 | 215 |
+| Avg keypoint detection time* (ms) | 4.625 | 3.18327 | 0.637949 | 38.1851 | 4.25557 | 40.847 | 37.5851 | 15.9139 |
 | Mean | 6 | 4 | 7 | 21.9444 | 55.9928 | 7.69915 | 5.03739 | 28.2967 |
 | Median | 6 | 4 | 7 | 15.5217 | 44.64 | 5.70819 | 3.19932 | 21 |
+| Mode | 6 | 4 | 7 | 72 | 111.079 | 22.8328 | 42.8487 | 128 |
 | Standard deviation | 0 | 0 | 0 | 14.6207 | 25.1258 | 3.53831 | 5.98752 | 19.6608 |
 | Min | 6 | 4 | 7 | 8.4 | 31 | 4.8 | 1.79669 | 10 |
 | Max | 6 | 4 | 7 | 72 | 111.079 | 27.1529 | 51.7024 | 128 |
@@ -54,6 +55,8 @@ caption: distribution of keypoints' neighborhood size
 | 25th percentile | 6 | 4 | 7 | 12.3061 | 37.2 | 5.70819 | 2.1767 | 16 |
 | 75th percentile | 6 | 4 | 7 | 27 | 77.1379 | 8.07261 | 4.83003 | 30 |
 | IQR | 0 | 0 | 0 | 14.6939 | 39.9379 | 2.36441 | 2.65333 | 14 |
+
+(*) Single experiment.
 
 __Figure 1: FAST-BRIEF (Top), FAST-ORB (Middle), FAST-BRISK (Bottom) Keypoint Matching__
 ![FAST-BRIEF](./img/FAST_BRIEF_0007.png)
