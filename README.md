@@ -48,8 +48,20 @@ A stream of incoming obstacles, encapsulated in PCA bounding boxes, is rendered 
 
 ## [Project 2: Camera-Based 2D Feature Tracking (Mid-Term)](projects/p2/p2-camera-based-2d-feature-tracking.md)
 
-__Acquired familiarity with:__ OpenCV 4.x
+__Acquired familiarity with:__ OpenCV 4.x, Gnumeric.
 
 ### Overview
+
+### How to Build and Run the Project
+
+As a prerequisite, build OpenCV 4.2.0 [from source](https://github.com/federicomariamassari/udacity-rsend/blob/main/projects/p4/p4-preliminary-config.md#3-rebuild-opencv-from-source-with-patented-modules) to enable patented algorithms SIFT and SURF.
+
+```bash
+cd /home/$whoami/workspace/udacity-rsend/projects/p2
+mkdir build && cd build
+cmake ..
+make
+./2D_feature_tracking
+```
 
 __[Link to code](projects/p2/)__ | [Starter Code from Udacity](https://github.com/udacity/SFND_2D_Feature_Tracking)
