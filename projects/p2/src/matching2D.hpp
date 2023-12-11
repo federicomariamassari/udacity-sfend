@@ -107,7 +107,6 @@ void descKeypoints(std::vector<cv::KeyPoint> &keypoints, const cv::Mat &img, cv:
  * @param rejected The structure that keeps track of the rejected outliers [4].
  * @param infoCounter To avoid cluttering the console when an info message has already been printed for an image.
  * @param minDescDistanceRatio Minimum descriptor distance ratio test (based on solution to [2]).
- * @param crossCheck If true, only return features in both images matching each other.
  * @param bPrintMsg Whether to print logs.
  * 
  * Resources:
