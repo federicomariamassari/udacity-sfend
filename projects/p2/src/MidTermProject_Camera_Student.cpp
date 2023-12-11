@@ -254,7 +254,8 @@ int main(int argc, const char *argv[])
         else
           if (bPrintLogs)
             cout << "#4: MATCH KEYPOINT DESCRIPTORS skipped (no image to compare to)" << endl;
-      }
+
+      }  // end for loop images
 
       neighborhoodSizesMatrix.push_back(neighborhoodSizes);
 
@@ -281,7 +282,7 @@ int main(int argc, const char *argv[])
 
         featureTrackingResMap[detectorType + "-" + descriptorType] = featureTrackingRes;
       }
-    }
+    }  // end for loop detectors
 
     if (!isTableDisplayed)
     {
@@ -304,7 +305,8 @@ int main(int argc, const char *argv[])
     }
 
     isTableDisplayed = true;  // Display MP.7 table only once when also performing MP.8
-  }
+
+  }  // end for loop descriptors
 
   // https://knowledge.udacity.com/questions/118373
   cout << endl;
