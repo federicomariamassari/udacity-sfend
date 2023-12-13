@@ -93,7 +93,7 @@ __Table 1: Distribution of Keypoints' Neighborhood Size__
 
 ### MP.8: Performance Evaluation 2
 
-[`performance_evaluation.xls`](https://github.com/federicomariamassari/udacity-sfend/tree/main/projects/p2/analysis) contains breakdowns of keypoint matches, per image pair and total, for both DES_BINARY and DES_HOG. The lists are sorted in descending order by total time, then by matching ratio (the proportion of matches over the sum of matches and non-matches). For SIFT (and SURF), DES_HOG is always used, even when DES_BINARY is selected.
+[`performance_evaluation.xls`](https://github.com/federicomariamassari/udacity-sfend/tree/main/projects/p2/analysis) contains breakdowns of keypoint matches, per image pair and total, for both DES_BINARY and DES_HOG. The lists are sorted in descending order by total time, then by matching ratio (the proportion of matches over the sum of matches and non-matches). For SIFT (and SURF), DES_HOG is always used, even when DES_BINARY is selected. For this exercise, the matcher type is set to brute-force (MAT_BF) and the selector to $k$-Nearest Neighbors (with $k$ = 2), with a descriptor distance ratio of 0.8.
 
 Overall, DES_BINARY leads to several more feature matches (~100+ on average), showing that the Hamming distance is in general a less strict discriminant as compared to the L2-norm. For this reason, I will mostly focus on results from the former.
 
