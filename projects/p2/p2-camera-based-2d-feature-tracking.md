@@ -93,7 +93,11 @@ __Table 1: Distribution of Keypoints' Neighborhood Size__
 
 ### MP.8: Performance Evaluation 2
 
+[`performance_evaluation.xls`](https://github.com/federicomariamassari/udacity-sfend/tree/main/projects/p2/analysis) contains breakdowns of keypoint matches, per image pair and total, for both DES_BINARY and DES_HOG. The lists are sorted in descending order by total time, then by matching ratio (the proportion of matches over the sum of matches and non-matches). For SIFT (and SURF), DES_HOG is always used, even when DES_BINARY is selected.
 
+Overall, DES_BINARY leads to several more feature matches (~100+ on average), showing that the Hamming distance is in general a less strict discriminant as compared to the L2-norm. For this reason, I will mostly focus on results from the former.
+
+Combinations BRISK-BRIEF (1704) and BRISK-SIFT (1656) produce the largest number of matched features, albeit with average accuracy (~65-68%), as is the case for all pairs where BRISK is the detector. The excellent FAST-BRIEF (1601) and FAST-ORB (1575) follow, but with much higher accuracy (~80%). Among the worst performers are the combinations where a HOG-based detector is paired with a binary descriptor, for example SIFT-BRISK or SIFT-FREAK (accuracy: less than 50%). Interestingly, when DES_HOG is chosen as default descriptor group, binary-only combinations like BRISK-ORB or BRISK-FREAK become some of the poorest instead (matching ratio ~35-45%).
 
 __Figure 1: FAST-BRIEF (Top), FAST-ORB (Middle), FAST-BRISK (Bottom) Keypoint Matching__
 ![FAST-BRIEF](./img/FAST_BRIEF_0007.png)
