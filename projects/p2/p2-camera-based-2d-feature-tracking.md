@@ -99,6 +99,14 @@ Overall, DES_BINARY leads to several more feature matches (~100+ on average), sh
 
 Combinations BRISK-BRIEF (1704) and BRISK-SIFT (1656) produce the largest number of matched features, albeit with average accuracy (~65-68%), as is the case for all pairs where BRISK is the detector. The excellent FAST-BRIEF (1601) and FAST-ORB (1575) follow, but with much higher accuracy (~80%). Among the worst performers are the combinations where a HOG-based detector is paired with a binary descriptor, for example SIFT-BRISK or SIFT-FREAK (accuracy: less than 50%). Interestingly, when DES_HOG is chosen as default descriptor group, binary-only combinations like BRISK-ORB or BRISK-FREAK become some of the poorest instead (matching ratio ~35-45%).
 
+### MP.9: Performance Evaluation 3
+
+The same spreadsheet also contains running time statistics for each detector-descriptor set. Data are available separately for each phase (detection and description), as well as an aggregate. Computation time difference between DES_BINARY and DES_HOG is quite negligible. A caveat of this analysis is that statistics are collected on a single experiment, so there will be some variability across repetitions (although the ranking is stable).
+
+#### Top 3 Detector-Descriptor Combinations
+
+
+
 __Figure 1: FAST-BRIEF (Top), FAST-ORB (Middle), FAST-BRISK (Bottom) Keypoint Matching__
 ![FAST-BRIEF](./img/FAST_BRIEF_0007.png)
 ![FAST-ORB](./img/FAST_ORB_0007.png)
