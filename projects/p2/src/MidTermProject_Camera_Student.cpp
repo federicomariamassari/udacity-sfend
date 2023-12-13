@@ -11,7 +11,7 @@ struct Options
 {
   string detectorType = "FAST";  // HARRIS, SHITOMASI, FAST, BRISK, ORB, AKAZE, SIFT, SURF
   string descriptorType = "BRIEF";  // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT, SURF
-  string descriptorGroup = "DES_BINARY";  // DES_HOG, DES_BINARY
+  string descriptorGroup = "DES_HOG";  // DES_HOG, DES_BINARY
 
   string matcherType = "MAT_BF";  // MAT_BF, MAT_FLANN
   string selectorType = "SEL_KNN";  // SEL_NN, SEL_KNN
@@ -275,6 +275,9 @@ int main(int argc, const char *argv[])
         double totalRejected = accumulate(rejected.begin(), rejected.end(), 0.);
         featureTrackingRes.push_back(totalRejected);
 
+        // Push back matching ratio as a percentage
+        featureTrackingRes.push_back(totalMatches / (totalMatches + totalRejected) * 100);
+
         // MP.9: Also push back total time spent on detection, description, and combined
         featureTrackingRes.push_back(sumDetTickCounts);
         featureTrackingRes.push_back(sumDescTickCounts);
@@ -316,8 +319,7 @@ int main(int argc, const char *argv[])
 
   printStatistics(featureTrackingResMap, imgEndIndex);
 
-  cout << "(*) Brute force matching, k-nearest neighbors (k=2), descriptor distance ratio: 0.8. " << 
-    "Unfiltered matches = # MATCHES + REJECTED." << endl << endl;
+  cout << "(*) Brute force matching, k-nearest neighbors (k=2), descriptor distance ratio: 0.8. " << endl << endl;
 
   return 0;
 }

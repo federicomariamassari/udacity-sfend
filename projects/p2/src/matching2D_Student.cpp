@@ -574,13 +574,13 @@ void printStatistics(const map<string, vector<double>>& m, const int& imgEndInde
 {
   // Print header
   vector<string> header {"0-1", "1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8-9", "# MATCHES", "REJECTED", 
-    "DET.TIME", "DESC.TIME", "TOTAL TIME"};
+    "M.RATIO %", "DET.TIME", "DESC.TIME", "TOTAL TIME"};
 
-  cout << string(6 * (14 + imgEndIndex), '*') << endl;
+  cout << string(6 * (16 + imgEndIndex), '*') << endl;
   cout << left << setw(12) << "DETECTOR" << left << setw(12) << "DESCRIPTOR";
 
   printLine(header, imgEndIndex);
-  cout << string(6 * (14 + imgEndIndex), '*') << endl;
+  cout << string(6 * (16 + imgEndIndex), '*') << endl;
 
   for (const auto& pair : m)
   {
