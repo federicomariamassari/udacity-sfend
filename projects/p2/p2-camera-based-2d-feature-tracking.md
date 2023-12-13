@@ -63,11 +63,19 @@ The implementation of the description distance ratio for k-Nearest Neighbors is 
 
 ### MP.7: Performance Evaluation 1
 
-__Figure 1: Distribution of Keypoints' Neighborhood Size__
+Table 1 contains statistics on the distribution of keypoints' neighborhood size — the diameter of the region around each keypoint that is considered when computing the associated descriptor [13] — for all detectors analysed. For most detectors, default parameter values were kept for fair comparison and as they seem to strike a good balance between computational time and number of keypoints detected. Only for FAST, `threshold` was increased to 20 (from default 10) because this adjustment, despite leading to far fewer keypoints, greatly improved accuracy.
+
+__Number of keypoints.__ BRISK, FAST, and AKAZE detect the largest amount of keypoints in the region, followed by SIFT, SHITOMASI, ORB, and by a long distance, HARRIS. BRISK and FAST are particularly effective in the given dataset, with the latter even detecting twice as many features in total (4094) if default parameter values are kept. SURF is also excellent, ending at third place with a total of 2150 keypoints.
+
+__Distribution shape.__ The distribution of neighborhood size is constant (i.e., standard deviation = 0) for HARRIS, SHITOMASI, and FAST. For the first two it is dictated by, respectively, `blockSize` $\times$ `apertureSize` and `blockSize`. For FAST, it is fixed by construction, as 7 is the diameter of a circle with a 16-pixel circumference [14] [15]. The distribution is variable for other detectors, and the spread around the mean (as measured by standard deviation, range, and IQR) is greatest for ORB and BRISK, suggesting keypoint detection across a broader range of sizes for these two algorithms.
+
+__Neighborhood size.__ In general, ORB and BRISK make use of the largest local context to describe a feature (i.e., include more information). This tendency is shown by the higher median (a measure robust to outliers) values of 44.64 and 15.5217 pixels respectively, and by the mode (the most frequently-occurring value in a distribution) coinciding with the maximum value for both. By contrast, FAST, AKAZE, and SIFT tend to consider much smaller regions, although for the latter the mode is ~43 pixels. SURF is also highly descriptive, with a median value of 21 and mode of 128 pixels.
+
+__Table 1: Distribution of Keypoints' Neighborhood Size__
 
 | Metrics | Harris | Shi-Tomasi | FAST | BRISK | ORB | AKAZE | SIFT | SURF |
 |:----------|------:|------:|------:|------:|------:|------:|------:|------:|
-| Total no. of keypoints | 247 | 1179 | 2207 | 2762 | 1161 | 1670 | 1386 | 2150 |
+| Total number of keypoints | 247 | 1179 | 2207 | 2762 | 1161 | 1670 | 1386 | 2150 |
 | Keypoints/image (lower bound) | 24 | 117 | 220 | 276 | 116 | 167 | 138 | 215 |
 | Avg keypoint detection time* (ms) | 5.13568 | 4.11741 | 0.862544 | 38.2281 | 4.34509 | 41.7808 | 40.887 | 17.0413 |
 | Mean | 6 | 4 | 7 | 21.9444 | 55.9928 | 7.69915 | 5.03739 | 28.2967 |
@@ -82,6 +90,10 @@ __Figure 1: Distribution of Keypoints' Neighborhood Size__
 | IQR | 0 | 0 | 0 | 14.6939 | 39.9379 | 2.36441 | 2.65333 | 14 |
 
 (*) Single experiment, [`bCompareDetectors = true`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p2/src/MidTermProject_Camera_Student.cpp#L21).
+
+### MP.8: Performance Evaluation 2
+
+
 
 __Figure 1: FAST-BRIEF (Top), FAST-ORB (Middle), FAST-BRISK (Bottom) Keypoint Matching__
 ![FAST-BRIEF](./img/FAST_BRIEF_0007.png)
@@ -102,5 +114,8 @@ __Figure 1: FAST-BRIEF (Top), FAST-ORB (Middle), FAST-BRISK (Bottom) Keypoint Ma
 10. https://knowledge.udacity.com/questions/211123
 11. https://docs.opencv.org/4.2.0/db/d39/classcv_1_1DescriptorMatcher.html
 12. Exercise - Descriptor Matching, Tracking Image Features Lesson 12, Udacity Sensor Fusion Nanodegree
+13. https://docs.opencv.org/4.2.0/d2/d29/classcv_1_1KeyPoint.html
+14. https://knowledge.udacity.com/questions/1021073
+15. https://docs.opencv.org/4.2.0/df/d0c/tutorial_py_fast.html
 
 [Home](../../README.md) | Previous: [LiDAR Obstacle Detection](../p1/p1-lidar-obstacle-detection.md) | Next: 
