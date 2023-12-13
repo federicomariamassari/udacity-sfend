@@ -89,7 +89,7 @@ __Table 1: Distribution of Keypoints' Neighborhood Size__
 | 75th percentile | 6 | 4 | 7 | 27 | 77.1379 | 8.07261 | 4.83003 | 30 |
 | IQR | 0 | 0 | 0 | 14.6939 | 39.9379 | 2.36441 | 2.65333 | 14 |
 
-(*) Single experiment, [`bCompareDetectors = true`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p2/src/MidTermProject_Camera_Student.cpp#L21).
+(*) Single experiment.
 
 ### MP.8: Performance Evaluation 2
 
@@ -103,9 +103,15 @@ Combinations BRISK-BRIEF (1704) and BRISK-SIFT (1656) produce the largest number
 
 The same spreadsheet also contains running time statistics for each detector-descriptor set. Data are available separately for each phase (detection and description), as well as an aggregate. Computation time difference between DES_BINARY and DES_HOG is quite negligible. A caveat of this analysis is that statistics are collected on a single experiment, so there will be some variability across repetitions (although the ranking is stable).
 
-#### Top 3 Detector-Descriptor Combinations
+__Table 2: Top 3 Detector-Descriptor Combinations__
 
+| Detector | Descriptor | Total Matches | Matching Ratio (%) | Detection Time* | Description Time* | Total Time* |
+|:---------|:-----------|--------------:|-------------------:|----------------:|------------------:|------------:|
+| FAST | BRIEF | 1601 | 80.57 | 8.33279 | 3.41294 | 11.7457 |
+| FAST | ORB | 1575 | 79.27 | 8.29375 | 7.30317 | 15.5969 |
+| FAST | BRISK | 1285 | 64.67 | 8.78666 | 10.9405 | 19.7271 |
 
+(*) In milliseconds.
 
 __Figure 1: FAST-BRIEF (Top), FAST-ORB (Middle), FAST-BRISK (Bottom) Keypoint Matching__
 ![FAST-BRIEF](./img/FAST_BRIEF_0007.png)
