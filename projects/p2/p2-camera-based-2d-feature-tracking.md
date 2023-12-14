@@ -53,7 +53,7 @@ SURF is also included (but analysed separately), as it was the required method f
 
 ### MP.3: Keypoint Removal
 
-For this task, template class `cv::Rect` is used to remove all keypoints outside an area in pixels centered on the preceding vehicle (x=535, y=180, width=180, height=150). All keypoints whose coordinates belong to the rectangle are pushed back in a new vector, which is then reassigned to the original object. It is worth mentioning that the pre-defined area includes the side mirror of a vehicle on the left, as well as the shadow of the preceding car itself, with relevant implications for the analysis. The keypoint removal logic is placed in custom method [`focusOnArea`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p2/src/matching2D_Student.cpp#L396), which is then [called in the main file](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p2/src/MidTermProject_Camera_Student.cpp#L153).
+For this task, template class `cv::Rect` [6] is used to remove all keypoints outside an area in pixels centered on the preceding vehicle (x=535, y=180, width=180, height=150). All keypoints whose coordinates belong to the rectangle are pushed back in a new vector, which is then reassigned to the original object. It is worth mentioning that the pre-defined area includes the side mirror of a vehicle on the left, as well as the shadow of the preceding car itself, with relevant implications for the analysis. The keypoint removal logic is placed in custom method [`focusOnArea`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p2/src/matching2D_Student.cpp#L396), which is then [called in the main file](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p2/src/MidTermProject_Camera_Student.cpp#L153).
 
 ### MP.4: Keypoint Descriptors
 
@@ -113,7 +113,7 @@ The same spreadsheet also contains running time statistics for each detector-des
 
 Table 2 ranks my top detector-descriptor combinations based on total computation time and accuracy (as measured by the matching ratio). In making the choice, I accounted for the fact that keypoint detection on objects different from the preceding vehicle—an issue common to all pairs—mostly depends on the pre-defined rectangle dimensions (see MP.3), and that speed is of essence in real-time applications such as tracking time-to-collision. The latter justifies my pick for third place.
 
-FAST-BRIEF takes the crown, with an impressive 11.7457 ms and 
+FAST-BRIEF takes the crown as the top-performing combination (11.75 ms total time, 1601 matches, 81% matching ratio), followed by FAST-ORB (15.60 ms, 1575 matches, ~80% matching ratio), and FAST-BRISK (19.73 ms, 1285 matches, ~65% matching ratio). For this particular application, FAST appears to be the best detector, while BRIEF the best descriptor. Somewhat unexpectedly, binary methods outperform HOG-based ones in terms not only of speed, but also accuracy. Worth to mention is also SHITOMASI-SIFT (DES_HOG), which achieves the highest matching ratio (~87%) across the board.
 
 __Table 2: Top 3 Detector-Descriptor Combinations (DES_BINARY)__
 
@@ -124,6 +124,8 @@ __Table 2: Top 3 Detector-Descriptor Combinations (DES_BINARY)__
 | 3 | FAST | BRISK | 1285 | 64.67 | 8.78666 | 10.9405 | 19.7271 |
 
 (*) In milliseconds (UTM VM on MacBook Pro M1 Max, 8 cores, 32GB RAM).
+
+Figure 1 displays the output from the top 3 detector-descriptor combinations (frames 6-7).
 
 __Figure 1: FAST-BRIEF (Top), FAST-ORB (Middle), FAST-BRISK (Bottom) Feature Matching__
 ![FAST-BRIEF](./img/FAST_BRIEF_0007.png)
