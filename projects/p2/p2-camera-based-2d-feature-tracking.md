@@ -113,7 +113,7 @@ The same spreadsheet also contains running time statistics for each detector-des
 
 Table 2 ranks my top detector-descriptor combinations based on total computation time and accuracy (as measured by the matching ratio). In making the choice, I accounted for the fact that keypoint detection on objects different from the preceding vehicle—an issue common to all pairs—mostly depends on the pre-defined rectangle dimensions (see MP.3), and that speed is of essence in real-time applications such as tracking time-to-collision. The latter justifies my pick for third place.
 
-FAST-BRIEF 
+FAST-BRIEF takes the crown, with an impressive 11.7457 ms and 
 
 __Table 2: Top 3 Detector-Descriptor Combinations (DES_BINARY)__
 
@@ -123,7 +123,7 @@ __Table 2: Top 3 Detector-Descriptor Combinations (DES_BINARY)__
 | 2 | FAST | ORB | 1575 | 79.27 | 8.29375 | 7.30317 | 15.5969 |
 | 3 | FAST | BRISK | 1285 | 64.67 | 8.78666 | 10.9405 | 19.7271 |
 
-(*) In milliseconds.
+(*) In milliseconds (UTM VM on MacBook Pro M1 Max, 8 cores, 32GB RAM).
 
 __Figure 1: FAST-BRIEF (Top), FAST-ORB (Middle), FAST-BRISK (Bottom) Feature Matching__
 ![FAST-BRIEF](./img/FAST_BRIEF_0007.png)
