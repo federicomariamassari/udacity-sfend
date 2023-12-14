@@ -6,6 +6,14 @@
 
 This project was originally developed on a UTM QEMU 7.0 Virtual Machine running Ubuntu 20.04-5 LTS on Apple Silicon architecture (aarch64), and later ported to the Udacity workspace. It uses OpenCV 4.2.0, [built from source](https://github.com/federicomariamassari/udacity-rsend/blob/main/projects/p4/p4-preliminary-config.md#3-rebuild-opencv-from-source-with-patented-modules) to enable patented algorithms SIFT/SURF. For easier debugging and experimentation, the main parameters have been factored out in an [`Options` struct](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p2/src/MidTermProject_Camera_Student.cpp#L10) and can be changed for a range of outcomes.
 
+## Project Structure
+
+The directory structure tree for the project appears in Figure 1. In particular:
+
+- `src` includes main file `MidTermProject_Camera_Student.cpp` (executable: `2D_feature_tracking`) and `matching2D_Student.cpp`, the latter containing the logic for keypoint detection, description, matching, removal, as well as utilities such as loading an image into buffer and computing and printing statistics;
+- `images` holds the input grayscale pictures;
+- `analysis` contains a spreadsheet with output statistics from comparing detector-descriptor combinations.
+
 __Figure 1: Directory Structure Tree__
 
 ```bash
