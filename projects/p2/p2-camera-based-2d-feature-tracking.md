@@ -123,7 +123,7 @@ __Table 2: Top 3 Detector-Descriptor Combinations__
 
 (*) In milliseconds.
 
-__Figure 1: FAST-BRIEF (Top), FAST-ORB (Middle), FAST-BRISK (Bottom) Keypoint Matching__
+__Figure 1: FAST-BRIEF (Top), FAST-ORB (Middle), FAST-BRISK (Bottom) Feature Matching__
 ![FAST-BRIEF](./img/FAST_BRIEF_0007.png)
 ![FAST-ORB](./img/FAST_ORB_0007.png)
 ![FAST-BRISK](./img/FAST_BRISK_0007.png)
