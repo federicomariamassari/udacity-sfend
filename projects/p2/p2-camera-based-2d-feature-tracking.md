@@ -111,9 +111,11 @@ Combinations BRISK-BRIEF (1704) and BRISK-SIFT (1656) produce the largest number
 
 The same spreadsheet also contains running time statistics for each detector-descriptor set. Data are available separately for each phase (detection and description), as well as an aggregate. Computation time difference between DES_BINARY and DES_HOG is quite negligible. A caveat of this analysis is that statistics are collected on a single experiment, so there will be some variability across repetitions (although the ranking is stable).
 
-Table 2 
+Table 2 ranks my top detector-descriptor combinations based on total computation time and accuracy (as measured by the matching ratio). In making the choice, I accounted for the fact that keypoint detection on objects different from the preceding vehicle—an issue common to all pairs—mostly depends on the pre-defined rectangle dimensions (see MP.3), and that speed is of essence in real-time applications such as tracking time-to-collision. The latter justifies my pick for third place.
 
-__Table 2: Top 3 Detector-Descriptor Combinations__
+FAST-BRIEF 
+
+__Table 2: Top 3 Detector-Descriptor Combinations (DES_BINARY)__
 
 | Rank | Detector | Descriptor | Total Matches | Matching Ratio (%) | Detection Time* | Description Time* | Total Time* |
 |:----:|:---------|:-----------|--------------:|-------------------:|----------------:|------------------:|------------:|
