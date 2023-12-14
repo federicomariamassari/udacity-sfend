@@ -133,17 +133,17 @@ __Figure 1: FAST-BRIEF (Top), FAST-ORB (Middle), FAST-BRISK (Bottom) Feature Mat
 1. https://knowledge.udacity.com/questions/644337
 2. https://cplusplus.com/reference/vector/vector/erase/
 3. Harris Corner Detection, Tracking Image Features Lesson 5, Udacity Sensor Fusion Nanodegree
-4. https://docs.opencv.org/4.2.0/d5/d51/group__features2d__main.html
-5. https://docs.opencv.org/4.2.0/d2/dca/group__xfeatures2d__nonfree.html
-6. https://docs.opencv.org/4.2.0/d2/d44/classcv_1_1Rect__.html
+4. [OpenCV 4.2.0: Feature Detection and Description](https://docs.opencv.org/4.2.0/d5/d51/group__features2d__main.html)
+5. [OpenCV 4.2.0: Non-free 2D Features Algorithms](https://docs.opencv.org/4.2.0/d2/dca/group__xfeatures2d__nonfree.html)
+6. [OpenCV 4.2.0: cv::Rect_< _Tp > Class Template Reference](https://docs.opencv.org/4.2.0/d2/d44/classcv_1_1Rect__.html)
 7. https://knowledge.udacity.com/questions/105392
-8. https://docs.opencv.org/4.2.0/d8/d9b/group__features2d__match.html
-9. https://docs.opencv.org/4.2.0/d3/da1/classcv_1_1BFMatcher.html
+8. [OpenCV 4.2.0: Descriptor Matchers](https://docs.opencv.org/4.2.0/d8/d9b/group__features2d__match.html)
+9. [OpenCV 4.2.0: cv::BFMatcher Class Reference](https://docs.opencv.org/4.2.0/d3/da1/classcv_1_1BFMatcher.html)
 10. https://knowledge.udacity.com/questions/211123
-11. https://docs.opencv.org/4.2.0/db/d39/classcv_1_1DescriptorMatcher.html
+11. [OpenCV 4.2.0: cv::DescriptorMatcher Class Reference](https://docs.opencv.org/4.2.0/db/d39/classcv_1_1DescriptorMatcher.html)
 12. Exercise - Descriptor Matching, Tracking Image Features Lesson 12, Udacity Sensor Fusion Nanodegree
-13. https://docs.opencv.org/4.2.0/d2/d29/classcv_1_1KeyPoint.html
+13. [OpenCV 4.2.0: cv::KeyPoint Class Reference](https://docs.opencv.org/4.2.0/d2/d29/classcv_1_1KeyPoint.html)
 14. https://knowledge.udacity.com/questions/1021073
-15. https://docs.opencv.org/4.2.0/df/d0c/tutorial_py_fast.html
+15. [OpenCV 4.2.0: FAST Algorithm for Corner Detection](https://docs.opencv.org/4.2.0/df/d0c/tutorial_py_fast.html)
 
 [Home](../../README.md) | Previous: [LiDAR Obstacle Detection](../p1/p1-lidar-obstacle-detection.md) | Next: 
