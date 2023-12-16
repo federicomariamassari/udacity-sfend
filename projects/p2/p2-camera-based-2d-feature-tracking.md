@@ -4,6 +4,7 @@
 
 ## Overview
 
+__Figure 1: Keypoint Detectors' Output__
 ![Detectors' Animated GIF](./img/mov2.gif)
 
 ## Preliminary Considerations
@@ -12,13 +13,13 @@ This project was originally developed on a UTM QEMU 7.0 Virtual Machine running 
 
 ## Project Structure
 
-The directory structure tree for the project appears in Figure 1. In particular:
+The directory structure tree for the project appears in Figure 2. In particular:
 
 - `src` includes main file `MidTermProject_Camera_Student.cpp` (executable: `2D_feature_tracking`) and `matching2D_Student.cpp`, the latter containing the logic for keypoint detection, description, matching, removal, as well as utilities such as loading an image into buffer and computing and printing statistics;
 - `images` holds the input grayscale pictures;
 - `analysis` contains a spreadsheet with output statistics from comparing detector-descriptor combinations.
 
-__Figure 1: Directory Structure Tree__
+__Figure 2: Directory Structure Tree__
 
 ```bash
 .
@@ -129,9 +130,9 @@ __Table 2: Top 3 Detector-Descriptor Combinations (DES_BINARY)__
 
 (*) In milliseconds (UTM VM on MacBook Pro M1 Max, 8 CPU cores, 32GB RAM).
 
-Figure 1 displays the output from the top 3 detector-descriptor combinations (frames 6-7).
+Figure 3 displays the output from the top 3 detector-descriptor combinations (frames 6-7).
 
-__Figure 1: FAST-BRIEF (Top), FAST-ORB (Middle), FAST-BRISK (Bottom) Feature Matching__
+__Figure 3: FAST-BRIEF (Top), FAST-ORB (Middle), FAST-BRISK (Bottom) Feature Matching__
 ![FAST-BRIEF](./img/FAST_BRIEF_0007.png)
 ![FAST-ORB](./img/FAST_ORB_0007.png)
 ![FAST-BRISK](./img/FAST_BRISK_0007.png)
