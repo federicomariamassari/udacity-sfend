@@ -4,7 +4,7 @@ using namespace std;
 
 
 void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, const cv::Mat &img, vector<double>& detTickCounts, 
-  const bool bVis, const bool bPrintMsg)
+  const bool bVis, const bool bSaveSingleFrames, const bool bPrintMsg)
 {
   // Compute detector parameters based on image size
   int blockSize = 4;  // Average block size to compute derivative covariation matrix over each pixel neighborhood
@@ -47,12 +47,16 @@ void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, const cv::Mat &img, 
     string windowName = "Shi-Tomasi Corner Detector Results";
     cv::namedWindow(windowName, 6);
     imshow(windowName, visImage);  // highgui methods don't require cv namespace specification (source: Udacity GPT)
+
+    if (bSaveSingleFrames)
+      cv::imwrite("SHITOMASI_" + to_string(detTickCounts.size()-1) + ".png", visImage);
+
     cv::waitKey(0);
   }
 }
 
 void detKeypointsHarris(vector<cv::KeyPoint> &keypoints, const cv::Mat &img, vector<double>& detTickCounts, 
-  const bool bVis, const bool bPrintMsg)
+  const bool bVis, const bool bSaveSingleFrames, const bool bPrintMsg)
 {
   int blockSize = 2;  // Size of pixel neighborhood considered for corner detection (W)
   int apertureSize = 3;  // Aperture size for the Sobel operator (must be odd)
@@ -123,12 +127,16 @@ void detKeypointsHarris(vector<cv::KeyPoint> &keypoints, const cv::Mat &img, vec
     string windowName = "Harris Corner Detector Results";
     cv::namedWindow(windowName, 6);
     imshow(windowName, visImage);
+
+    if (bSaveSingleFrames)
+      cv::imwrite("HARRIS_" + to_string(detTickCounts.size()-1) + ".png", visImage);
+
     cv::waitKey(0);
   }
 }
 
 void detKeypointsModern(vector<cv::KeyPoint> &keypoints, const cv::Mat &img, const string detectorType, 
-  vector<double>& detTickCounts, const bool bVis, const bool bPrintMsg)
+  vector<double>& detTickCounts, const bool bVis, const bool bSaveSingleFrames, const bool bPrintMsg)
 {
   cv::Ptr<cv::FeatureDetector> detector;
   
@@ -181,6 +189,10 @@ void detKeypointsModern(vector<cv::KeyPoint> &keypoints, const cv::Mat &img, con
     string windowName = detectorType + " Detector Results";
     cv::namedWindow(windowName, 6);
     imshow(windowName, visImage);
+
+    if (bSaveSingleFrames)
+      cv::imwrite(detectorType + "_" + to_string(detTickCounts.size()-1) + ".png", visImage);
+
     cv::waitKey(0);
   }
 }
@@ -372,7 +384,7 @@ DataFrame loadImageIntoBuffer(const string filename, vector<DataFrame>& dataBuff
 }
 
 vector<cv::KeyPoint> detectKeypoints(const string detectorType, cv::Mat& img, vector<double>& detTickCounts, 
-  const bool bVis, const bool bPrintMsg)
+  const bool bVis, const bool bSaveSingleFrames, const bool bPrintMsg)
 {
   // To hold 2D keypoints extracted from current image
   vector<cv::KeyPoint> keypoints;
@@ -380,13 +392,13 @@ vector<cv::KeyPoint> detectKeypoints(const string detectorType, cv::Mat& img, ve
   // TASK MP.2: Add keypoints HARRIS, FAST, BRISK, ORB, AKAZE, SIFT and enable string-based selection on detectorType
 
   if (detectorType.compare("SHITOMASI") == 0)
-    detKeypointsShiTomasi(keypoints, img, detTickCounts, bVis, bPrintMsg);
+    detKeypointsShiTomasi(keypoints, img, detTickCounts, bVis, bSaveSingleFrames, bPrintMsg);
 
   else if (detectorType.compare("HARRIS") == 0)
-    detKeypointsHarris(keypoints, img, detTickCounts, bVis, bPrintMsg);
+    detKeypointsHarris(keypoints, img, detTickCounts, bVis, bSaveSingleFrames, bPrintMsg);
 
   else
-    detKeypointsModern(keypoints, img, detectorType, detTickCounts, bVis, bPrintMsg);
+    detKeypointsModern(keypoints, img, detectorType, detTickCounts, bVis, bSaveSingleFrames, bPrintMsg);
 
   // End of TASK MP.2
 

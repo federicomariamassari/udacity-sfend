@@ -31,6 +31,7 @@
  * @param img The input grayscale image.
  * @param detTickCounts The structure to hold the detection tick count for the analysed image.
  * @param bVis Whether to visualize the output image with superimposed detection marks.
+ * @param bSaveSingleFrames Whether to save the displayed frames inside the current working directory.
  * @param bPrintMsg Whether to print logs.
  * 
  * Resources:
@@ -38,7 +39,7 @@
  * [1] - Shi, Tomasi: "Good Features to Track" (1994)
  */
 void detKeypointsShiTomasi(std::vector<cv::KeyPoint> &keypoints, const cv::Mat &img, std::vector<double>& detTickCounts, 
-  const bool bVis=false, const bool bPrintMsg=true);
+  const bool bVis=false, const bool bSaveSingleFrames=false, const bool bPrintMsg=true);
 
 /** 
  * @brief Perform Harris' corner detection (1988) with non-maxima suppression (NMS) [1].
@@ -48,6 +49,7 @@ void detKeypointsShiTomasi(std::vector<cv::KeyPoint> &keypoints, const cv::Mat &
  * @param img The input grayscale image.
  * @param detTickCounts The structure to hold the detection tick count for the analysed image.
  * @param bVis Whether to visualize the output image with superimposed detection marks.
+ * @param bSaveSingleFrames Whether to save the displayed frames inside the current working directory.
  * @param bPrintMsg Whether to print logs.
  * 
  * Resources:
@@ -58,7 +60,7 @@ void detKeypointsShiTomasi(std::vector<cv::KeyPoint> &keypoints, const cv::Mat &
  * [4] - Harris Corner Detector Tutorial (https://docs.opencv.org/4.2.0/d4/d7d/tutorial_harris_detector.html)
  */
 void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, const cv::Mat &img, std::vector<double>& detTickCounts, 
-  const bool bVis=false, const bool bPrintMsg=true);
+  const bool bVis=false, const bool bSaveSingleFrames=false, const bool bPrintMsg=true);
 
 /**
  * @brief Detect image keypoints using modern algorithms: SIFT, SURF, FAST, ORB, BRISK, AKAZE [1].
@@ -68,6 +70,7 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, const cv::Mat &img
  * @param detectorType The name of the used detector.
  * @param detTickCounts The structure to hold the detection tick count for the analysed image.
  * @param bVis Whether to visualize the output image with superimposed detection marks.
+ * @param bSaveSingleFrames Whether to save the displayed frames inside the current working directory.
  * @param bPrintMsg Whether to print logs.
  * 
  * Resources:
@@ -75,7 +78,8 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, const cv::Mat &img
  * [1] - https://docs.opencv.org/4.2.0/d5/d51/group__features2d__main.html
  */
 void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, const cv::Mat &img, const std::string detectorType, 
-  std::vector<double>& detTickCounts, const bool bVis=false, const bool bPrintMsg=true);
+  std::vector<double>& detTickCounts, const bool bVis=false, const bool bSaveSingleFrames=false, 
+  const bool bPrintMsg=true);
 
 /**
  * @brief Use one among several state-of-art descriptors to uniquely identify keypoints.
@@ -157,12 +161,14 @@ DataFrame loadImageIntoBuffer(const std::string filename, std::vector<DataFrame>
  * @param img The input grayscale image.
  * @param detTickCounts The structure to hold detection tick count for the analysed image.
  * @param bVis Whether to visualize the output image with superimposed detection marks.
+ * @param bSaveSingleFrames Whether to save the displayed frames inside the current working directory.
  * @param bPrintMsg Whether to print logs.
  * 
  * @return keypoints The data structure holding the found keypoints.
  */
 std::vector<cv::KeyPoint> detectKeypoints(const std::string detectorType, cv::Mat& img, 
-  std::vector<double>& detTickCounts, const bool bVis=false, const bool bPrintMsg=true);
+  std::vector<double>& detTickCounts, const bool bVis=false, const bool bSaveSingleFrames=false, 
+  const bool bPrintMsg=true);
 
 /**
  * @brief MP.3: Remove keypoints outside of a rectangle area centered on the vehicle ahead.
@@ -183,7 +189,7 @@ void focusOnArea(std::vector<cv::KeyPoint>& keypoints, const bool bFocusOnVehicl
 void limitKeypoints(std::vector<cv::KeyPoint>& keypoints, const std::string detector, const int maxKeypoints=50);
 
 /**
- * @brief MP.7: Extract keypoints' neighborhood sizes for a single detector.
+ * @brief MP.7: Extract keypoints' neighborhood sizes (diameters of the windows) for a single detector.
  * 
  * @param keypoints The data structure holding the keypoints.
  * @param neighborhoodSizes The structure to hold the neighborhood sizes of all detected keypoints.

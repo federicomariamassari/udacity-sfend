@@ -25,7 +25,8 @@ struct Options
   bool bVisMatches = true;  // true to view matched keypoints among image pairs (single detector-descriptor only,
                             // adds a significant overhead to tick counts)
 
-  bool bSaveImagePairs = false;  // true to write image pairs in the current working directory
+  bool bSaveImagePairs = false;  // true to write image pairs in the current working directory (if bVisMatches = true)
+  bool bSaveSingleFrames = false;  // true to write single frames in current working directory (if bVis = true)
   bool bLimitKpts = false;  // true to limit the number of keypoints (helpful for debugging and learning)
 };
 
@@ -147,7 +148,7 @@ int main(int argc, const char *argv[])
 
         // MP.2: Wrapper function that includes all possible detector choices
         vector<cv::KeyPoint> keypoints = detectKeypoints(detectorType, frame.cameraImg, detTickCounts, options.bVis, 
-          bPrintLogs);
+          options.bSaveSingleFrames, bPrintLogs);
 
         // MP.3: Restrict the focus on the preceding vehicle
         focusOnArea(keypoints, true, bPrintLogs);
