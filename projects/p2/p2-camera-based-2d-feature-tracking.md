@@ -2,6 +2,10 @@
 
 # Project 2: Camera-Based 2D Feature Tracking
 
+## Overview
+
+![Detectors' Animated GIF](./img/mov2.gif)
+
 ## Preliminary Considerations
 
 This project was originally developed on a UTM QEMU 7.0 Virtual Machine running Ubuntu 20.04-5 LTS on Apple Silicon architecture (aarch64), and later ported to the Udacity workspace. It uses OpenCV 4.2.0, [built from source](https://github.com/federicomariamassari/udacity-rsend/blob/main/projects/p4/p4-preliminary-config.md#3-rebuild-opencv-from-source-with-patented-modules) to enable patented algorithms SIFT/SURF. For easier debugging and experimentation, the main parameters have been factored out in an [`Options` struct](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p2/src/MidTermProject_Camera_Student.cpp#L10) and can be changed for a range of outcomes.
