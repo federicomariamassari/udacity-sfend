@@ -62,7 +62,7 @@ __[Link to code](projects/p2/src)__ | [Starter Code from Udacity](https://github
 
 ### How to Build and Run the Project
 
-As a prerequisite, build OpenCV 4.2.0 [from source](https://github.com/federicomariamassari/udacity-rsend/blob/main/projects/p4/p4-preliminary-config.md#3-rebuild-opencv-from-source-with-patented-modules) to enable patented algorithms SIFT and SURF.
+As a prerequisite, build OpenCV 4.2.0 [from source](https://github.com/federicomariamassari/udacity-rsend/blob/main/projects/p4/p4-preliminary-config.md#3-rebuild-opencv-from-source-with-patented-modules) to enable patented algorithms SIFT and SURF. Then build and run as follows:
 
 ```bash
 cd /home/$whoami/workspace/udacity-rsend/projects/p2
