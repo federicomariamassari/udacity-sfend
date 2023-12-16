@@ -54,7 +54,7 @@ __Acquired familiarity with:__ OpenCV 4.x, Gnumeric.
 
 __[Link to code](projects/p2/)__ | [Starter Code from Udacity](https://github.com/udacity/SFND_2D_Feature_Tracking)
 
-![SIFT Keypoint Detection](./projects/p2/images/SIFT_0004.png)
+![SIFT Keypoint Detection](./projects/p2/img/mov1.gif)
 
 ### How to Build and Run the Project
 
