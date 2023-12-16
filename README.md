@@ -54,7 +54,7 @@ __Acquired familiarity with:__ OpenCV 4.x, Gnumeric.
 
 _Learn to detect, describe, and match features in 2D camera images._
 
-In this computer vision application, I implement a two-dimensional feature tracking algorithm to monitor objects in a sequence of images using OpenCV. After progressively loading the pictures in a data buffer, I use classic and modern techniques to detect keypoints, calculate their descriptors, match the features between consecutive frames, and finally evaluate the performance of each detector-descriptor combination in terms of speed and accuracy.
+In this computer vision application, I implement a two-dimensional feature tracking algorithm to monitor objects in a sequence of images using OpenCV. After progressively loading the pictures in a data ring buffer, I use classic and modern techniques to detect keypoints, calculate their descriptors, match the features between consecutive frames, and finally evaluate the performance of each detector-descriptor combination in terms of speed and accuracy.
 
 __[Link to code](projects/p2/src)__ | [Starter Code from Udacity](https://github.com/udacity/SFND_2D_Feature_Tracking)
 
