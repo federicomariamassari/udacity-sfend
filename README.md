@@ -19,7 +19,7 @@ _Filter, segment, and cluster raw LiDAR data to detect vehicles and obstacles on
 
 In this assignment I learn how to process point clouds from LiDAR scans in order to identify vehicles and other obstacles in a driving environment. I first reduce cloud size using voxel (volumetric pixel) grid and region of interest techniques, then separate road and obstacles via RANSAC (RANdom SAmple Consensus), group points belonging to the same objects using Euclidean clustering with 3-dimensional KD-Trees, and finally enclose the obtained clusters within either regular or minimum (PCA-based) bounding boxes.
 
-__[Link to code](projects/p1/)__ | [Starter Code from Udacity](https://github.com/udacity/SFND_Lidar_Obstacle_Detection)
+__[Link to code](projects/p1/src)__ | [Starter Code from Udacity](https://github.com/udacity/SFND_Lidar_Obstacle_Detection)
 
 <table>
   <tr>
@@ -52,7 +52,11 @@ __Acquired familiarity with:__ OpenCV 4.x, Gnumeric.
 
 ### Overview
 
-__[Link to code](projects/p2/)__ | [Starter Code from Udacity](https://github.com/udacity/SFND_2D_Feature_Tracking)
+_Learn to detect, describe, and match features in 2D camera images._
+
+In this computer vision application, I implement a two-dimensional feature tracking algorithm to monitor objects in a sequence of images using OpenCV. After progressively loading the pictures in a data buffer, I use classic and modern techniques to detect keypoints, calculate their descriptors, match the features between consecutive frames, and finally evaluate the performance of each detector-descriptor combination in terms of speed and accuracy.
+
+__[Link to code](projects/p2/src)__ | [Starter Code from Udacity](https://github.com/udacity/SFND_2D_Feature_Tracking)
 
 ![SIFT Keypoint Detection](./projects/p2/img/mov1.gif)
 
@@ -67,3 +71,7 @@ cmake ..
 make
 ./2D_feature_tracking
 ```
+
+### Output
+
+By setting `bCompareDetectors` and/or `bCompareDescriptors` to `true` instead, the output will be tabulated statistics on the distribution of keypoints' neighborhood size (MP.7) and/or comparisons among detector-descriptor combinations (MP.8-9).
