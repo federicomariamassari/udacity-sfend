@@ -75,3 +75,5 @@ make
 ### Output
 
 By setting `bCompareDetectors` and/or `bCompareDescriptors` to `true` instead, the output will be tabulated statistics on the distribution of keypoints' neighborhood size (MP.7) and/or comparisons among detector-descriptor combinations (MP.8-9).
+
+## [Project 3: Track an Object in 3D Space]()
