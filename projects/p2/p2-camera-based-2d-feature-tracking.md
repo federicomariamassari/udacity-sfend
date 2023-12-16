@@ -123,7 +123,7 @@ __Table 2: Top 3 Detector-Descriptor Combinations (DES_BINARY)__
 | 2 | FAST | ORB | 1575 | 79.27 | 8.29375 | 7.30317 | 15.5969 |
 | 3 | FAST | BRISK | 1285 | 64.67 | 8.78666 | 10.9405 | 19.7271 |
 
-(*) In milliseconds (UTM VM on MacBook Pro M1 Max, 8 cores, 32GB RAM).
+(*) In milliseconds (UTM VM on MacBook Pro M1 Max, 8 CPU cores, 32GB RAM).
 
 Figure 1 displays the output from the top 3 detector-descriptor combinations (frames 6-7).
 
