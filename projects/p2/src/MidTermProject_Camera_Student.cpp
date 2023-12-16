@@ -11,7 +11,7 @@ struct Options
 {
   string detectorType = "FAST";  // HARRIS, SHITOMASI, FAST, BRISK, ORB, AKAZE, SIFT, SURF
   string descriptorType = "BRIEF";  // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT, SURF
-  string descriptorGroup = "DES_HOG";  // DES_HOG, DES_BINARY
+  string descriptorGroup = "DES_BINARY";  // DES_HOG, DES_BINARY
 
   string matcherType = "MAT_BF";  // MAT_BF, MAT_FLANN
   string selectorType = "SEL_KNN";  // SEL_NN, SEL_KNN
