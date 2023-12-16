@@ -1,4 +1,4 @@
-[Home](../../README.md) | Next: [Camera-Based 2D Feature Tracking](../p2/p2-camera-based-2d-feature-tracking.md)
+[Home](../../README.md) | Previous: [Autonomous Systems Interview Practice](https://github.com/federicomariamassari/udacity-rsend/blob/main/projects/e1/e1-autonomous-systems-interview-practice.md) | Next: [Camera-Based 2D Feature Tracking](../p2/p2-camera-based-2d-feature-tracking.md)
 
 # Project 1: LiDAR Obstacle Detection
 
@@ -332,4 +332,4 @@ A comparison between regular and PCA-based bounding boxes appears in Figure 7.
 11. [Wikipedia: Conversion between quaternions and Euler angles](https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles)
 12. [Wikipedia: Basic 3D rotations](https://en.wikipedia.org/wiki/Rotation_matrix#Basic_3D_rotations)
 
-[Home](../../README.md) | Next: [Camera-Based 2D Feature Tracking](../p2/p2-camera-based-2d-feature-tracking.md)
+[Home](../../README.md) | Previous: [Autonomous Systems Interview Practice](https://github.com/federicomariamassari/udacity-rsend/blob/main/projects/e1/e1-autonomous-systems-interview-practice.md) | Next: [Camera-Based 2D Feature Tracking](../p2/p2-camera-based-2d-feature-tracking.md)
