@@ -58,7 +58,7 @@ make
 
 In older versions of OpenCV, SIFT may still be part of the experimental features module. If the build fails, update the SIFT detector and descriptor constructors in `matching2D_Student.cpp` to include the `xfeatures2d` namespace (same as SURF).
 
-### Options
+### Main Options
 
 <table>
     <thead>
@@ -83,14 +83,6 @@ In older versions of OpenCV, SIFT may still be part of the experimental features
         <tr>
             <td><code>bVisMatches</code></td>
             <td><code>true</code> to view matched keypoints among image pairs (single detector-descriptor only, adds a significant overhead to tick counts)</td>
-        </tr>
-        <tr>
-            <td><code>bSaveSingleFrames</code></td>
-            <td><code>true</code> to write single frames in current working directory (if <code>bVis = true</code>)</td>
-        </tr>
-        <tr>
-            <td><code>bSaveImagePairs</code></td>
-            <td><code>true</code> to write image in current working directory (if <code>bVisMatches = true</code>)</td>
         </tr>
     </tbody>
 </table>
