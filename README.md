@@ -76,4 +76,8 @@ make
 
 By setting `bCompareDetectors` and/or `bCompareDescriptors` to `true` instead, the output will be tabulated statistics on the distribution of keypoints' neighborhood size (MP.7) and/or comparisons among detector-descriptor combinations (MP.8-9).
 
-## [Project 3: Track an Object in 3D Space]()
+## [Project 3: Track an Object in 3D Space](projects/p3/p3-track-an-object-in-3d-space.md)
+
+### Overview
+
+__[Link to code](projects/p3/src)__ | [Starter Code from Udacity](https://github.com/udacity/SFND_3D_Object_Tracking)
