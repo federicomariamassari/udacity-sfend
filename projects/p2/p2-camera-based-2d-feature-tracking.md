@@ -44,6 +44,21 @@ __Figure 2: Directory Structure Tree__
     └── MidTermProject_Camera_Student.cpp
 ```
 
+## Building and Running the Project
+
+To enable patented algorithms SIFT and SURF, build OpenCV 4.2.0 [from source](https://github.com/federicomariamassari/udacity-rsend/blob/main/projects/p4/p4-preliminary-config.md#3-rebuild-opencv-from-source-with-patented-modules). Then:
+
+```bash
+cd /home/$whoami/workspace/udacity-rsend/projects/p2
+mkdir build && cd build
+cmake ..
+make
+./2D_feature_tracking
+```
+
+### Options
+
+
 ## Mid-Term Report
 
 ### MP.1: Data Buffer Optimization
