@@ -88,11 +88,11 @@ Options can be set in the homonymous struct in the main file.
         </tr>
         <tr>
             <td><code>bSaveSingleFrames</code></td>
-            <td><code>true</code> to write single frames in current working directory (if <code>bVis = true</code>)</td>
+            <td><code>true</code> to write single frames in the current working directory (if <code>bVis</code> is <code>true</code>)</td>
         </tr>
         <tr>
             <td><code>bSaveImagePairs</code></td>
-            <td><code>true</code> to write image in current working directory (if <code>bVisMatches = true</code>)</td>
+            <td><code>true</code> to write image pairs with superimposed feature matches in the current working directory (if <code>bVisMatches</code> is <code>true</code>)</td>
         </tr>
         <tr>
             <td><code>bLimitKpts</code></td>
