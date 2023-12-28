@@ -70,11 +70,19 @@ In older versions of OpenCV, SIFT may still be part of the experimental features
     <tbody>
         <tr>
             <td><code>bCompareDetectors</code></td>
-            <td><code>true</code> for MP.7, <code>false</code> to print statistics on a single detector.</td>
+            <td><code>true</code> for MP.7, <code>false</code> to print statistics on a single detector</td>
         </tr>
         <tr>
             <td><code>bCompareDescriptors</code></td>
-            <td><code>true</code> for MP.8-9, <code>false</code> to use a single descriptor.</td>
+            <td><code>true</code> for MP.8-9, <code>false</code> to use a single descriptor</td>
+        </tr>
+        <tr>
+            <td><code>bVis</code></td>
+            <td><code>true</code> to display the full array of keypoints found in each image</td>
+        </tr>
+        <tr>
+            <td><code>bVisMatches</code></td>
+            <td><code>true</code> to view matched keypoints among image pairs (single detector-descriptor only, adds a significant overhead to tick counts)</td>
         </tr>
     </tbody>
 </table>
