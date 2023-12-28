@@ -56,6 +56,8 @@ make
 ./2D_feature_tracking
 ```
 
+In older versions of OpenCV, SIFT may still be part of the experimental features module. If the build fails, update the SIFT detector-descriptor constructors in `matching2D_Student.cpp` to include the `xfeatures2d` namespace.
+
 ### Options
 
 
