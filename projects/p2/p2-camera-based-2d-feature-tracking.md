@@ -4,7 +4,7 @@
 
 ## Overview
 
-In this mid-term assignment, I implement a 2D feature-tracking algorithm to monitor objects in an image sequence from the KITTI dataset, using OpenCV.
+In this mid-term assignment, I implement a 2D feature-tracking algorithm to monitor objects in an image sequence from the KITTI dataset, using OpenCV. As frames are gradually loaded into a data ring buffer, I use state-of-the-art techniques to detect keypoints, compute their descriptors (i.e., vector summaries of landmarks' characteristics), match features between consecutive stills (using Brute Force or FLANN-based matching), and finally assess the performance of each detector-descriptor combinations in terms of speed and accuracy.
 
 __Figure 1: Keypoint Detectors' Output__
 ![Detectors' Animated GIF](./img/mov2.gif)
