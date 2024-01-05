@@ -77,8 +77,6 @@ make
 
 Set both `bCompareDetectors` and `bCompareDescriptors` to `false` to visualize matched keypoints among image pairs for the chosen detector and descriptor. Set either (or both) to `true` to output tabulated statistics on the distribution of keypoints' neighborhood size (MP.7) and/or comparisons among detector-descriptor combinations (MP.8-9).
 
-![Keypoint Matching FAST-BRIEF](./projects/p2/img/mov3.gif)
-
 ## [Project 3: Track an Object in 3D Space](projects/p3/p3-track-an-object-in-3d-space.md)
 
 ### Overview
