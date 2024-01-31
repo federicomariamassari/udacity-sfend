@@ -264,7 +264,7 @@ void renderCluster(const vector<LidarPoint> &src, const vector<set<int>> &cluste
 
 template<typename T>
 void clusterHelper(int index, const cv::Mat& cloud, set<int>& cluster, vector<bool>& processed,
-  const cv::flann::GenericIndex<T>& tree, float radius, int minSize, int maxSize)
+  cv::flann::GenericIndex<T>& tree, float radius, int minSize, int maxSize)
 {
   processed[index] = true;
   cluster.insert(index);

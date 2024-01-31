@@ -7,7 +7,6 @@
 #include <iostream>
 #include <numeric>
 #include <set>
-#include <stdexcept>
 #include <vector>
 #include <utility>
 
@@ -63,13 +62,11 @@ double percentile(const std::vector<double>& vec, const float q);
  */
 double mean(const std::vector<double>& vec);
 
-
 /**
  * FP.2: List of filtering methods to remove outliers from a cloud of 3-dimensional points.
  * 
  * TUKEY: Applies Tukey's fences [1] to the x-coordinates of the input data.
- * EUCLIDEAN_CLUSTERING: Applies Euclidean clustering (L2-norm using all dimensions) on the input data and returns 
- *   the largest cluster [2].
+ * EUCLIDEAN_CLUSTERING: Applies Euclidean clustering (L2-norm) on the input data removing isolated points [2].
  * 
  * Resources:
  * 
@@ -89,16 +86,34 @@ enum class FilteringMethod
  * @param clusters The populated Euclidean clusters container.
  * 
  * Resources:
+ * 
  * [1] - https://docs.opencv.org/4.2.0/d4/dba/classcv_1_1viz_1_1Color.html
  */
 void renderCluster(const std::vector<LidarPoint> &src, const std::vector<std::set<int>> &clusters);
 
+/**
+ * @brief FP.2: Recursive function to compute the nearest neighbors of a query point based on input L2-norm [1] [2].
+ * 
+ * @param index Id of the query point.
+ * @param cloud The input LiDAR point cloud data.
+ * @param cluster The cluster instance, to populate.
+ * @param processed Container to mark visited query points.
+ * @param tree FLANN KD-Tree structure.
+ * @param radius Distance tolerance to query point for the neighborhood search; will be squared (L2-norm).
+ * @param minSize Minimum acceptable size for a cluster; smaller ones will be discarded.
+ * @param maxSize Maximum acceptable size for a cluster; larger ones will be split.
+ * 
+ * Resources:
+ * 
+ * [1] - Lidar Obstacle Detection: Euclidean Clustering (Clustering Obstacles: Lesson 8), Udacity Sensor Fusion
+ * [2] - https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p1/src/custom/clustering.h
+ */
 template<typename T>
-void clusterHelper(int index, const cv::Mat& cloud, std::set<int>& cluster, std::vector<bool>& processed,
-  const cv::flann::GenericIndex<T>& tree, float radius, int minSize, int maxSize);
+void clusterHelper(int index, const cv::Mat& cloud, std::set<int>& cluster, std::vector<bool>& processed, 
+    cv::flann::GenericIndex<T>& tree, float radius, int minSize, int maxSize);
 
 /**
- * @brief FP.2: Cluster input data based on the Euclidean distance (L2-norm) from a query point.
+ * @brief FP.2: Cluster input data based on the Euclidean distance (L2-norm) from a query point [1].
  * 
  * @param src The input LiDAR point cloud data.
  * @param clusters The cluster container, to populate.
@@ -113,6 +128,7 @@ void clusterHelper(int index, const cv::Mat& cloud, std::set<int>& cluster, std:
  * [3] - https://vovkos.github.io/doxyrest-showcase/opencv/sphinxdoc/struct_cvflann_KDTreeSingleIndexParams.html
  * [4] - https://github.com/opencv/opencv/issues/12683
  * [5] - https://vovkos.github.io/doxyrest-showcase/opencv/sphinxdoc/struct_cvflann_SearchParams.html
+ * [6] - https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p1/src/custom/clustering.h
  */
 void euclideanClustering(const std::vector<LidarPoint> &src, std::vector<std::set<int>> &clusters, float radius, 
     int minSize, int maxSize);
