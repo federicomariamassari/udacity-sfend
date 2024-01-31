@@ -312,7 +312,7 @@ void euclideanClustering(const vector<LidarPoint> &src, vector<set<int>> &cluste
 
   vector<bool> processed(src.size(), false);
 
-  for (size_t i = 10; i < src.size(); ++i)  // Point at index i is query point
+  for (size_t i = 0; i < src.size(); ++i)  // Point at index i is query point
   {
     if (processed[i])  // Skip
       continue;
