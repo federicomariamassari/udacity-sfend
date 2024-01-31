@@ -1,4 +1,5 @@
 #include "camFusion.hpp"
+#include "lidarData.hpp"
 
 using namespace std;
 
@@ -127,30 +128,6 @@ void show3DObjects(vector<BoundingBox> &boundingBoxes, cv::Size worldSize, cv::S
   }
 }
 
-
-// associate a given bounding box with the keypoints it contains
-void clusterKptMatchesWithROI(BoundingBox &boundingBox, vector<cv::KeyPoint> &kptsPrev, vector<cv::KeyPoint> &kptsCurr, 
-  vector<cv::DMatch> &kptMatches)
-{
-  // ...
-}
-
-
-// Compute time-to-collision (TTC) based on keypoint correspondences in successive images
-void computeTTCCamera(vector<cv::KeyPoint> &kptsPrev, vector<cv::KeyPoint> &kptsCurr, vector<cv::DMatch> kptMatches, 
-  double frameRate, double &TTC, cv::Mat *visImg)
-{
-  // ...
-}
-
-
-void computeTTCLidar(vector<LidarPoint> &lidarPointsPrev, vector<LidarPoint> &lidarPointsCurr, double frameRate, 
-  double &TTC)
-{
-  // ...
-}
-
-
 void matchBoundingBoxes(vector<cv::DMatch> &matches, map<int, int> &bbBestMatches, DataFrame &prevFrame, 
   DataFrame &currFrame)
 {
@@ -201,4 +178,259 @@ void matchBoundingBoxes(vector<cv::DMatch> &matches, map<int, int> &bbBestMatche
   auto endTime = chrono::steady_clock::now();
   auto elapsedTime = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
   cout << "Bounding Boxes matching took: " << elapsedTime.count() / 1000. << " milliseconds." << endl;
+}
+
+double percentile(const vector<double>& vec, const float q)
+{
+  // https://axibase.com/use-cases/workshop/percentiles.html#r7-linear-interpolation
+
+  int vecSize = vec.size();
+
+  if (vecSize == 0)
+    throw length_error("Input vector is empty.");
+
+  if (q < 0. || q > 1.)
+    throw out_of_range("Percentile must be a real number in [0; 1].");
+
+  if (q == 0.)  // Fast bounds calculation
+    return vec.front();
+
+  if (q == 1.)
+    return vec[vecSize - 1];
+
+  if (q == 0.5)  // Fast median calculation
+  {
+    if (vecSize % 2 == 1)
+      return vec[vecSize * q];
+
+    else
+      return 0.5 * (vec[vecSize * q - 1] + vec[vecSize * q]);
+  }
+
+  double index = (vecSize - 1) * q;
+
+  return vec[floor(index)] + (index - floor(index)) * (vec[ceil(index)] - vec[floor(index)]);
+}
+
+double mean(const vector<double>& vec)
+{
+  return accumulate(vec.begin(), vec.end(), 0.) / vec.size();
+}
+
+double std_dev(const vector<double>& vec)
+{
+  double mu = mean(vec);
+
+  double squared_dev = accumulate(vec.begin(), vec.end(), 0., 
+    [mu](double sum, const double x) { return sum + pow(x - mu, 2); });
+
+  return sqrt(squared_dev / (vec.size() - 1));  // Sample standard deviation
+}
+
+void renderCluster(const vector<LidarPoint> &src, const vector<set<int>> &clusters)
+{
+  cv::viz::Viz3d window("Filtered LiDAR point cloud");
+  window.setBackgroundColor(cv::viz::Color::black());
+
+  for (size_t i = 0; i < clusters.size(); ++i)
+  {
+    std::vector<cv::Point3f> points;
+
+    for (int id : clusters[i])
+      points.push_back(cv::Point3f(src[id].x, src[id].y, src[id].z));
+
+    cv::viz::WCloud cloud(points);
+    cloud.setRenderingProperty(cv::viz::POINT_SIZE, 5.0);
+
+    // Rotate color among clusters (to extend: i % n == k, with k = 0, ..., n-1)
+    cv::viz::Color color;
+
+    if (i % 3 == 0) {
+        color = cv::viz::Color::red();  // [1]
+    } else if (i % 3 == 1) {
+        color = cv::viz::Color::blue();
+    } else {
+        color = cv::viz::Color::yellow();
+    }
+
+    cloud.setColor(color);
+
+    std::string cloudName = "cloud" + std::to_string(i);
+    window.showWidget(cloudName, cloud);
+  }
+
+  window.spin();  // Trigger event loop
+}
+
+template<typename T>
+void clusterHelper(int index, const cv::Mat& cloud, set<int>& cluster, vector<bool>& processed,
+  const cv::flann::GenericIndex<T>& tree, float radius, int minSize, int maxSize)
+{
+  processed[index] = true;
+  cluster.insert(index);
+
+  int knn = 3;
+
+  // Will contain (sorted) ids and distances of points close enough to query point, -1 elsewhere
+  cv::Mat nearest (1, knn, CV_32S, cv::Scalar::all(-1));
+  cv::Mat distances (1, knn, CV_32F, cv::Scalar::all(-1));
+
+  // Square radius as we are using L2-norm [4]; for cvflann::SearchParams see [5]
+  tree.radiusSearch(cloud.row(index), nearest, distances, radius*radius, cvflann::SearchParams());
+
+  for (size_t j = 0; j < nearest.cols; ++j)
+  {
+    int id = nearest.at<int>(j);
+
+    if (id == -1)  // No more close-enough points
+      break;
+
+    if (!processed[id])
+
+      // Insert all points close enough to query point into the cluster
+      clusterHelper(id, cloud, cluster, processed, tree, radius, minSize, maxSize);
+  }
+}
+
+void euclideanClustering(const vector<LidarPoint> &src, vector<set<int>> &clusters, float radius, int minSize, 
+  int maxSize)
+{
+  // Convert src to matrix for nearest neighbor search [2]. Downcast to float for faster processing with minimal 
+  // change in output, if any
+
+  cv::Mat srcMat(src.size(), 3, CV_32F);
+
+  for (size_t i = 0; i < src.size(); ++i)
+  {
+    srcMat.at<float>(i, 0) = src[i].x;
+    srcMat.at<float>(i, 1) = src[i].y;
+    srcMat.at<float>(i, 2) = src[i].z;
+  }
+
+  // Build a KD-Tree structure [2] [3] with arguments optimized for 3D-point search
+  cv::flann::GenericIndex<cvflann::L2_Simple<float>> kdtree(srcMat, cvflann::KDTreeSingleIndexParams());
+
+  vector<bool> processed(src.size(), false);
+
+  for (size_t i = 10; i < src.size(); ++i)  // Point at index i is query point
+  {
+    if (processed[i])  // Skip
+      continue;
+
+    set<int> cluster;
+
+    clusterHelper(i, srcMat, cluster, processed, kdtree, radius, minSize, maxSize);
+
+    if (cluster.size() >= minSize && cluster.size() <= maxSize)
+      clusters.push_back(cluster);
+  }
+}
+
+void removeOutliers(vector<LidarPoint> &src, vector<LidarPoint> &dst, FilteringMethod method)
+{
+  switch (method)
+  {
+    case FilteringMethod::TUKEY:  // Tukey's fences [1]
+    {  
+      // Sort by x, the most important dimension to compute time-to-collision
+      sort(src.begin(), src.end(), [](const LidarPoint& p1, const LidarPoint& p2) { return p1.x < p2.x; });
+
+      // Extract x-coordinates for easier percentile calculation
+      vector<double> src_x (src.size(), 0.);
+
+      for (size_t i = 0; i < src.size(); ++i)
+        src_x[i] = src[i].x;
+
+      double q1 = percentile(src_x, .25);
+      double q3 = percentile(src_x, .75);
+      double IQR = (q3 - q1);
+
+      double lowerBound = q1 - 1.5 * IQR;
+      double upperBound = q3 + 1.5 * IQR;
+
+      for (const auto& point : src)
+      {
+        // Only keep points inside Tukey's fences
+        if (point.x >= lowerBound && point.x <= upperBound)
+          dst.push_back(point);
+      }
+
+      break;
+    }
+
+    case FilteringMethod::EUCLIDEAN_CLUSTERING:  // [2]
+    {
+      float radius = 0.6;
+      int minSize = 30, maxSize = 400;
+
+      vector<set<int>> clusters;
+
+      euclideanClustering(src, clusters, radius, minSize, maxSize);
+
+      for (auto& cluster : clusters)
+      {
+        cout << "Source: " << src.size() << "\tCluster size: " << cluster.size() << endl;
+
+        for (int id : cluster)
+        {
+          dst.push_back(src[id]);  // Will compute time-to-collision with remaining points
+        }
+      }
+
+      sort(dst.begin(), dst.end(), [](const LidarPoint& p1, const LidarPoint& p2) { return p1.x < p2.x; });
+
+      renderCluster(src, clusters);
+
+      break;
+    }
+  }
+}
+
+void computeTTCLidar(vector<LidarPoint> &lidarPointsPrev, vector<LidarPoint> &lidarPointsCurr, double frameRate, 
+  double &TTC)
+{
+  // Time the LiDAR time-to-collision calculation process
+  auto startTime = chrono::steady_clock::now();
+
+  // Time between two measurements, in seconds
+  double dT = 1 / frameRate;
+
+  vector<LidarPoint> filteredPrev, filteredCurr;
+
+  removeOutliers(lidarPointsPrev, filteredPrev, FilteringMethod::EUCLIDEAN_CLUSTERING);
+  removeOutliers(lidarPointsCurr, filteredCurr, FilteringMethod::EUCLIDEAN_CLUSTERING);  
+
+  vector<double> filteredXPrev (filteredPrev.size(), 0.);
+
+  for (size_t i = 0; i < filteredPrev.size(); ++i)
+    filteredXPrev[i] = filteredPrev[i].x;
+
+    vector<double> filteredXCurr (filteredCurr.size(), 0.);
+
+  for (size_t i = 0; i < filteredCurr.size(); ++i)
+    filteredXCurr[i] = filteredCurr[i].x;
+
+  double medianXPrev = percentile(filteredXPrev, 0.5);
+  double medianXCurr = percentile(filteredXCurr, 0.5);
+
+  // Compute stable time-to-collision assuming a constant velocity model
+  TTC = medianXCurr * dT / (medianXPrev - medianXCurr);
+
+  auto endTime = chrono::steady_clock::now();
+  auto elapsedTime = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
+  cout << "LiDAR time-to-collision calculation took: " << elapsedTime.count() / 1000. << " milliseconds." << endl;
+}
+
+// associate a given bounding box with the keypoints it contains
+void clusterKptMatchesWithROI(BoundingBox &boundingBox, vector<cv::KeyPoint> &kptsPrev, vector<cv::KeyPoint> &kptsCurr, 
+  vector<cv::DMatch> &kptMatches)
+{
+  // ...
+}
+
+// Compute time-to-collision (TTC) based on keypoint correspondences in successive images
+void computeTTCCamera(vector<cv::KeyPoint> &kptsPrev, vector<cv::KeyPoint> &kptsCurr, vector<cv::DMatch> kptMatches, 
+  double frameRate, double &TTC, cv::Mat *visImg)
+{
+  // ...
 }
