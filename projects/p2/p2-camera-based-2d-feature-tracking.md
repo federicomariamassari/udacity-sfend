@@ -119,7 +119,7 @@ SURF is also included (but analysed separately), as it was the required method f
 
 For this task, template class `cv::Rect` [6] is used to remove all keypoints outside an area in pixels centered on the preceding vehicle (x=535, y=180, width=180, height=150). All keypoints whose coordinates belong to the rectangle are pushed back in a new vector, which is then reassigned to the original object. It is worth mentioning that the pre-defined area includes the side mirror of a vehicle on the left, as well as the shadow of the preceding car itself, with relevant implications for the analysis. The keypoint removal logic is placed in custom method [`focusOnArea`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p2/src/matching2D_Student.cpp#L408), which is then [called in the main file](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p2/src/MidTermProject_Camera_Student.cpp#L154).
 
-__Update.__ Masking can be used to achieve the same result more efficiently. A mask is defined as having the same size as the input image, and all its values are set to 0 except within a rectangle area, in which they are set to 1. When the mask is applied, all keypoints outside the rectangle are discarded, while those inside the rectangle are kept for further processing.
+__Update.__ Masking can be used to achieve the same result more efficiently. A mask is defined as having the same size as the input image, and all its values are set to 0 except within a rectangle area, in which they are set to 1. When the mask is applied, all keypoints outside the rectangle are discarded, while those inside it are kept for further processing.
 
 ```cpp
 cv::Mat mask = cv::Mat::zeros(imgGray.rows, imgGray.cols, CV_8U);
