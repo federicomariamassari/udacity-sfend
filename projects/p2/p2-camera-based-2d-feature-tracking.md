@@ -119,7 +119,7 @@ SURF is also included (but analysed separately), as it was the required method f
 
 For this task, template class `cv::Rect` [6] is used to remove all keypoints outside an area in pixels centered on the preceding vehicle (x=535, y=180, width=180, height=150). All keypoints whose coordinates belong to the rectangle are pushed back in a new vector, which is then reassigned to the original object. It is worth mentioning that the pre-defined area includes the side mirror of a vehicle on the left, as well as the shadow of the preceding car itself, with relevant implications for the analysis. The keypoint removal logic is placed in custom method [`focusOnArea`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p2/src/matching2D_Student.cpp#L408), which is then [called in the main file](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p2/src/MidTermProject_Camera_Student.cpp#L154).
 
-__Update.__ Masking can be used to achieve the same result more efficiently. A mask is defined as having the same size as the input image, and all its values are set to 0 except within a rectangle area, in which they are set to 1. When the mask is applied, all keypoints outside the rectangle are discarded, while those inside the rectangle are kept for further processing.
+__Update.__ Masking can be used to achieve the same result more efficiently. A mask is defined as having the same size as the input image, and all its values are set to 0 except within a rectangle area, in which they are set to 1. When the mask is applied, all keypoints outside the rectangle are discarded, while those inside it are kept for further processing.
 
 ```cpp
 cv::Mat mask = cv::Mat::zeros(imgGray.rows, imgGray.cols, CV_8U);
@@ -150,7 +150,7 @@ __Number of keypoints.__ BRISK, FAST, and AKAZE detect the largest amount of key
 
 __Distribution shape.__ The distribution of neighborhood size is constant (i.e., standard deviation = 0) for HARRIS, SHITOMASI, and FAST. For the first two it is dictated by, respectively, `blockSize` $\times$ `apertureSize` and `blockSize`. For FAST, it is fixed by construction, as 7 is the diameter of a circle with a 16-pixel circumference [14] [15]. The distribution is variable for other detectors, and the spread around the mean (as measured by standard deviation, range, and IQR) is greatest for ORB and BRISK, suggesting keypoint detection across a broader range of sizes for these two algorithms.
 
-__Neighborhood size.__ In general, ORB and BRISK make use of the largest local context to describe a feature (i.e., include more information). This tendency is shown by the higher median (a measure robust to outliers) values of 44.64 and 15.5217 pixels respectively, and by the mode (the most frequently-occurring value in a distribution) coinciding with the maximum value for both. By contrast, FAST, AKAZE, and SIFT tend to consider much smaller regions, although for the latter the mode is ~43 pixels. SURF is also highly descriptive, with a median value of 21 and mode of 128 pixels.
+__Neighborhood size.__ In general, ORB and BRISK make use of the largest local context to describe a feature (i.e., include more information). This tendency is shown by the higher median (a measure robust to outliers) values of 44.64 and 15.5195 pixels respectively, and by the mode (the most frequently-occurring value in a distribution) coinciding with the maximum value for both. By contrast, FAST, AKAZE, and SIFT tend to consider much smaller regions, although for the latter the mode is ~43 pixels. SURF is also highly descriptive, with a median value of 21 and mode of 128 pixels.
 
 __Table 1: Distribution of Keypoints' Neighborhood Size__
 
@@ -160,15 +160,15 @@ __Table 1: Distribution of Keypoints' Neighborhood Size__
 | Keypoints/image (lower bound) | 24 | 117 | 220 | 276 | 116 | 167 | 138 | 215 |
 | Avg keypoint detection time* (ms) | 5.13568 | 4.11741 | 0.862544 | 38.2281 | 4.34509 | 41.7808 | 40.887 | 17.0413 |
 | Mean | 6 | 4 | 7 | 21.9444 | 55.9928 | 7.69915 | 5.03739 | 28.2967 |
-| Median | 6 | 4 | 7 | 15.5217 | 44.64 | 5.70819 | 3.19932 | 21 |
+| Median | 6 | 4 | 7 | 15.5195 | 44.64 | 5.70819 | 3.19516 | 21 |
 | Mode | 6 | 4 | 7 | 72 | 111.079 | 22.8328 | 42.8487 | 128 |
 | Standard deviation | 0 | 0 | 0 | 14.6207 | 25.1258 | 3.53831 | 5.98752 | 19.6608 |
 | Min | 6 | 4 | 7 | 8.4 | 31 | 4.8 | 1.79669 | 10 |
 | Max | 6 | 4 | 7 | 72 | 111.079 | 27.1529 | 51.7024 | 128 |
 | Range | 0 | 0 | 0 | 63.6 | 80.0786 | 22.3529 | 49.9057 | 118 |
-| 25th percentile | 6 | 4 | 7 | 12.3061 | 37.2 | 5.70819 | 2.1767 | 16 |
-| 75th percentile | 6 | 4 | 7 | 27 | 77.1379 | 8.07261 | 4.83003 | 30 |
-| IQR | 0 | 0 | 0 | 14.6939 | 39.9379 | 2.36441 | 2.65333 | 14 |
+| 25th percentile | 6 | 4 | 7 | 12.3065 | 37.2 | 5.70819 | 2.1769 | 16 |
+| 75th percentile | 6 | 4 | 7 | 26.987 | 77.1379 | 8.07261 | 4.82683 | 30 |
+| IQR | 0 | 0 | 0 | 14.6804 | 39.9379 | 2.36441 | 2.64993 | 14 |
 
 (*) Single experiment.
 

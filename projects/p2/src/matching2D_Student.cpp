@@ -447,23 +447,36 @@ void extractNeighborhoodSizes(const vector<cv::KeyPoint>& keypoints, vector<doub
     neighborhoodSizes.push_back(keypoint.size);
 }
 
-double percentile(const vector<double>& vec, const float p)  // MP.7
+double percentile(const vector<double>& vec, const float q)  // MP.7
 {
-  int vec_size = vec.size();
-  double res;
+  // https://axibase.com/use-cases/workshop/percentiles.html#r7-linear-interpolation
 
-  switch(vec_size % 2)
+  int vecSize = vec.size();
+
+  if (vecSize == 0)
+    throw length_error("Input vector is empty.");
+
+  if (q < 0. || q > 1.)
+    throw out_of_range("Percentile must be a real number in [0; 1].");
+
+  if (q == 0.)  // Fast bounds calculation
+    return vec.front();
+
+  if (q == 1.)
+    return vec[vecSize - 1];
+
+  if (q == 0.5)  // Fast median calculation
   {
-    case 0:
-      res = vec[vec_size * p];
-      break;
+    if (vecSize % 2 == 1)
+      return vec[vecSize * q];
 
-    case 1:
-      res = 0.5 * (vec[floor(vec_size * p)] + vec[floor(vec_size * p) + 1]);
-      break;
+    else
+      return 0.5 * (vec[vecSize * q - 1] + vec[vecSize * q]);
   }
 
-  return res;
+  double index = (vecSize - 1) * q;
+
+  return vec[floor(index)] + (index - floor(index)) * (vec[ceil(index)] - vec[floor(index)]);
 }
 
 double computeMode(const vector<double>& vec)  // MP.7
