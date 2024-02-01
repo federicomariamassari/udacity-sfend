@@ -227,20 +227,33 @@ double std_dev(const vector<double>& vec)
   return sqrt(squared_dev / (vec.size() - 1));  // Sample standard deviation
 }
 
-void renderCluster(const vector<LidarPoint> &src, const vector<set<int>> &clusters)
+void renderCluster(const vector<LidarPoint> &src, const vector<set<int>> &clusters, bool showRemoved)
 {
   cv::viz::Viz3d window("Filtered LiDAR point cloud");
   window.setBackgroundColor(cv::viz::Color::black());
+
+  set<int> removedIds;
+
+  if (showRemoved)
+  {
+    for (int i = 0; i < src.size(); ++i)
+      removedIds.insert(i);
+  }
 
   for (size_t i = 0; i < clusters.size(); ++i)
   {
     std::vector<cv::Point3f> points;
 
     for (int id : clusters[i])
+    {  
       points.push_back(cv::Point3f(src[id].x, src[id].y, src[id].z));
 
+      if (showRemoved)
+        removedIds.erase(id);  // Pop ids of kept point to only preserve removed ones
+    }
+
     cv::viz::WCloud cloud(points);
-    cloud.setRenderingProperty(cv::viz::POINT_SIZE, 5.0);
+    cloud.setRenderingProperty(cv::viz::POINT_SIZE, 6.0);
 
     // Rotate color among clusters (to extend: i % n == k, with k = 0, ..., n-1)
     cv::viz::Color color;
@@ -255,8 +268,23 @@ void renderCluster(const vector<LidarPoint> &src, const vector<set<int>> &cluste
 
     cloud.setColor(color);
 
-    std::string cloudName = "cloud" + std::to_string(i);
+    string cloudName = "cloud" + to_string(i);
     window.showWidget(cloudName, cloud);
+  }
+
+  if (showRemoved)  // Removed clusters will be colorless
+  {
+    vector<cv::Point3f> removed;
+
+    for (int id : removedIds)
+      removed.push_back(cv::Point3f(src[id].x, src[id].y, src[id].z));
+
+    cv::viz::WCloud cloud(removed);
+    cloud.setRenderingProperty(cv::viz::POINT_SIZE, 6.0);
+    cloud.setColor(cv::viz::Color::white());
+    
+    window.showWidget("removed", cloud);
+
   }
 
   window.spin();  // Trigger event loop
@@ -269,7 +297,7 @@ void clusterHelper(int index, const cv::Mat& cloud, set<int>& cluster, vector<bo
   processed[index] = true;
   cluster.insert(index);
 
-  int knn = 3;
+  int knn = 6;
 
   // Will contain (sorted) ids and distances of points close enough to query point, -1 elsewhere
   cv::Mat nearest (1, knn, CV_32S, cv::Scalar::all(-1));
@@ -323,6 +351,8 @@ void euclideanClustering(const vector<LidarPoint> &src, vector<set<int>> &cluste
 
     if (cluster.size() >= minSize && cluster.size() <= maxSize)
       clusters.push_back(cluster);
+    else
+      cout << "Removed cluster of size: " << cluster.size() << endl;  // TODO: ADDED
   }
 }
 
@@ -360,8 +390,8 @@ void removeOutliers(vector<LidarPoint> &src, vector<LidarPoint> &dst, FilteringM
 
     case FilteringMethod::EUCLIDEAN_CLUSTERING:  // [2]
     {
-      float radius = 0.6;
-      int minSize = 30, maxSize = 400;
+      float radius = 0.05;
+      int minSize = 15, maxSize = 400;
 
       vector<set<int>> clusters;
 
@@ -372,9 +402,7 @@ void removeOutliers(vector<LidarPoint> &src, vector<LidarPoint> &dst, FilteringM
         cout << "Source: " << src.size() << "\tCluster size: " << cluster.size() << endl;
 
         for (int id : cluster)
-        {
           dst.push_back(src[id]);  // Will compute time-to-collision with remaining points
-        }
       }
 
       sort(dst.begin(), dst.end(), [](const LidarPoint& p1, const LidarPoint& p2) { return p1.x < p2.x; });

@@ -84,12 +84,14 @@ enum class FilteringMethod
  * 
  * @param src The input LiDAR point cloud data.
  * @param clusters The populated Euclidean clusters container.
+ * @param showRemoved Whether to also render discarded clusters (in white). 
  * 
  * Resources:
  * 
  * [1] - https://docs.opencv.org/4.2.0/d4/dba/classcv_1_1viz_1_1Color.html
  */
-void renderCluster(const std::vector<LidarPoint> &src, const std::vector<std::set<int>> &clusters);
+void renderCluster(const std::vector<LidarPoint> &src, const std::vector<std::set<int>> &clusters, 
+    bool showRemoved=true);
 
 /**
  * @brief FP.2: Recursive function to compute the nearest neighbors of a query point based on input L2-norm [1] [2].
