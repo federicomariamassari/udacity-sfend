@@ -197,14 +197,14 @@ void limitKeypoints(std::vector<cv::KeyPoint>& keypoints, const std::string dete
 void extractNeighborhoodSizes(const std::vector<cv::KeyPoint>& keypoints, std::vector<double>& neighborhoodSizes);
 
 /**
- * @brief MP.7: Calculate percentile p on a detector's sorted distribution of keypoints' neighborhood sizes.
+ * @brief MP.7: Calculate percentile q on a detector's sorted distribution of keypoints' neighborhood sizes.
  * 
  * @param vec The sorted vector of keypoints' neighborhood sizes.
- * @param p The desired decimal percentile.
+ * @param q The desired decimal percentile.
  * 
  * @return res The vector element corresponding to the desired percentile.
  */
-double percentile(const std::vector<cv::KeyPoint>& vec, const float p);
+double percentile(const std::vector<cv::KeyPoint>& vec, const float q);
 
 /**
  * @brief MP.7: Simplified mode calculation assuming input vector is sorted.
