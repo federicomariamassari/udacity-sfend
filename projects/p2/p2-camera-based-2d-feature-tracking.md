@@ -119,6 +119,15 @@ SURF is also included (but analysed separately), as it was the required method f
 
 For this task, template class `cv::Rect` [6] is used to remove all keypoints outside an area in pixels centered on the preceding vehicle (x=535, y=180, width=180, height=150). All keypoints whose coordinates belong to the rectangle are pushed back in a new vector, which is then reassigned to the original object. It is worth mentioning that the pre-defined area includes the side mirror of a vehicle on the left, as well as the shadow of the preceding car itself, with relevant implications for the analysis. The keypoint removal logic is placed in custom method [`focusOnArea`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p2/src/matching2D_Student.cpp#L408), which is then [called in the main file](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p2/src/MidTermProject_Camera_Student.cpp#L154).
 
+__Update.__ Masking can be used to achieve the same result more efficiently. A mask is defined as having the same size as the input image, and all its values are set to 0 except within a rectangle area, in which they are set to 1. When the mask is applied, all keypoints outside the rectangle are discarded, while those inside the rectangle are kept for further processing.
+
+```cpp
+cv::Mat mask = cv::Mat::zeros(imgGray.rows, imgGray.cols, CV_8U);
+cv::Rect vehicleRect(535, 180, 180, 150);
+mask(vehicleRect) = 1;
+cv::KeyPointsFilter::runByPixelsMask(keypoints, mask);
+```
+
 ### MP.4: Keypoint Descriptors
 
 Descriptors SIFT (and SURF), BRIEF, ORB, FREAK, and AKAZE are implemented, with default arguments, from [4] and [5]. They complement the already available BRISK. Similarly to the detectors' case, the descriptors are plugged in the generic class `cv::DescriptorExtractor`, which provides a clean interface. Exceptions are raised in case of detector/descriptor incompatibilities, such as SIFT and ORB, or AKAZE and everything else [7].
