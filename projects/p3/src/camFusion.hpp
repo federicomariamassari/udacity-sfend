@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <algorithm>
 #include <chrono>
+#include <iomanip>
 #include <iostream>
 #include <numeric>
 #include <set>
@@ -20,10 +21,10 @@
 
 
 void clusterLidarWithROI(std::vector<BoundingBox> &boundingBoxes, std::vector<LidarPoint> &lidarPoints, 
-    float shrinkFactor, cv::Mat &P_rect_xx, cv::Mat &R_rect_xx, cv::Mat &RT);
+  float shrinkFactor, cv::Mat &P_rect_xx, cv::Mat &R_rect_xx, cv::Mat &RT);
 
 void clusterKptMatchesWithROI(BoundingBox &boundingBox, std::vector<cv::KeyPoint> &kptsPrev, 
-    std::vector<cv::KeyPoint> &kptsCurr, std::vector<cv::DMatch> &kptMatches);
+  std::vector<cv::KeyPoint> &kptsCurr, std::vector<cv::DMatch> &kptMatches);
 
 void show3DObjects(std::vector<BoundingBox> &boundingBoxes, cv::Size worldSize, cv::Size imageSize, bool bWait=true);
 
@@ -41,7 +42,7 @@ void show3DObjects(std::vector<BoundingBox> &boundingBoxes, cv::Size worldSize, 
  * [2] - https://docs.opencv.org/4.2.0/d4/de0/classcv_1_1DMatch.html
  */
 void matchBoundingBoxes(std::vector<cv::DMatch> &matches, std::map<int, int> &bbBestMatches, DataFrame &prevFrame, 
-    DataFrame &currFrame);
+  DataFrame &currFrame);
 
 /**
  * @brief FP.2, FP.3: Linearly interpolate percentile q on a sorted container, using method R7 [1].
@@ -90,8 +91,12 @@ enum class FilteringMethod
  * 
  * [1] - https://docs.opencv.org/4.2.0/d4/dba/classcv_1_1viz_1_1Color.html
  */
-void renderCluster(const std::vector<LidarPoint> &src, const std::vector<std::set<int>> &clusters, 
-    bool showRemoved=true);
+void renderClusters(const std::vector<LidarPoint> &src, const std::vector<std::set<int>> &clusters, 
+  bool showRemoved=true);
+
+
+void printStatistics(const std::vector<LidarPoint> &src, const std::vector<std::set<int>> &clusters, 
+  const std::vector<std::set<int>> &removed, float radius, int minSize, int maxSize);
 
 /**
  * @brief FP.2: Recursive function to compute the nearest neighbors of a query point based on input L2-norm [1] [2].
@@ -112,13 +117,14 @@ void renderCluster(const std::vector<LidarPoint> &src, const std::vector<std::se
  */
 template<typename T>
 void clusterHelper(int index, const cv::Mat& cloud, std::set<int>& cluster, std::vector<bool>& processed, 
-    cv::flann::GenericIndex<T>& tree, float radius, int minSize, int maxSize);
+  cv::flann::GenericIndex<T>& tree, float radius, int minSize, int maxSize);
 
 /**
  * @brief FP.2: Cluster input data based on the Euclidean distance (L2-norm) from a query point [1].
  * 
  * @param src The input LiDAR point cloud data.
  * @param clusters The cluster container, to populate.
+ * @param removed The removed clusters container, to also populate.
  * @param radius Distance tolerance to query point for the neighborhood search; will be squared (L2-norm).
  * @param minSize Minimum acceptable size for a cluster; smaller ones will be discarded.
  * @param maxSize Maximum acceptable size for a cluster; larger ones will be split.
@@ -132,8 +138,8 @@ void clusterHelper(int index, const cv::Mat& cloud, std::set<int>& cluster, std:
  * [5] - https://vovkos.github.io/doxyrest-showcase/opencv/sphinxdoc/struct_cvflann_SearchParams.html
  * [6] - https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p1/src/custom/clustering.h
  */
-void euclideanClustering(const std::vector<LidarPoint> &src, std::vector<std::set<int>> &clusters, float radius, 
-    int minSize, int maxSize);
+void euclideanClustering(const std::vector<LidarPoint> &src, std::vector<std::set<int>> &clusters, 
+  std::vector<std::set<int>> &removed, float radius, int minSize, int maxSize);
 
 /** 
  * @brief FP.2: Filter out outliers from a cloud of 3-dimensional points based on the desired filtering method.
@@ -164,9 +170,9 @@ void removeOutliers(std::vector<LidarPoint> &src, std::vector<LidarPoint> &dst, 
  * [2] - https://en.wikipedia.org/wiki/Outlier
  */
 void computeTTCLidar(std::vector<LidarPoint> &lidarPointsPrev, std::vector<LidarPoint> &lidarPointsCurr, 
-    double frameRate, double &TTC);
+  double frameRate, double &TTC);
 
 void computeTTCCamera(std::vector<cv::KeyPoint> &kptsPrev, std::vector<cv::KeyPoint> &kptsCurr,
-                      std::vector<cv::DMatch> kptMatches, double frameRate, double &TTC, cv::Mat *visImg=nullptr);
+  std::vector<cv::DMatch> kptMatches, double frameRate, double &TTC, cv::Mat *visImg=nullptr);
 
 #endif /* camFusion_hpp */

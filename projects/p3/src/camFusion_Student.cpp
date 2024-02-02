@@ -227,7 +227,7 @@ double std_dev(const vector<double>& vec)
   return sqrt(squared_dev / (vec.size() - 1));  // Sample standard deviation
 }
 
-void renderCluster(const vector<LidarPoint> &src, const vector<set<int>> &clusters, bool showRemoved)
+void renderClusters(const vector<LidarPoint> &src, const vector<set<int>> &clusters, bool showRemoved)
 {
   cv::viz::Viz3d window("Filtered LiDAR point cloud");
   window.setBackgroundColor(cv::viz::Color::black());
@@ -255,7 +255,7 @@ void renderCluster(const vector<LidarPoint> &src, const vector<set<int>> &cluste
     cv::viz::WCloud cloud(points);
     cloud.setRenderingProperty(cv::viz::POINT_SIZE, 6.0);
 
-    // Rotate color among clusters (to extend: i % n == k, with k = 0, ..., n-1)
+    // Rotate color among clusters (to extend: i % n == k, for all k = 0, ..., n-1)
     cv::viz::Color color;
 
     if (i % 3 == 0) {
@@ -263,7 +263,7 @@ void renderCluster(const vector<LidarPoint> &src, const vector<set<int>> &cluste
     } else if (i % 3 == 1) {
         color = cv::viz::Color::blue();
     } else {
-        color = cv::viz::Color::yellow();
+        color = cv::viz::Color::green();
     }
 
     cloud.setColor(color);
@@ -288,6 +288,45 @@ void renderCluster(const vector<LidarPoint> &src, const vector<set<int>> &cluste
   }
 
   window.spin();  // Trigger event loop
+}
+
+void printStatistics(const vector<LidarPoint> &src, const vector<set<int>> &clusters, const vector<set<int>> &removed,
+  float radius, int minSize, int maxSize)
+{
+  cout << endl;
+  cout << "Source: " << src.size() << " points" << endl;
+  cout << endl;
+
+  cout << "Filtering method: Euclidean clustering" << endl;
+  cout << "Radius: " << radius << " (sq.: " << radius*radius << ")" << endl;
+  cout << endl;
+
+  cout << "Min cluster size: " << right << setw(4) << minSize << endl;
+  cout << "Max cluster size: " << right << setw(4) << maxSize << endl;
+  cout << endl;
+
+  int pointsKept = 0, pointsRemoved = 0;
+
+  for (auto& cluster : clusters)
+  {
+    cout << left << setw(25) << "Found cluster of size: " << right << setw(4) << cluster.size() << endl;
+    pointsKept += cluster.size();
+  }
+
+  cout << string(30, '-') << endl;
+  cout << left << setw(25) << "Total points kept: " << right << setw(4) << pointsKept << endl;
+  cout << endl;
+
+  for (auto& cluster : removed)
+  {
+    cout << left << setw(25) << "Removed cluster of size: " << right << setw(4) << cluster.size() << endl;
+    pointsRemoved += cluster.size();
+  }
+
+  cout << string(30, '-') << endl;
+  cout << left << setw(25) << "Total points removed: " << right << setw(4) << pointsRemoved << endl;
+  cout << endl;
+
 }
 
 template<typename T>
@@ -320,8 +359,8 @@ void clusterHelper(int index, const cv::Mat& cloud, set<int>& cluster, vector<bo
   }
 }
 
-void euclideanClustering(const vector<LidarPoint> &src, vector<set<int>> &clusters, float radius, int minSize, 
-  int maxSize)
+void euclideanClustering(const vector<LidarPoint> &src, vector<set<int>> &clusters, vector<set<int>> &removed,
+  float radius, int minSize, int maxSize)
 {
   // Convert src to matrix for nearest neighbor search [2]. Downcast to float for faster processing with minimal 
   // change in output, if any
@@ -351,8 +390,9 @@ void euclideanClustering(const vector<LidarPoint> &src, vector<set<int>> &cluste
 
     if (cluster.size() >= minSize && cluster.size() <= maxSize)
       clusters.push_back(cluster);
+    
     else
-      cout << "Removed cluster of size: " << cluster.size() << endl;  // TODO: ADDED
+      removed.push_back(cluster);
   }
 }
 
@@ -390,24 +430,23 @@ void removeOutliers(vector<LidarPoint> &src, vector<LidarPoint> &dst, FilteringM
 
     case FilteringMethod::EUCLIDEAN_CLUSTERING:  // [2]
     {
-      float radius = 0.05;
-      int minSize = 15, maxSize = 400;
+      float radius = 0.1;
+      int minSize = 5, maxSize = 400;
 
-      vector<set<int>> clusters;
+      vector<set<int>> clusters, removed;
 
-      euclideanClustering(src, clusters, radius, minSize, maxSize);
+      euclideanClustering(src, clusters, removed, radius, minSize, maxSize);
 
       for (auto& cluster : clusters)
       {
-        cout << "Source: " << src.size() << "\tCluster size: " << cluster.size() << endl;
-
         for (int id : cluster)
           dst.push_back(src[id]);  // Will compute time-to-collision with remaining points
       }
 
       sort(dst.begin(), dst.end(), [](const LidarPoint& p1, const LidarPoint& p2) { return p1.x < p2.x; });
 
-      renderCluster(src, clusters);
+      renderClusters(src, clusters);
+      printStatistics(src, clusters, removed, radius, minSize, maxSize);
 
       break;
     }
