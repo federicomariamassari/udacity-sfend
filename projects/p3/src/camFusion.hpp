@@ -29,12 +29,12 @@ void clusterKptMatchesWithROI(BoundingBox &boundingBox, std::vector<cv::KeyPoint
 void show3DObjects(std::vector<BoundingBox> &boundingBoxes, cv::Size worldSize, cv::Size imageSize, bool bWait=true);
 
 /**
- * @brief FP.1: Match consecutive bounding box pairs by the frequency of matches they contain [1].
+ * @brief FP.1: Match consecutive bounding box pairs by the largest number of keypoint correspondences [1].
  * 
  * @param matches The keypoint matches between previous (query) and current (train) frames.
  * @param bbBestMatches Container of previous-current bounding box IDs that result in the best matches, to populate.
- * @param prevFrame Sensor information at previous time.
- * @param currFrame Sensor information at current time.
+ * @param prevFrame Sensor information at previous (query) time.
+ * @param currFrame Sensor information at current (train) time.
  * 
  * Resources:
  * 
@@ -85,14 +85,14 @@ enum class FilteringMethod
  * 
  * @param src The input LiDAR point cloud data.
  * @param clusters The populated Euclidean clusters container.
- * @param showRemoved Whether to also render discarded clusters (in white). 
+ * @param bShowRemoved Whether to also render discarded clusters (in white). 
  * 
  * Resources:
  * 
  * [1] - https://docs.opencv.org/4.2.0/d4/dba/classcv_1_1viz_1_1Color.html
  */
 void renderClusters(const std::vector<LidarPoint> &src, const std::vector<std::set<int>> &clusters, 
-  bool showRemoved=true);
+  bool bShowRemoved=true);
 
 
 void printStatistics(const std::vector<LidarPoint> &src, const std::vector<std::set<int>> &clusters, 

@@ -37,7 +37,7 @@ void clusterLidarWithROI(vector<BoundingBox> &boundingBoxes, vector<LidarPoint> 
       smallerBox.width = (*it2).roi.width * (1 - shrinkFactor);
       smallerBox.height = (*it2).roi.height * (1 - shrinkFactor);
 
-      // check wether point is within current bounding box
+      // check whether point is within current bounding box
       if (smallerBox.contains(pt))
       {
         enclosingBoxes.push_back(it2);
@@ -45,7 +45,7 @@ void clusterLidarWithROI(vector<BoundingBox> &boundingBoxes, vector<LidarPoint> 
 
     } // eof loop over all bounding boxes
 
-    // check wether point has been enclosed by one or by multiple boxes
+    // check whether point has been enclosed by one or by multiple boxes
     if (enclosingBoxes.size() == 1)
     { 
       // add Lidar point to bounding box
@@ -134,13 +134,11 @@ void matchBoundingBoxes(vector<cv::DMatch> &matches, map<int, int> &bbBestMatche
   // Time the bounding box matching process
   auto startTime = chrono::steady_clock::now();
 
-  // https://knowledge.udacity.com/questions/570553 (additional refactoring suggested by Udacity GPT)
-  map<pair<int, int>, int> idPairsCount;
+  map<pair<int, int>, int> idPairsCount;  // [1]
 
   for (const auto& match : matches)
   {
-    // https://docs.opencv.org/4.2.0/d4/de0/classcv_1_1DMatch.html
-    cv::KeyPoint prevPoint = prevFrame.keypoints[match.queryIdx];
+    cv::KeyPoint prevPoint = prevFrame.keypoints[match.queryIdx];  // [2]
     cv::KeyPoint currPoint = currFrame.keypoints[match.trainIdx];
 
     for (const BoundingBox& prevBB : prevFrame.boundingBoxes)
@@ -150,13 +148,9 @@ void matchBoundingBoxes(vector<cv::DMatch> &matches, map<int, int> &bbBestMatche
         for (const BoundingBox& currBB : currFrame.boundingBoxes)
         {
           if (currBB.roi.contains(currPoint.pt))  // Keypoint is also in the current bounding box
-          {
-            idPairsCount[make_pair(prevBB.boxID, currBB.boxID)]++;  // We have a correspondence
-            break;  // No need to continue searching in the current bounding box
-          }
-        }
 
-        break;  // No need to continue searching in the remaining bounding boxes
+            idPairsCount[make_pair(prevBB.boxID, currBB.boxID)]++;  // We have a correspondence
+        }
       }
     }
   }
@@ -227,14 +221,14 @@ double std_dev(const vector<double>& vec)
   return sqrt(squared_dev / (vec.size() - 1));  // Sample standard deviation
 }
 
-void renderClusters(const vector<LidarPoint> &src, const vector<set<int>> &clusters, bool showRemoved)
+void renderClusters(const vector<LidarPoint> &src, const vector<set<int>> &clusters, bool bShowRemoved)
 {
   cv::viz::Viz3d window("Filtered LiDAR point cloud");
   window.setBackgroundColor(cv::viz::Color::black());
 
   set<int> removedIds;
 
-  if (showRemoved)
+  if (bShowRemoved)
   {
     for (int i = 0; i < src.size(); ++i)
       removedIds.insert(i);
@@ -248,7 +242,7 @@ void renderClusters(const vector<LidarPoint> &src, const vector<set<int>> &clust
     {  
       points.push_back(cv::Point3f(src[id].x, src[id].y, src[id].z));
 
-      if (showRemoved)
+      if (bShowRemoved)
         removedIds.erase(id);  // Pop ids of kept point to only preserve removed ones
     }
 
@@ -272,7 +266,7 @@ void renderClusters(const vector<LidarPoint> &src, const vector<set<int>> &clust
     window.showWidget(cloudName, cloud);
   }
 
-  if (showRemoved)  // Removed clusters will be colorless
+  if (bShowRemoved)  // Removed clusters will be colorless
   {
     vector<cv::Point3f> removed;
 
@@ -339,8 +333,8 @@ void clusterHelper(int index, const cv::Mat& cloud, set<int>& cluster, vector<bo
   int knn = 6;
 
   // Will contain (sorted) ids and distances of points close enough to query point, -1 elsewhere
-  cv::Mat nearest (1, knn, CV_32S, cv::Scalar::all(-1));
-  cv::Mat distances (1, knn, CV_32F, cv::Scalar::all(-1));
+  cv::Mat nearest (1, knn, cv::DataType<int>::type, cv::Scalar::all(-1));
+  cv::Mat distances (1, knn, cv::DataType<float>::type, cv::Scalar::all(-1));
 
   // Square radius as we are using L2-norm [4]; for cvflann::SearchParams see [5]
   tree.radiusSearch(cloud.row(index), nearest, distances, radius*radius, cvflann::SearchParams());
@@ -430,8 +424,8 @@ void removeOutliers(vector<LidarPoint> &src, vector<LidarPoint> &dst, FilteringM
 
     case FilteringMethod::EUCLIDEAN_CLUSTERING:  // [2]
     {
-      float radius = 0.1;
-      int minSize = 5, maxSize = 400;
+      float radius = 0.6;
+      int minSize = 5, maxSize = 600;
 
       vector<set<int>> clusters, removed;
 
@@ -445,7 +439,7 @@ void removeOutliers(vector<LidarPoint> &src, vector<LidarPoint> &dst, FilteringM
 
       sort(dst.begin(), dst.end(), [](const LidarPoint& p1, const LidarPoint& p2) { return p1.x < p2.x; });
 
-      renderClusters(src, clusters);
+      //renderClusters(src, clusters);
       printStatistics(src, clusters, removed, radius, minSize, maxSize);
 
       break;
