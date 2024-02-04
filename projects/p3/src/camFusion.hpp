@@ -23,6 +23,20 @@
 void clusterLidarWithROI(std::vector<BoundingBox> &boundingBoxes, std::vector<LidarPoint> &lidarPoints, 
   float shrinkFactor, cv::Mat &P_rect_xx, cv::Mat &R_rect_xx, cv::Mat &RT);
 
+/**
+ * @brief Associate a given bounding box with the keypoints it contains [1].
+ * 
+ * @param boundingBox A particular bounding box in the current frame.
+ * @param kptsPrev Container of keypoints detected in the previous frame.
+ * @param kptsCurr Container of keypoints detected in the current frame.
+ * @param kptMatches Container of matches between the previous and the current frame.
+ * 
+ * Resources:
+ * 
+ * [1] - https://knowledge.udacity.com/questions/624666
+ * [2] - https://docs.opencv.org/4.2.0/d2/de8/group__core__array.html
+ * [3] - https://knowledge.udacity.com/questions/1026363
+ */
 void clusterKptMatchesWithROI(BoundingBox &boundingBox, std::vector<cv::KeyPoint> &kptsPrev, 
   std::vector<cv::KeyPoint> &kptsCurr, std::vector<cv::DMatch> &kptMatches);
 

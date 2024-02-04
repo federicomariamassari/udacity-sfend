@@ -143,11 +143,11 @@ void matchBoundingBoxes(vector<cv::DMatch> &matches, map<int, int> &bbBestMatche
 
     for (const BoundingBox& prevBB : prevFrame.boundingBoxes)
     {
-      if (prevBB.roi.contains(prevPoint.pt))  // Keypoint is in the previous bounding box
+      if (prevBB.roi.contains(prevPoint.pt))  // Keypoint is in the previous frame bounding box
       {
         for (const BoundingBox& currBB : currFrame.boundingBoxes)
         {
-          if (currBB.roi.contains(currPoint.pt))  // Keypoint is also in the current bounding box
+          if (currBB.roi.contains(currPoint.pt))  // Keypoint is also in the current frame bounding box
 
             idPairsCount[make_pair(prevBB.boxID, currBB.boxID)]++;  // We have a correspondence
         }
@@ -330,6 +330,7 @@ void clusterHelper(int index, const cv::Mat& cloud, set<int>& cluster, vector<bo
   processed[index] = true;
   cluster.insert(index);
 
+  // Set knn > 3 to ensure at least one new point is included at each radius search iteration
   int knn = 6;
 
   // Will contain (sorted) ids and distances of points close enough to query point, -1 elsewhere
@@ -424,8 +425,8 @@ void removeOutliers(vector<LidarPoint> &src, vector<LidarPoint> &dst, FilteringM
 
     case FilteringMethod::EUCLIDEAN_CLUSTERING:  // [2]
     {
-      float radius = 0.6;
-      int minSize = 5, maxSize = 600;
+      float radius = 0.12;
+      int minSize = 15, maxSize = 600;
 
       vector<set<int>> clusters, removed;
 
@@ -482,11 +483,50 @@ void computeTTCLidar(vector<LidarPoint> &lidarPointsPrev, vector<LidarPoint> &li
   cout << "LiDAR time-to-collision calculation took: " << elapsedTime.count() / 1000. << " milliseconds." << endl;
 }
 
-// associate a given bounding box with the keypoints it contains
 void clusterKptMatchesWithROI(BoundingBox &boundingBox, vector<cv::KeyPoint> &kptsPrev, vector<cv::KeyPoint> &kptsCurr, 
   vector<cv::DMatch> &kptMatches)
 {
-  // ...
+  // Time bounding box to keypoints association process
+  auto startTime = chrono::steady_clock::now();
+
+  vector<double> euclideanDistances;  // [1]
+
+  vector<cv::KeyPoint> keypointsInRoi, tempKeypoints;
+  vector<cv::DMatch> matchesInRoi, tempMatches;
+
+  for (const auto& match : kptMatches)
+  {
+    cv::KeyPoint prevPoint = kptsPrev[match.queryIdx];
+    cv::KeyPoint currPoint = kptsCurr[match.trainIdx];
+
+    if (boundingBox.roi.contains(currPoint.pt))  // As we focus on current bounding box
+    {
+      double distance = cv::norm(currPoint.pt - prevPoint.pt);  // Defaults to L2-norm (Euclidean distance) [2]
+      euclideanDistances.push_back(distance);
+
+      tempKeypoints.push_back(currPoint);  // To avoid code redundancy
+      tempMatches.push_back(match);
+    }
+  }
+
+  double meanDistance = mean(euclideanDistances);
+
+  for (size_t i = 0; i < euclideanDistances.size(); ++i)
+  {
+    if (euclideanDistances[i] <= 1.5 * meanDistance)  // As we expect a rigid transform of preceding vehicle [1]
+    {
+      keypointsInRoi.push_back(tempKeypoints[i]);
+      matchesInRoi.push_back(tempMatches[i]);
+    }
+  }
+
+  boundingBox.keypoints = keypointsInRoi;
+  boundingBox.kptMatches = matchesInRoi;
+
+  auto endTime = chrono::steady_clock::now();
+  auto elapsedTime = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
+  cout << "Bounding box to keypoints association took: " << elapsedTime.count() / 1000. << " milliseconds." << endl;
+
 }
 
 // Compute time-to-collision (TTC) based on keypoint correspondences in successive images
