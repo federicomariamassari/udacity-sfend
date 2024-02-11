@@ -275,14 +275,14 @@ void matchDescriptors(const vector<cv::KeyPoint> &kPtsSource, const vector<cv::K
     if ((descriptorType.compare("SIFT") == 0 || descriptorType.compare("SURF") == 0) 
       && descriptorGroup.compare("DES_BINARY") == 0)
     {
-      descriptorGroup = "DES_HOG";
-
       if (infoCounter == 0)
       {
         cerr << "(!) WARNING: " << descriptorGroup << " is incompatible with SIFT/SURF. Switching to DES_HOG for " << 
           descriptorType << "." << endl;
         infoCounter++;
       }
+
+      descriptorGroup = "DES_HOG";
     }
 
     // Use Hamming norm for binary descriptors and L2 norm for histogram-of-gradients ones
