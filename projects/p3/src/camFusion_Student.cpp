@@ -586,25 +586,4 @@ void computeTTCCamera(vector<cv::KeyPoint>& kptsPrev, vector<cv::KeyPoint>& kpts
   auto elapsedTime = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
   cout << "Camera time-to-collision calculation took: " << elapsedTime.count() / 1000. << " ms" << endl;
 
-  // EXPERIMENTAL: Visualization (steps suggested by Udacity GPT) && project 2
-
-  //cv::Mat kptsImg = visImg->clone(); //cv::Mat::zeros(visImg->rows, visImg->cols, CV_8UC3);
-
-  //if (visImg != nullptr)
-  //{
-    // https://docs.opencv.org/4.2.0/d4/d5d/group__features2d__draw.html (suggested by Udacity GPT)
-
-    // Draw previous, current keypoints and their distance ratios (or distances?)
-    //cv::drawKeypoints(*visImg, kptsPrev, *visImg, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-    //cv::drawKeypoints(*visImg, kptsCurr, *visImg, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-    
-    //string windowName = "Keypoints overlay";
-    //cv::namedWindow(windowName, 6);
-    //imshow(windowName, *visImg);
-  //}
-
-  // END EXPERIMENTAL
-
-
-  // TODO: How to use *visImg
 }
