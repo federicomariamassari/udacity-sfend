@@ -585,4 +585,5 @@ void computeTTCCamera(vector<cv::KeyPoint>& kptsPrev, vector<cv::KeyPoint>& kpts
   auto endTime = chrono::steady_clock::now();
   auto elapsedTime = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
   cout << "Camera time-to-collision calculation took: " << elapsedTime.count() / 1000. << " ms" << endl;
+
 }
