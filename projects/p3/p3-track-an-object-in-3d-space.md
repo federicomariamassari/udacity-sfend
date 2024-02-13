@@ -16,9 +16,13 @@ Once the map is populated, the query-train index pairs for which the counter is 
 
 ### FP.2: Compute LiDAR-based TTC
 
-### Outliers Removal
+### Outlier Removal
 
 Outlier detection and removal is provided in two flavours: Tukey's fences [4] and Euclidean clustering [5] [6].
+
+#### Tukey's Fences
+
+This option will filter out as outliers all points whose x-coordinate is outside the interval $[Q_1 - 1.5\times IQR; Q_3 + 1.5\times IQR]$, where $Q_1$ and $Q_3$ are, respectively, the first and third quartile (25th and 75th percentile), computed via custom function [`percentile`](), and $IQR = Q_3 - Q_1$ is the interquartile range.
 
 ## Resources
 
