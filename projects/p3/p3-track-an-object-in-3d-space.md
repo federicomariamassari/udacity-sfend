@@ -18,11 +18,15 @@ Once the map is populated, the query-train index pairs for which the counter is 
 
 ### Outlier Removal
 
-Outlier detection and removal is provided in two flavours: Tukey's fences [4] and Euclidean clustering [5] [6].
+Outlier detection and removal is provided in two flavours: Tukey's fences [4] and Euclidean clustering [5] [6]. Each option can be selected from the [`FilteringMethod`]() enum class.
 
 #### Tukey's Fences
 
-This option will filter out as outliers all points whose x-coordinate is outside the interval $[Q_1 - 1.5\times IQR; Q_3 + 1.5\times IQR]$, where $Q_1$ and $Q_3$ are, respectively, the first and third quartile (25th and 75th percentile), computed via custom function [`percentile`](), and $IQR = Q_3 - Q_1$ is the interquartile range.
+This option filters out as outliers all points whose x-coordinate (measuring the distance between ego and the preceding vehicle) is outside the interval $[Q_1 - 1.5\times IQR; Q_3 + 1.5\times IQR]$, where $Q_1$ and $Q_3$ are, respectively, the first and third quartiles (25th and 75th percentiles), computed via custom function [`percentile`](), and $IQR = Q_3 - Q_1$ is the interquartile range. This method produces a stable time-to-collision estimate fast and effectively, and is set as the default option.
+
+#### Euclidean clustering
+
+
 
 ## Resources
 
