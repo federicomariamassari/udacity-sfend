@@ -43,6 +43,8 @@ An alternative option, which also considers dimensions $y$ and $z$ in the outlie
 
 ### FP.3: Associate Keypoint Correspondences with Bounding Boxes
 
+To establish a connection between the YOLOv3 bounding boxes and the enclosed keypoints, I proceed as follows. For each match, I extract the keypoint descriptors for both the previous and the current frame; if the region of interest (ROI) of the latter [8] contains the associated feature, I compute the Euclidean distance (L2-norm) between the train and the query keypoints and preliminary push it back to a vector. As we expect a rigid transformation of the preceding vehicle [9] given the focus on a straight ego lane, I then remove all enclosed matches whose distance exceeds 1.5 times the median (the mean is not a robust enough estimator). The remaining correspondences, both matches and keypoints, are finally assigned back to their respective `BoundingBox` attributes.
+
 ## Resources
 
 1. https://knowledge.udacity.com/questions/570553
@@ -52,5 +54,7 @@ An alternative option, which also considers dimensions $y$ and $z$ in the outlie
 5. https://knowledge.udacity.com/questions/296395
 6. https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p1/src/custom/clustering.h
 7. https://docs.opencv.org/4.2.0/db/d18/classcv_1_1flann_1_1GenericIndex.html
+8. https://knowledge.udacity.com/questions/110934
+9. https://knowledge.udacity.com/questions/624666
 
 [Home](../../README.md) | Previous: [Camera-Based 2D Feature Tracking](../p2/p2-camera-based-2d-feature-tracking.md) | Next: 
