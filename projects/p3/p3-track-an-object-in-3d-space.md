@@ -16,7 +16,11 @@ Once the map is populated, the query-train index pairs for which the counter is 
 
 ### FP.2: Compute LiDAR-based TTC
 
-The LiDAR time-to-collision logic is handled by [`computeTTCLidar`]() and related auxiliary functions.
+LiDAR time-to-collision logic is handled by [`computeTTCLidar`](). Extreme or otherwise unreliable data are discarded using one of the available filtering methods as input to function [`removeOutliers`](). TTC is then given by one of the below formulae (CVM, CAM), where $\tilde{x}$ is the median of all x-coordinates of the usable points (a proxy for distance $d$):
+
+$$
+\text{TTC}_ {\text{CVM}} = d_1 \times \frac{\Delta t}{d_0 - d_1} = \tilde{x}_{\text{curr}} \times \frac{\Delta t}{\tilde{x} _{\text{prev}} - \tilde{x} _{\text{curr}}}
+$$
 
 ### Outlier Removal
 
