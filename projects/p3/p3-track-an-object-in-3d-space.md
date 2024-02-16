@@ -39,11 +39,13 @@ An alternative option, which also considers dimensions $y$ and $z$ in the outlie
 | `knn`      | 5             | Number $k$ of neighbors to include at each radius search. Set $k > 3$ to ensure at least one new point is considered at each iteration (there will be duplicates), but not too large to avoid excessive increase in computational time. |
 | `radius`   | 0.12          | Distance tolerance to query point for the neighborhood search. This value will be squared (L2-norm) [7]. |
 | `minSize`  | 15            | Minimum cluster size. Clusters smaller than this threshold will be discarded as outliers. |
-| `maxSize`  | 600           | Maximum cluster size. Clusters larger than this value will be broken down into smaller ones. |
+| `maxSize`  | 600           | Maximum cluster size. Clusters larger than this threshold will also be discarded. |
 
 ### FP.3: Associate Keypoint Correspondences with Bounding Boxes
 
 To establish a connection between the YOLOv3 bounding boxes and the enclosed keypoints, I proceed as follows. For each match, I extract the keypoint descriptors for both the previous and the current frame; if the region of interest (ROI) of the latter [8] contains the associated feature, I compute the Euclidean distance (L2-norm) between the train and the query keypoints and preliminary push it back into a vector. As we expect a rigid transformation of the preceding vehicle [9] given the focus on a straight ego lane, I then remove all enclosed matches whose distance exceeds 1.5 times the median (the mean is not a robust enough estimator). The remaining correspondences, both matches and keypoints, are finally assigned back to their respective `BoundingBox` attributes. This logic is handled by [`clusterKptMatchesWithROI`]().
+
+### FP.4: Compute Camera-based TTC
 
 ## Resources
 
@@ -56,5 +58,6 @@ To establish a connection between the YOLOv3 bounding boxes and the enclosed key
 7. https://docs.opencv.org/4.2.0/db/d18/classcv_1_1flann_1_1GenericIndex.html
 8. https://knowledge.udacity.com/questions/110934
 9. https://knowledge.udacity.com/questions/624666
+10. https://knowledge.udacity.com/questions/668076
 
 [Home](../../README.md) | Previous: [Camera-Based 2D Feature Tracking](../p2/p2-camera-based-2d-feature-tracking.md) | Next: 
