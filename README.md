@@ -84,3 +84,5 @@ Set both `bCompareDetectors` and `bCompareDescriptors` to `false` to visualize m
 ### Overview
 
 __[Link to code](projects/p3/src)__ | [Starter Code from Udacity](https://github.com/udacity/SFND_3D_Object_Tracking)
+
+![SIFT Keypoint Detection](./projects/p3/img/mov1.gif)
