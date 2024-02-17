@@ -1,11 +1,12 @@
-#ifndef matching2D_hpp
-#define matching2D_hpp
+#ifndef MATCHING2D_HPP
+#define MATCHING2D_HPP
 
 #include <stdio.h>
 #include <cmath>
 #include <iomanip>
 #include <iostream>
 #include <limits>
+#include <numeric>
 #include <sstream>
 #include <vector>
 
@@ -24,7 +25,7 @@
  *
  * @param keypoints The structure that will hold the Shi-Tomasi -detected keypoints.
  * @param img The input grayscale image.
- * @param bVis Whether to visualize the output image with superimposed detection marks.
+ * @param bVis Whether to visualize the output image with superimposed detection marks (unused in this project).
  * 
  * Resources:
  * 
@@ -33,12 +34,12 @@
 void detKeypointsShiTomasi(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis=false);
 
 /** 
- * @brief Perform Harris' corner detection (1988) with non-maxima suppression (NMS) [1].
+ * @brief MP.2: Perform Harris' corner detection (1988) with non-maxima suppression (NMS) [1].
  * Adapted from solution to "Harris Corner Detection", Tracking Image Features: Lesson 5, Udacity [2].
  * 
  * @param keypoints The structure that will hold the Harris-detected keypoints.
  * @param img The input grayscale image.
- * @param bVis Whether to visualize the output image with superimposed detection marks.
+ * @param bVis Whether to visualize the output image with superimposed detection marks (unused in this project).
  * 
  * Resources:
  *
@@ -50,12 +51,12 @@ void detKeypointsShiTomasi(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, b
 void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis=false);
 
 /**
- * @brief Detect image keypoints using modern algorithms: SIFT, SURF, FAST, ORB, BRISK, AKAZE [1].
+ * @brief MP.2: Detect image keypoints using modern algorithms: SIFT, SURF, FAST, ORB, BRISK, AKAZE [1].
  *
  * @param keypoints The structure that will hold the detected keypoints.
  * @param img The input grayscale image.
  * @param detectorType The name of the used detector.
- * @param bVis Whether to visualize the output image with superimposed detection marks.
+ * @param bVis Whether to visualize the output image with superimposed detection marks (unused in this project).
  * 
  * Resources:
  * 
@@ -64,7 +65,7 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
 void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std::string detectorType, bool bVis=false);
 
 /**
- * @brief Use one among several state-of-art descriptors to uniquely identify keypoints.
+ * @brief MP.4: Use one among several state-of-art descriptors to uniquely identify keypoints.
  * 
  * @param keypoints The structure that holds the detected keypoints.
  * @param img The input grayscale image.
@@ -76,7 +77,7 @@ void descKeypoints(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &
   std::string descriptorType);
 
 /**
- * @brief Find (best) matches for keypoints in two camera images based on several matching methods.
+ * @brief MP.5: Find (best) matches for keypoints in two camera images based on several matching methods.
  *
  * @param kPtsSource The structure holding the keypoints detected in the source image.
  * @param kPtsRef The structure holding the keypoints detected in the reference (i.e., destination) image.
@@ -100,4 +101,4 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
   cv::Mat &descRef, std::vector<cv::DMatch> &matches, std::string descriptorType, std::string descriptorGroup, 
   std::string matcherType, std::string selectorType, float minDescDistanceRatio);
 
-#endif /* matching2D_hpp */
+#endif /* MATCHING2D_HPP */

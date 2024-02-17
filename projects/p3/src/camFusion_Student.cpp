@@ -4,10 +4,12 @@
 using namespace std;
 
 
-// Create groups of LiDAR points whose projection into the camera falls into the same bounding box
 void clusterLidarWithROI(vector<BoundingBox>& boundingBoxes, vector<LidarPoint>& lidarPoints, float shrinkFactor, 
   cv::Mat& P_rect_xx, cv::Mat& R_rect_xx, cv::Mat& RT)
 {
+  // Time the LiDAR-ROI clustering process
+  auto startTime = chrono::steady_clock::now();
+
   // Loop over all LiDAR points and associate them to a 2D bounding box
   cv::Mat X(4, 1, cv::DataType<double>::type);
   cv::Mat Y(3, 1, cv::DataType<double>::type);
@@ -53,13 +55,12 @@ void clusterLidarWithROI(vector<BoundingBox>& boundingBoxes, vector<LidarPoint>&
       enclosingBoxes[0]->lidarPoints.push_back(*it1);
 
   }  // eof loop over all LiDAR points
+
+  auto endTime = chrono::steady_clock::now();
+  auto elapsedTime = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
+  cout << "LiDAR point cloud clustering took: " << elapsedTime.count() / 1000. << " ms" << endl;
 }
 
-/** 
-* The show3DObjects() function below can handle different output image sizes, but the text output has been manually 
-* tuned to fit the 2000x2000 size. However, you can make this function work for other sizes too. For instance, to use 
-* a 1000x1000 size, adjusting the text positions by dividing them by 2.
-*/
 void show3DObjects(vector<BoundingBox>& boundingBoxes, cv::Size worldSize, cv::Size imageSize, bool bWait)
 {
   // Create top-view image
@@ -128,6 +129,7 @@ void show3DObjects(vector<BoundingBox>& boundingBoxes, cv::Size worldSize, cv::S
     cv::waitKey(0);  // Wait for key to be pressed
 }
 
+// FP.1
 void matchBoundingBoxes(vector<cv::DMatch>& matches, map<int, int>& bbBestMatches, DataFrame& prevFrame, 
   DataFrame& currFrame)
 {
@@ -176,6 +178,7 @@ void matchBoundingBoxes(vector<cv::DMatch>& matches, map<int, int>& bbBestMatche
   cout << "Bounding box matching took: " << elapsedTime.count() / 1000. << " ms" << endl;
 }
 
+// FP.2, FP.3, FP.4
 double percentile(const vector<double>& vec, const float q)
 {
   // https://axibase.com/use-cases/workshop/percentiles.html#r7-linear-interpolation
@@ -213,17 +216,9 @@ double mean(const vector<double>& vec)
   return accumulate(vec.begin(), vec.end(), 0.) / vec.size();
 }
 
-double std_dev(const vector<double>& vec)  // TODO: Potentially unused
-{
-  double mu = mean(vec);
-
-  double squared_dev = accumulate(vec.begin(), vec.end(), 0., 
-    [mu](double sum, const double x) { return sum + pow(x - mu, 2); });
-
-  return sqrt(squared_dev / (vec.size() - 1));  // Sample standard deviation
-}
-
-void renderClusters(const vector<LidarPoint>& src, const vector<set<int>>& clusters, bool bShowRemoved)
+// FP.2
+void renderClusters(const vector<LidarPoint>& src, const vector<set<int>>& clusters, const vector<set<int>>& removed,
+ bool bShowRemoved)
 {
   cv::viz::Viz3d window("Filtered LiDAR point cloud");
   window.setBackgroundColor(cv::viz::Color::black());
@@ -238,14 +233,14 @@ void renderClusters(const vector<LidarPoint>& src, const vector<set<int>>& clust
 
   for (size_t i = 0; i < clusters.size(); ++i)
   {
-    std::vector<cv::Point3f> points;
+    vector<cv::Point3f> points;
 
     for (int id : clusters[i])
     {  
       points.push_back(cv::Point3f(src[id].x, src[id].y, src[id].z));
 
       if (bShowRemoved)
-        removedIds.erase(id);  // Pop ids of kept point to only preserve removed ones
+        removedIds.erase(id);  // Pop ids of kept point to only preserve removed ones                                         ---- TODO: This is already done by Euclidean Clustering
     }
 
     cv::viz::WCloud cloud(points);
@@ -286,10 +281,10 @@ void renderClusters(const vector<LidarPoint>& src, const vector<set<int>>& clust
   window.spin();  // Trigger event loop
 }
 
+// FP.2
 void printStatistics(const vector<LidarPoint>& src, const vector<set<int>>& clusters, const vector<set<int>>& removed,
   float radius, int minSize, int maxSize)
 {
-  cout << endl;
   cout << "Source: " << src.size() << " points" << endl;
   cout << endl;
 
@@ -325,13 +320,14 @@ void printStatistics(const vector<LidarPoint>& src, const vector<set<int>>& clus
 
 }
 
+// FP.2
 template<typename T>
 void clusterHelper(int index, const cv::Mat& cloud, set<int>& cluster, vector<bool>& processed,
   cv::flann::GenericIndex<T>& tree, float radius, int knn, int minSize, int maxSize)
 {
   processed[index] = true;
   cluster.insert(index);
-
+  
   // Will contain (sorted) ids and distances of points close enough to query point, -1 elsewhere
   cv::Mat nearest (1, knn, cv::DataType<int>::type, cv::Scalar::all(-1));
   cv::Mat distances (1, knn, cv::DataType<float>::type, cv::Scalar::all(-1));
@@ -353,6 +349,7 @@ void clusterHelper(int index, const cv::Mat& cloud, set<int>& cluster, vector<bo
   }
 }
 
+// FP.2
 void euclideanClustering(const vector<LidarPoint>& src, vector<set<int>>& clusters, vector<set<int>>& removed,
   float radius, int knn, int minSize, int maxSize)
 {
@@ -390,6 +387,7 @@ void euclideanClustering(const vector<LidarPoint>& src, vector<set<int>>& cluste
   }
 }
 
+// FP.2
 void removeOutliers(vector<LidarPoint>& src, vector<LidarPoint>& dst, FilteringMethod method, float radius, int knn,
   int minSize, int maxSize, bool bRenderClusters, bool bShowRemoved)
 {
@@ -438,7 +436,7 @@ void removeOutliers(vector<LidarPoint>& src, vector<LidarPoint>& dst, FilteringM
       sort(dst.begin(), dst.end(), [](const LidarPoint& p1, const LidarPoint& p2) { return p1.x < p2.x; });
 
       if (bRenderClusters)
-        renderClusters(src, clusters, bShowRemoved);
+        renderClusters(src, clusters, removed, bShowRemoved);
       
       printStatistics(src, clusters, removed, radius, minSize, maxSize);
 
@@ -447,6 +445,7 @@ void removeOutliers(vector<LidarPoint>& src, vector<LidarPoint>& dst, FilteringM
   }
 }
 
+// FP.2
 void computeTTCLidar(vector<LidarPoint>& lidarPointsPrev, vector<LidarPoint>& lidarPointsCurr, double frameRate, 
   double& TTC, FilteringMethod& filteringMethod, float radius, int knn, int minSize, int maxSize, bool bRenderClusters, 
   bool bShowRemoved)
@@ -487,6 +486,7 @@ void computeTTCLidar(vector<LidarPoint>& lidarPointsPrev, vector<LidarPoint>& li
   cout << "LiDAR time-to-collision calculation took: " << elapsedTime.count() / 1000. << " ms" << endl;
 }
 
+// FP.3
 void clusterKptMatchesWithROI(BoundingBox& boundingBox, vector<cv::KeyPoint>& kptsPrev, vector<cv::KeyPoint>& kptsCurr, 
   vector<cv::DMatch>& kptMatches)
 {
@@ -535,23 +535,27 @@ void clusterKptMatchesWithROI(BoundingBox& boundingBox, vector<cv::KeyPoint>& kp
   cout << "Bounding-box-to-keypoints association took: " << elapsedTime.count() / 1000. << " ms" << endl;
 }
 
-// Compute time-to-collision (TTC) based on keypoint correspondences in successive images
+// FP.4
 void computeTTCCamera(vector<cv::KeyPoint>& kptsPrev, vector<cv::KeyPoint>& kptsCurr, vector<cv::DMatch> kptMatches, 
   double frameRate, double& TTC, cv::Mat* visImg)
 {
   // Time the camera time-to-collision calculation process
   auto startTime = chrono::steady_clock::now();
 
+  // This is actually the heights' ratio, which allows to estimate the distance to the preceding vehicle without
+  // measuring distance directly (h1/h0 = d0/d1) (source: Udacity GPT)
   vector<double> distRatios;
 
+  // Compute the heights' ratios
   for (auto it1 = kptMatches.begin(); it1 != kptMatches.end() - 1; ++it1)  // Outer keypoint loop
   {
     cv::KeyPoint kptOuterPrev = kptsPrev.at(it1->queryIdx);
     cv::KeyPoint kptOuterCurr = kptsCurr.at(it1->trainIdx);
 
+    // Filter out outliers or mismatches
     for (auto it2 = kptMatches.begin() + 1; it2 != kptMatches.end(); ++it2)  // Inner keypoint loop
     {
-      double minDistance = 100.0;
+      double minDistance = 100.0;  // [1]
 
       cv::KeyPoint kptInnerPrev = kptsPrev.at(it2->queryIdx);
       cv::KeyPoint kptInnerCurr = kptsCurr.at(it2->trainIdx);
@@ -562,7 +566,7 @@ void computeTTCCamera(vector<cv::KeyPoint>& kptsPrev, vector<cv::KeyPoint>& kpts
       if (distPrev > numeric_limits<double>::epsilon() && distCurr > minDistance)
       {
         // Avoid division by zero
-        double distRatio = distCurr / distPrev;
+        double distRatio = distCurr / distPrev;  // h1/h0
         distRatios.push_back(distRatio);
       }
     }  // eof inner loop over all matched keypoints
@@ -577,7 +581,7 @@ void computeTTCCamera(vector<cv::KeyPoint>& kptsPrev, vector<cv::KeyPoint>& kpts
   // Compute camera-based TTC from distance ratios
   sort(distRatios.begin(), distRatios.end());
 
-  double medianDistRatio = percentile(distRatios, 0.5);
+  double medianDistRatio = percentile(distRatios, 0.5);  // As robust to outliers
   
   double dT = 1 / frameRate;
   TTC = -dT / (1 - medianDistRatio);
@@ -586,4 +590,28 @@ void computeTTCCamera(vector<cv::KeyPoint>& kptsPrev, vector<cv::KeyPoint>& kpts
   auto elapsedTime = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
   cout << "Camera time-to-collision calculation took: " << elapsedTime.count() / 1000. << " ms" << endl;
 
+  // EXPERIMENTAL: Visualization (steps suggested by Udacity GPT) && project 2
+
+  /*cv::Mat kptsImg = visImg->clone(); //cv::Mat::zeros(visImg->rows, visImg->cols, CV_8UC3);
+
+  if (visImg != nullptr)
+  {
+    // https://docs.opencv.org/4.2.0/d4/d5d/group__features2d__draw.html (suggested by Udacity GPT)
+
+    // Restrict keypoints on the current bounding box (source: reviewer's comment on Project 2)
+    cv::Mat mask = cv::Mat::zeros((*visImg).rows, (*visImg).cols, CV_8U);
+    mask(boundingBoxes.roi) // need to pass ROI of bounding box!
+
+    // Draw current keypoints on top of bounding box
+    cv::drawKeypoints(*visImg, kptsCurr, *visImg, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+    
+    string windowName = "Keypoints overlay";
+    cv::namedWindow(windowName, 6);
+    imshow(windowName, *visImg);
+  }
+
+  // END EXPERIMENTAL
+*/
+
+  // TODO: How to use *visImg
 }
