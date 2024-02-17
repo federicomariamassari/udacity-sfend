@@ -58,9 +58,10 @@ struct Options
                                      // (if bVisLidarTopView = true) false to proceed with TTC calculation
 
   bool bVisFinalOutput = true;  // true to view final output image with superimposed time-to-collision estimates
+  bool bVisKeypointsOverlay = false;  // true to additionally superimpose keypoints on preceding vehicle bounding box
 
   bool bSaveLidarTopView = false;  // true to write LiDAR top-views in working directory (if bVisLidarTopView = true)
-  bool bSaveOutputFrames = false;  // true to write output frames in working directory (if bVisFinalOutput = true) ---------------------------------- TODO: Implement!
+  bool bSaveOutputFrames = false;  // true to write output frames in working directory (if bVisFinalOutput = true)
 
   /*******************************************************************************************************************
    * OUTLIER DETECTION AND DIAGNOSTICS OPTIONS
@@ -139,10 +140,9 @@ int main(int argc, const char *argv[])
   // Miscellanea
   double sensorFrameRate = 10.0 / opts.imgStepWidth;  // Frames per second for LiDAR and camera (Hertz); 10Hz is the
                                                       // spin frequency of KITTI Velodyne HDL-64E sensor (~100k pps)
-  
+
   int dataBufferSize = 2;  // No. of images which are held in memory (ring buffer) at the same time
   vector<DataFrame> dataBuffer;  // List of data frames which are held in memory at the same time
-  bool bVis = false;  // Visualize results
 
   // Time-to-collision statistics
   vector<vector<double>> ttcStats;  // FP.5, FP.6: Container of TTC statistics for later tabulation
@@ -207,7 +207,7 @@ int main(int argc, const char *argv[])
     /* CLUSTER LIDAR POINT CLOUD */
 
     // Associate LiDAR points with camera-based ROI
-    
+
     float shrinkFactor = 0.10;  // Shrinks each bounding box by the given percentage to avoid 3D-object merging 
                                 // at the edges of an ROI
 
@@ -216,7 +216,12 @@ int main(int argc, const char *argv[])
 
     // Visualize 3D objects
     if (opts.bVisLidarTopView)
-      show3DObjects((dataBuffer.end()-1)->boundingBoxes, cv::Size(4.0, 20.0), cv::Size(2000, 2000), true);
+    {
+      string lidarSaveAs = "lidar_" + imgNumber.str() + imgFileType;
+      
+      show3DObjects((dataBuffer.end()-1)->boundingBoxes, cv::Size(4.0, 20.0), cv::Size(2000, 2000), 
+        opts.bSaveLidarTopView, lidarSaveAs, true);
+    }
 
     cout << "#4 : CLUSTER LIDAR POINT CLOUD done" << endl << endl;
     
@@ -244,7 +249,8 @@ int main(int argc, const char *argv[])
     else
       detKeypointsModern(keypoints, imgGray, opts.detectorType, false);
 
-    // Optional: limit number of keypoints (helpful for debugging and learning)
+    // Optional: limit number of keypoints; helpful to debug and learn, but will introduce NaN values in camera-based
+    // time to collision estimates hence should be avoided (https://knowledge.udacity.com/questions/366760)
     if (opts.bLimitKpts)
     {
       int maxKeypoints = 50;
@@ -296,7 +302,7 @@ int main(int argc, const char *argv[])
       
       /* TRACK 3D OBJECT BOUNDING BOXES */
 
-      //// STUDENT ASSIGNMENT (FP.1)
+      // STUDENT ASSIGNMENT (FP.1)
       
       // Task FP.1: Match list of 3D objects
       map<int, int> bbBestMatches;
@@ -304,7 +310,7 @@ int main(int argc, const char *argv[])
       // Associate bounding boxes between current and previous frame using keypoint matches
       matchBoundingBoxes(matches, bbBestMatches, *(dataBuffer.end()-2), *(dataBuffer.end()-1));
       
-      //// END OF STUDENT ASSIGNMENT (FP.1)
+      // END OF STUDENT ASSIGNMENT (FP.1)
 
       // Store matches in current data frame
       (dataBuffer.end()-1)->bbMatches = bbBestMatches;
@@ -334,7 +340,7 @@ int main(int argc, const char *argv[])
         // Compute TTC for current match (if we have LiDAR points)
         if (currBB->lidarPoints.size() > 0 && prevBB->lidarPoints.size() > 0) 
         {
-          //// STUDENT ASSIGNMENT (FP.2)
+          // STUDENT ASSIGNMENT (FP.2)
           
           // Task FP.2: Compute time-to-collision based on LiDAR data
           double ttcLidar; 
@@ -354,9 +360,9 @@ int main(int argc, const char *argv[])
             cout << "(!) WARNING: No usable cluster found! Unreliable data, skipping." << endl << endl;
           }
           
-          //// END OF STUDENT ASSIGNMENT (FP.2)
+          // END OF STUDENT ASSIGNMENT (FP.2)
 
-          //// STUDENT ASSIGNMENT (FP.3, FP.4)
+          // STUDENT ASSIGNMENT (FP.3, FP.4)
           
           double ttcCamera;
 
@@ -368,16 +374,21 @@ int main(int argc, const char *argv[])
           computeTTCCamera((dataBuffer.end() - 2)->keypoints, (dataBuffer.end() - 1)->keypoints, currBB->kptMatches, 
             sensorFrameRate, ttcCamera);
 
-          //// END OF STUDENT ASSIGNMENT (FP.3, FP.4)
+          // END OF STUDENT ASSIGNMENT (FP.3, FP.4)
 
           // FP.5, FP.6: Collect statistics to later tabulate
           frameStats.push_back(ttcCamera);
           ttcStats.push_back(frameStats);
-          
+
           if (opts.bVisFinalOutput)
           {
             cv::Mat visImg = (dataBuffer.end() - 1)->cameraImg.clone();
             showLidarImgOverlay(visImg, currBB->lidarPoints, P_rect_00, R_rect_00, RT, &visImg);
+
+            if (opts.bVisKeypointsOverlay)
+              cv::drawKeypoints(visImg, currBB->keypoints, visImg, cv::Scalar::all(-1), 
+                cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+
             cv::rectangle(visImg, cv::Point(currBB->roi.x, currBB->roi.y), cv::Point(currBB->roi.x + currBB->roi.width, 
               currBB->roi.y + currBB->roi.height), cv::Scalar(0, 255, 0), 2);
 
@@ -388,6 +399,14 @@ int main(int argc, const char *argv[])
             string windowName = "Final Results: TTC";
             cv::namedWindow(windowName, 4);
             cv::imshow(windowName, visImg);
+
+            if (opts.bSaveOutputFrames)  // Save output frames in current working directory
+            {
+              string saveAs = opts.detectorType + "_" + opts.descriptorType + "_" + imgNumber.str() + imgFileType;
+              imwrite(saveAs, visImg);
+              cout << endl << "Saved image: " << saveAs << endl;
+            }
+
             cout << endl << "Press key to continue to next frame" << endl << endl;
             cv::waitKey(0);
           }
@@ -397,17 +416,8 @@ int main(int argc, const char *argv[])
     }
   } // eof loop over all images
 
-
-  // Experimental                                                                                        -------------------------------------- TODO
-
-  cout << endl << right << setw(8) << "FRAMES" << right << setw(18) << "LIDAR TTC" << right << setw(18) << "CAMERA TTC" << endl;
-  int index = (opts.imgStartIndex);
-  for (size_t i = 0; i < ttcStats.size(); ++i)
-  {
-    cout << right << setw(8) << to_string(index) + "-" + to_string(++index) << right << setw(18) << ttcStats[i][0] << right << setw(18) << ttcStats[i][1] << endl;
-  }
-
-  // End experimental
+  // Print summary statistics on time-to-collision for all in-scope image pairs
+  printStatistics(opts.imgStartIndex, ttcStats);
 
   return 0;
 }
