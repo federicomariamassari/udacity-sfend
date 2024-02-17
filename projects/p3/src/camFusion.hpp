@@ -1,5 +1,5 @@
-#ifndef camFusion_hpp
-#define camFusion_hpp
+#ifndef CAMFUSION_HPP
+#define CAMFUSION_HPP
 
 #include <stdio.h>
 #include <algorithm>
@@ -35,12 +35,16 @@ void clusterLidarWithROI(std::vector<BoundingBox>& boundingBoxes, std::vector<Li
   float shrinkFactor, cv::Mat& P_rect_xx, cv::Mat& R_rect_xx, cv::Mat& RT);
 
 /**
- * @brief
+ * @brief Display LiDAR top-view perspective with superimposed cluster statistics.
  * 
- * @param 
- * @param 
- * @param 
- * @param 
+ * The function below can handle different output image sizes, but the text output has been manually tuned to fit the 
+ * 2000x2000 size. However, you can make this function work for other sizes too. For instance, to use a 1000x1000 size, 
+ * adjusting the text positions by dividing them by 2.
+ * 
+ * @param boundingBoxes Set of bounding boxes detected in a particular image.
+ * @param worldSize Dimensions of the 3D world in which the object exists.
+ * @param imageSize Size of the image in which the 3D objects are visualised.
+ * @param bWait Whether to wait for key to be pressed before displaying the next perspective.
  */
 void show3DObjects(std::vector<BoundingBox> &boundingBoxes, cv::Size worldSize, cv::Size imageSize, bool bWait=true);
 
@@ -76,7 +80,9 @@ void matchBoundingBoxes(std::vector<cv::DMatch>& matches, std::map<int, int>& bb
 double percentile(const std::vector<double>& vec, const float q);
 
 /**
+ * @brief FP.2: Compute the simple average of a vector's components.
  * 
+ * @param vec The input vector.
  */
 double mean(const std::vector<double>& vec);
 
@@ -102,6 +108,7 @@ enum class FilteringMethod
  * 
  * @param src The input LiDAR point cloud data.
  * @param clusters The populated Euclidean clusters container.
+ * @param removed The container of discarded points.
  * @param bShowRemoved Whether to also render discarded clusters (in white). 
  * 
  * Resources:
@@ -109,9 +116,19 @@ enum class FilteringMethod
  * [1] - https://docs.opencv.org/4.2.0/d4/dba/classcv_1_1viz_1_1Color.html
  */
 void renderClusters(const std::vector<LidarPoint>& src, const std::vector<std::set<int>>& clusters, 
-  bool bShowRemoved=true);
+  const std::vector<std::set<int>>& removed, bool bShowRemoved=true);
 
 
+/**
+ * @brief FP.2: Display output statistics from Euclidean clustering.
+ * 
+ * @param src The input LiDAR point cloud data.
+ * @param clusters Container of points kept after Euclidean clustering.
+ * @param removed Container of points removed after Euclidean clustering.
+ * @param radius Distance tolerance to query point used for the neighborhood search.
+ * @param minSize Minimum acceptable size for a cluster.
+ * @param maxSize Maximum acceptable size for a cluster.
+ */
 void printStatistics(const std::vector<LidarPoint>& src, const std::vector<std::set<int>>& clusters, 
   const std::vector<std::set<int>>& removed, float radius, int minSize, int maxSize);
 
@@ -233,16 +250,20 @@ void clusterKptMatchesWithROI(BoundingBox& boundingBox, std::vector<cv::KeyPoint
   std::vector<cv::KeyPoint>& kptsCurr, std::vector<cv::DMatch>& kptMatches);
 
 /**
- * brief FP.4: Compute stable LiDAR time-to-collision (TTC) between consecutive frames assuming constant velocity [1].
+ * brief FP.4: Compute stable time-to-collision (TTC) based on keypoint correspondences in successive images [1].
  * 
  * @param kptsPrev Container of keypoints detected in the previous frame.
  * @param kptsCurr Container of keypoints detected in the current frame.
  * @param kptMatches Container of matches between the previous and the current frame.
  * @param frameRate Time between two measurements, in seconds.
  * @param TTC Camera time-to-collision measure, to populate.
- * @param visImg ???
+ * @param visImg Unused.
+ * 
+ * Resources:
+ * 
+ * [1] https://knowledge.udacity.com/questions/668076
  */
 void computeTTCCamera(std::vector<cv::KeyPoint>& kptsPrev, std::vector<cv::KeyPoint>& kptsCurr,
   std::vector<cv::DMatch> kptMatches, double frameRate, double& TTC, cv::Mat* visImg=nullptr);
 
-#endif /* camFusion_hpp */
+#endif /* CAMFUSION_HPP */

@@ -1,26 +1,25 @@
-
-#include <numeric>
 #include "matching2D.hpp"
 
 using namespace std;
 
+
 void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis)
 {
-  // compute detector parameters based on image size
-  int blockSize = 4;  //  size of an average block for computing a derivative covariation matrix over each pixel neighborhood
-  double maxOverlap = 0.0;  // max. permissible overlap between two features in %
+  // Compute detector parameters based on image size
+  int blockSize = 4;  // Average block size to compute derivative covariation matrix over each pixel neighborhood
+  double maxOverlap = 0.0;  // Maximum permissible % overlap between two features
   double minDistance = (1.0 - maxOverlap) * blockSize;
-  int maxCorners = img.rows * img.cols / max(1.0, minDistance);  // max. num. of keypoints
+  int maxCorners = img.rows * img.cols / max(1.0, minDistance);  // Maximum number of keypoints
 
-  double qualityLevel = 0.01; // minimal accepted quality of image corners
-  double k = 0.04;
+  double qualityLevel = 0.01;  // Minimal accepted quality of image corners
+  double k = 0.04;  // Free parameter of the Harris detector (unused with bUseHarrisDetector = false)
 
   // Apply corner detection
   double t = (double)cv::getTickCount();
   vector<cv::Point2f> corners;
   cv::goodFeaturesToTrack(img, corners, maxCorners, qualityLevel, minDistance, cv::Mat(), blockSize, false, k);
 
-  // add corners to result vector
+  // Add corners to result vector
   for (auto it = corners.begin(); it != corners.end(); ++it)
   {
 
@@ -29,21 +28,23 @@ void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool b
     newKeyPoint.size = blockSize;
     keypoints.push_back(newKeyPoint);
   }
-  t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
-  cout << "Shi-Tomasi detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
 
-  // visualize results
+  t = ((double) cv::getTickCount() - t) / cv::getTickFrequency();
+  cout << "Shi-Tomasi detector with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
+
+  // Visualize results
   if (bVis)
   {
     cv::Mat visImage = img.clone();
     cv::drawKeypoints(img, keypoints, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
     string windowName = "Shi-Tomasi Corner Detector Results";
     cv::namedWindow(windowName, 6);
-    imshow(windowName, visImage);
+    imshow(windowName, visImage);  // highgui methods don't require cv namespace specification (source: Udacity GPT)
     cv::waitKey(0);
   }
 }
 
+// MP.2: Keypoint Detection
 void detKeypointsHarris(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis)
 {
   int blockSize = 2;  // Size of pixel neighborhood considered for corner detection (W)
@@ -104,7 +105,7 @@ void detKeypointsHarris(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis
 
   t = ((double) cv::getTickCount() - t) / cv::getTickFrequency();
   
-  cout << "Harris corner detection with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
+  cout << "Harris corner detector with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
 
   if (bVis)
   {
@@ -118,6 +119,7 @@ void detKeypointsHarris(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis
   }
 }
 
+// MP.2: Keypoint Detection
 void detKeypointsModern(vector<cv::KeyPoint> &keypoints, cv::Mat &img, string detectorType, bool bVis)
 {
   cv::Ptr<cv::FeatureDetector> detector;
@@ -159,7 +161,7 @@ void detKeypointsModern(vector<cv::KeyPoint> &keypoints, cv::Mat &img, string de
   detector->detect(img, keypoints);
   t = ((double) cv::getTickCount() - t) / cv::getTickFrequency();
 
-  cout << detectorType + " with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
+  cout << detectorType + " detector with n = " << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
 
   if (bVis)
   {
@@ -173,6 +175,7 @@ void detKeypointsModern(vector<cv::KeyPoint> &keypoints, cv::Mat &img, string de
   }
 }
 
+// MP.4: Keypoint Descriptors
 void descKeypoints(vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &descriptors, string detectorType, 
   string descriptorType)
 {
@@ -186,8 +189,8 @@ void descKeypoints(vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &descr
   if (descriptorType == "AKAZE" && detectorType != "AKAZE")
     throw invalid_argument("AKAZE descriptor only works with AKAZE detector.");
 
-  // select appropriate descriptor
   cv::Ptr<cv::DescriptorExtractor> extractor;
+
   if (descriptorType.compare("BRISK") == 0)
   {
     int threshold = 30;
@@ -218,13 +221,14 @@ void descKeypoints(vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &descr
   else
     throw invalid_argument("Invalid descriptor type. Must be among: BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT, SURF.");
 
-  // perform feature description
-  double t = (double)cv::getTickCount();
+  // Perform and time feature description
+  double t = (double) cv::getTickCount();
   extractor->compute(img, keypoints, descriptors);
-  t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+  t = ((double) cv::getTickCount() - t) / cv::getTickFrequency();
   cout << descriptorType << " descriptor extraction in " << 1000 * t / 1.0 << " ms" << endl;
 }
 
+// MP.5: Descriptor Matching
 void matchDescriptors(vector<cv::KeyPoint> &kPtsSource, vector<cv::KeyPoint> &kPtsRef, cv::Mat &descSource, 
   cv::Mat &descRef, vector<cv::DMatch> &matches, string descriptorType, string descriptorGroup, string matcherType, 
   string selectorType, float minDescDistanceRatio)

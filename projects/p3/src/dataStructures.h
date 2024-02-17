@@ -1,20 +1,24 @@
-#ifndef dataStructures_h
-#define dataStructures_h
+#ifndef DATASTRUCTURES_H
+#define DATASTRUCTURES_H
 
 #include <map>
 #include <vector>
 
 #include <opencv2/core.hpp>
 
+/**
+ * Single LiDAR point in space.
+ */
 struct LidarPoint 
 { 
-  // Single LiDAR point in space
   double x, y, z, r;  // x,y,z in [m], r is point reflectivity
 };
 
+/**
+ * Bounding box around a classified object (contains both 2D and 3D data).
+ */
 struct BoundingBox 
-{ // Bounding box around a classified object (contains both 2D and 3D data)
-  
+{
   int boxID;  // Unique identifier for this bounding box
   int trackID;  // Unique identifier for the track to which this bounding box belongs
   
@@ -27,9 +31,11 @@ struct BoundingBox
   std::vector<cv::DMatch> kptMatches;  // Keypoint matches enclosed by 2D roi
 };
 
+/**
+ * Represents the available sensor information at the same time instance.
+ */
 struct DataFrame 
 { 
-  // Represents the available sensor information at the same time instance
   cv::Mat cameraImg;  // Camera image
   
   std::vector<cv::KeyPoint> keypoints;  // 2D keypoints within camera image
@@ -41,4 +47,4 @@ struct DataFrame
   std::map<int, int> bbMatches;  // Bounding box matches between previous and current frame
 };
 
-#endif /* dataStructures_h */
+#endif /* DATASTRUCTURES_H */

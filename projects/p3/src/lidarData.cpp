@@ -3,11 +3,10 @@
 
 using namespace std;
 
-// Remove LiDAR points based on min-max distance in X, Y, Z, and min reflectivity
 void cropLidarPoints(vector<LidarPoint>& lidarPoints, float minX, float maxX, float maxY, float minZ, float maxZ, 
   float minR)
 {
-  // Time LiDAR points cropping
+  // Time LiDAR points cropping (custom addition)
   auto startTime = chrono::steady_clock::now();
 
   vector<LidarPoint> newLidarPts; 
@@ -28,10 +27,9 @@ void cropLidarPoints(vector<LidarPoint>& lidarPoints, float minX, float maxX, fl
 
   auto endTime = chrono::steady_clock::now();
   auto elapsedTime = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
-  cout << "Cropping took: " << elapsedTime.count() / 1000. << " ms" << endl;
+  cout << "LiDAR point cloud cropping took: " << elapsedTime.count() / 1000. << " ms" << endl;
 }
 
-// Load LiDAR points from a given location and store them in a vector
 void loadLidarFromFile(vector<LidarPoint> &lidarPoints, string filename)
 {
   // Allocate 4 MB buffer (only ~130*4*4 KB are needed)
