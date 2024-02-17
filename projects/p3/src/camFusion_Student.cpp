@@ -61,7 +61,8 @@ void clusterLidarWithROI(vector<BoundingBox>& boundingBoxes, vector<LidarPoint>&
   cout << "LiDAR point cloud clustering took: " << elapsedTime.count() / 1000. << " ms" << endl;
 }
 
-void show3DObjects(vector<BoundingBox>& boundingBoxes, cv::Size worldSize, cv::Size imageSize, bool bWait)
+void show3DObjects(vector<BoundingBox>& boundingBoxes, cv::Size worldSize, cv::Size imageSize, bool bSaveLidarTopView, 
+  string saveAs, bool bWait)
 {
   // Create top-view image
   cv::Mat topviewImg(imageSize, CV_8UC3, cv::Scalar(255, 255, 255));  // Image is white by default
@@ -124,6 +125,12 @@ void show3DObjects(vector<BoundingBox>& boundingBoxes, cv::Size worldSize, cv::S
   string windowName = "3D Objects";
   cv::namedWindow(windowName, 1);
   cv::imshow(windowName, topviewImg);
+
+  if (bSaveLidarTopView)
+  {
+    imwrite(saveAs, topviewImg);
+    cout << "Saved image: " << saveAs << endl;
+  }
 
   if (bWait)
     cv::waitKey(0);  // Wait for key to be pressed
@@ -240,7 +247,7 @@ void renderClusters(const vector<LidarPoint>& src, const vector<set<int>>& clust
       points.push_back(cv::Point3f(src[id].x, src[id].y, src[id].z));
 
       if (bShowRemoved)
-        removedIds.erase(id);  // Pop ids of kept point to only preserve removed ones                                         ---- TODO: This is already done by Euclidean Clustering
+        removedIds.erase(id);  // Pop ids of kept point to only preserve removed ones
     }
 
     cv::viz::WCloud cloud(points);
@@ -249,13 +256,14 @@ void renderClusters(const vector<LidarPoint>& src, const vector<set<int>>& clust
     // Rotate color among clusters (to extend: i % n == k, for all k = 0, ..., n-1)
     cv::viz::Color color;
 
-    if (i % 3 == 0) {
-        color = cv::viz::Color::red();  // [1]
-    } else if (i % 3 == 1) {
+    if (i % 3 == 0)
+      color = cv::viz::Color::red();  // [1]
+    
+    else if (i % 3 == 1)
         color = cv::viz::Color::blue();
-    } else {
+    
+    else
         color = cv::viz::Color::green();
-    }
 
     cloud.setColor(color);
 
@@ -275,13 +283,12 @@ void renderClusters(const vector<LidarPoint>& src, const vector<set<int>>& clust
     cloud.setColor(cv::viz::Color::white());
     
     window.showWidget("removed", cloud);
-
   }
 
   window.spin();  // Trigger event loop
 }
 
-// FP.2
+// FP.2: Print Euclidean clustering statistics
 void printStatistics(const vector<LidarPoint>& src, const vector<set<int>>& clusters, const vector<set<int>>& removed,
   float radius, int minSize, int maxSize)
 {
@@ -317,7 +324,22 @@ void printStatistics(const vector<LidarPoint>& src, const vector<set<int>>& clus
   cout << string(30, '-') << endl;
   cout << left << setw(25) << "Total points removed: " << right << setw(4) << pointsRemoved << endl;
   cout << endl;
+}
 
+// FP.5, FP.6: Print time-to-collision summary statistics
+void printStatistics(const int imgStartIndex, const vector<vector<double>>& ttcStats)
+{
+  cout << string(40, '*') << endl;
+  cout << right << setw(10) << "IMAGE PAIR" << right << setw(15) << "LIDAR TTC" << right << setw(15) 
+    << "CAMERA TTC" << endl;
+  cout << string(40, '*') << endl;
+
+  int index = (imgStartIndex);
+  for (size_t i = 0; i < ttcStats.size(); ++i)
+  {
+    cout << right << setw(10) << to_string(index) + "-" + to_string(++index) << right << setw(15) << ttcStats[i][0] 
+      << right << setw(15) << ttcStats[i][1] << endl;
+  }
 }
 
 // FP.2
@@ -450,20 +472,26 @@ void computeTTCLidar(vector<LidarPoint>& lidarPointsPrev, vector<LidarPoint>& li
   double& TTC, FilteringMethod& filteringMethod, float radius, int knn, int minSize, int maxSize, bool bRenderClusters, 
   bool bShowRemoved)
 {
-  // Time the LiDAR time-to-collision calculation process
-  auto startTime = chrono::steady_clock::now();
-
   // Time between two measurements, in seconds
   double dT = 1 / frameRate;
 
   vector<LidarPoint> filteredPrev, filteredCurr;
 
-  // TODO: Time outlier removal process as well!
-  removeOutliers(lidarPointsPrev, filteredPrev, filteringMethod, radius, knn, minSize, maxSize, bRenderClusters, 
-    bShowRemoved);
+  // Time the outlier removal process
+  auto startTime = chrono::steady_clock::now();
+
+  removeOutliers(lidarPointsPrev, filteredPrev, filteringMethod, radius, knn, minSize, maxSize, 
+    bRenderClusters, bShowRemoved);
   
-  removeOutliers(lidarPointsCurr, filteredCurr, filteringMethod, radius, knn, minSize, maxSize, bRenderClusters,
-    bShowRemoved);
+  removeOutliers(lidarPointsCurr, filteredCurr, filteringMethod, radius, knn, minSize, maxSize, 
+    bRenderClusters, bShowRemoved);
+
+  auto endTime = chrono::steady_clock::now();
+  auto elapsedTime = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
+  cout << "Outlier detection took: " << elapsedTime.count() / 1000. << " ms" << endl;
+
+  // Time the LiDAR time-to-collision calculation process
+  startTime = chrono::steady_clock::now();
 
   vector<double> filteredXPrev (filteredPrev.size(), 0.);
 
@@ -481,8 +509,8 @@ void computeTTCLidar(vector<LidarPoint>& lidarPointsPrev, vector<LidarPoint>& li
   // Compute stable time-to-collision assuming a constant velocity model
   TTC = medianXCurr * dT / (medianXPrev - medianXCurr);
 
-  auto endTime = chrono::steady_clock::now();
-  auto elapsedTime = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
+  endTime = chrono::steady_clock::now();
+  elapsedTime = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
   cout << "LiDAR time-to-collision calculation took: " << elapsedTime.count() / 1000. << " ms" << endl;
 }
 
@@ -542,8 +570,8 @@ void computeTTCCamera(vector<cv::KeyPoint>& kptsPrev, vector<cv::KeyPoint>& kpts
   // Time the camera time-to-collision calculation process
   auto startTime = chrono::steady_clock::now();
 
-  // This is actually the heights' ratio, which allows to estimate the distance to the preceding vehicle without
-  // measuring distance directly (h1/h0 = d0/d1) (source: Udacity GPT)
+  // This will actually store the heights' ratios, which allow to estimate the distance to the preceding vehicle
+  // without measuring distance directly (h1/h0 = d0/d1) (source: Udacity GPT)
   vector<double> distRatios;
 
   // Compute the heights' ratios
@@ -589,29 +617,4 @@ void computeTTCCamera(vector<cv::KeyPoint>& kptsPrev, vector<cv::KeyPoint>& kpts
   auto endTime = chrono::steady_clock::now();
   auto elapsedTime = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
   cout << "Camera time-to-collision calculation took: " << elapsedTime.count() / 1000. << " ms" << endl;
-
-  // EXPERIMENTAL: Visualization (steps suggested by Udacity GPT) && project 2
-
-  /*cv::Mat kptsImg = visImg->clone(); //cv::Mat::zeros(visImg->rows, visImg->cols, CV_8UC3);
-
-  if (visImg != nullptr)
-  {
-    // https://docs.opencv.org/4.2.0/d4/d5d/group__features2d__draw.html (suggested by Udacity GPT)
-
-    // Restrict keypoints on the current bounding box (source: reviewer's comment on Project 2)
-    cv::Mat mask = cv::Mat::zeros((*visImg).rows, (*visImg).cols, CV_8U);
-    mask(boundingBoxes.roi) // need to pass ROI of bounding box!
-
-    // Draw current keypoints on top of bounding box
-    cv::drawKeypoints(*visImg, kptsCurr, *visImg, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-    
-    string windowName = "Keypoints overlay";
-    cv::namedWindow(windowName, 6);
-    imshow(windowName, *visImg);
-  }
-
-  // END EXPERIMENTAL
-*/
-
-  // TODO: How to use *visImg
 }

@@ -44,9 +44,12 @@ void clusterLidarWithROI(std::vector<BoundingBox>& boundingBoxes, std::vector<Li
  * @param boundingBoxes Set of bounding boxes detected in a particular image.
  * @param worldSize Dimensions of the 3D world in which the object exists.
  * @param imageSize Size of the image in which the 3D objects are visualised.
+ * @param bSaveLidarTopView Whether to save LiDAR top-view perspectives in the current working directory.
+ * @param saveAs Name of the top-view perspective to save, if bSaveLidarTopView = true.
  * @param bWait Whether to wait for key to be pressed before displaying the next perspective.
  */
-void show3DObjects(std::vector<BoundingBox> &boundingBoxes, cv::Size worldSize, cv::Size imageSize, bool bWait=true);
+void show3DObjects(std::vector<BoundingBox> &boundingBoxes, cv::Size worldSize, cv::Size imageSize, 
+  bool bSaveLidarTopView, std::string saveAs, bool bWait=true);
 
 /**
  * @brief FP.1: Match consecutive bounding box pairs by the largest number of keypoint correspondences [1].
@@ -131,6 +134,14 @@ void renderClusters(const std::vector<LidarPoint>& src, const std::vector<std::s
  */
 void printStatistics(const std::vector<LidarPoint>& src, const std::vector<std::set<int>>& clusters, 
   const std::vector<std::set<int>>& removed, float radius, int minSize, int maxSize);
+
+/**
+ * @brief FP.5, FP.6: Print summary statistics on time-to-collision for all image pairs in scope.
+ * 
+ * @param imgStartIndex First file index loaded.
+ * @param ttcStats Collection of statistics on LiDAR and camera TTC for all image pairs.
+ */
+void printStatistics(const int imgStartIndex, const std::vector<std::vector<double>>& ttcStats);
 
 /**
  * @brief FP.2: Recursive function to compute the nearest neighbors of a query point based on input L2-norm [1] [2].
