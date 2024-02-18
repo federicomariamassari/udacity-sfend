@@ -69,17 +69,17 @@ Additionally, all tasks are timed to monitor their efficiency.
         <tr>
             <td><code>bLimitKpts</code></td>
             <td><code>false</code></td>
-            <td><code>true</code> to limit the number of keypoints. Helpful for debugging and learning, but it will interfere with time-to-collision calculations (introducing NaN values)</td>
-        </tr>
-        <tr>
-            <td><code>bShowRemoved</code></td>
-            <td><code>true</code></td>
-            <td>Euclidean clustering only. <code>true</code> to also display colorless outliers </td>
+            <td><code>true</code> to limit the number of keypoints. Helpful for debugging and learning, but will introduce NaN values in time-to-collision calculations</td>
         </tr>
         <tr>
             <td><code>bRenderClusters</code></td>
             <td><code>false</code></td>
             <td>Euclidean clustering only. <code>true</code> to visualize 3D LiDAR point clusters</td>
+        </tr>
+        <tr>
+            <td><code>bShowRemoved</code></td>
+            <td><code>true</code></td>
+            <td>Euclidean clustering only. <code>true</code> to also display colorless outliers (if <code>bRenderClusters</code> is <code>true</code>)</td>
         </tr>
     </tbody>
 </table>
