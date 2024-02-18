@@ -86,3 +86,15 @@ Set both `bCompareDetectors` and `bCompareDescriptors` to `false` to visualize m
 __[Link to code](projects/p3/src)__ | [Starter Code from Udacity](https://github.com/udacity/SFND_3D_Object_Tracking)
 
 ![SIFT Time-to-Collision](./projects/p3/img/mov1.gif)
+
+### How to Build and Run the Project
+
+For the prerequisites, see project 2. Build and run as follows:
+
+```bash
+cd /home/$whoami/workspace/udacity-rsend/projects/p3
+mkdir build && cd build
+cmake ..
+make
+./3D_object_tracking
+```

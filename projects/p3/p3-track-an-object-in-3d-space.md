@@ -22,7 +22,7 @@ Additionally, all tasks are timed to monitor their efficiency.
             <td rowspan=1><b>Input data options</b></td>
             <td><code>bExtraAccuracy</code></td>
             <td><code>false</code></td>
-            <td><code>true</code> for more accurate YOLOv3 blob size $(448 \times 448)$, <code>false</code> for default $(416 \times 416)*$ [3]</td>
+            <td><code>true</code> for more accurate YOLOv3 blob size $(448 \times 448)$, <code>false</code> for default $(416 \times 416)$* [3]</td>
         </tr>
         <tr>
             <td rowspan=7><b>Visualisation and output options</b></td>
