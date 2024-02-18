@@ -6,6 +6,84 @@
 
 Additionally, all tasks are timed to monitor their efficiency.
 
+### Options
+
+<table>
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>Parameter</th>
+            <th>Default value</th>
+            <th>Explanation</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td rowspan=1><b>Input data options</b></td>
+            <td><code>bExtraAccuracy</code></td>
+            <td><code>false</code></td>
+            <td><code>true</code> for more accurate YOLOv3 blob size $(448 \times 448)$, <code>false</code> for default $(416 \times 416)$ [3]</td>
+        </tr>
+        <tr>
+            <td rowspan=7><b>Visualisation and output options</b></td>
+            <td><code>bVisYoloBoundingBoxes</code></td>
+            <td><code>false</code></td>
+            <td><code>true</code> to show YOLOv3 bounding boxes, COCO names, and confidence levels for each frame</td>
+        </tr>
+        <tr>
+            <td><code>bVisLidarTopView</code></td>
+            <td><code>false</code></td>
+            <td><code>true</code> to display LiDAR top-view perspective, <code>false</code> to skip</td>
+        </tr>
+        <tr>
+            <td><code>bStopAtLidarTopView</code></td>
+            <td><code>false</code></td>
+            <td>wrapper around the <code>continue</code> statement; <code>true</code> to cycle through LiDAR top-views (if <code>bVisLidarTopView</code> is <code>true</code>), <code>false</code> to proceed with time-to-collision calculation</td>
+        </tr>
+        <tr>
+            <td><code>bVisFinalOutput</code></td>
+            <td><code>true</code></td>
+            <td><code>true</code> to view final output image with superimposed time-to-collision estimates</td>
+        </tr>
+        <tr>
+            <td><code>bVisKeypointsOverlay</code></td>
+            <td><code>true</code></td>
+            <td><code>true</code> to additionally superimpose keypoints on preceding vehicle bounding box</td>
+        </tr>
+        <tr>
+            <td><code>bSaveLidarTopView</code></td>
+            <td><code>false</code></td>
+            <td><code>true</code> to write LiDAR top-views in current working directory (if <code>bVisLidarTopView</code> is <code>true</code>)</td>
+        </tr>
+        <tr>
+            <td><code>bSaveOutputFrames</code></td>
+            <td><code>false</code></td>
+            <td><code>true</code> to write output frames in current working directory (if <code>bVisFinalOutput</code> is <code>true</code>)</td>
+        </tr>
+        <tr>
+            <td rowspan=4><b>Outlier detection and diagnostics options</b></td>
+            <td><code>FilteringMethod</code></td>
+            <td><code>TUKEY</code></td>
+            <td>Outlier filtering method. Either <code>TUKEY</code> for Tukey's fences [4] or <code>EUCLIDEAN_CLUSTERING</code> [6]</td>
+        </tr>
+        <tr>
+            <td><code>bLimitKpts</code></td>
+            <td><code>false</code></td>
+            <td><code>true</code> to limit the number of keypoints. Helpful for debugging and learning, but it will interfere with time-to-collision calculations (introducing NaN values)</td>
+        </tr>
+        <tr>
+            <td><code>bShowRemoved</code></td>
+            <td><code>true</code></td>
+            <td>Euclidean clustering only. <code>true</code> to also display colorless outliers </td>
+        </tr>
+        <tr>
+            <td><code>bRenderClusters</code></td>
+            <td><code>false</code></td>
+            <td>Euclidean clustering only. <code>true</code> to visualize 3D LiDAR point clusters</td>
+        </tr>
+    </tbody>
+</table>
+
 ## Final Report
 
 ### FP.1: Match 3D Objects
@@ -47,6 +125,8 @@ To establish a connection between the YOLOv3 bounding boxes and the enclosed key
 
 ### FP.4: Compute Camera-based TTC
 
+The base code for camera-based time-to-collision computation is taken from [10]. The suggested default value, which was determined heuristically [11]
+
 ## Resources
 
 1. https://knowledge.udacity.com/questions/570553
@@ -58,6 +138,7 @@ To establish a connection between the YOLOv3 bounding boxes and the enclosed key
 7. https://docs.opencv.org/4.2.0/db/d18/classcv_1_1flann_1_1GenericIndex.html
 8. https://knowledge.udacity.com/questions/110934
 9. https://knowledge.udacity.com/questions/624666
-10. https://knowledge.udacity.com/questions/668076
+10. Lesson 3: Estimate TTC with a Camera, Engineering a Collision Detection System, Udacity Sensor Fusion Nanodegree
+11. https://knowledge.udacity.com/questions/668076
 
 [Home](../../README.md) | Previous: [Camera-Based 2D Feature Tracking](../p2/p2-camera-based-2d-feature-tracking.md) | Next: 
