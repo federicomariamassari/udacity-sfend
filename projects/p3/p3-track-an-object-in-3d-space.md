@@ -38,7 +38,7 @@ Additionally, all tasks are timed to monitor their efficiency.
         <tr>
             <td><code>bStopAtLidarTopView</code></td>
             <td><code>false</code></td>
-            <td>wrapper around the <code>continue</code> statement; <code>true</code> to cycle through LiDAR top-views (if <code>bVisLidarTopView</code> is <code>true</code>), <code>false</code> to proceed with time-to-collision calculation</td>
+            <td>wrapper around the <code>continue</code> statement; <code>true</code> to cycle through all LiDAR top-views (if <code>bVisLidarTopView = true</code>), <code>false</code> to proceed with time-to-collision calculation</td>
         </tr>
         <tr>
             <td><code>bVisFinalOutput</code></td>
@@ -53,12 +53,12 @@ Additionally, all tasks are timed to monitor their efficiency.
         <tr>
             <td><code>bSaveLidarTopView</code></td>
             <td><code>false</code></td>
-            <td><code>true</code> to write LiDAR top-views in current working directory (if <code>bVisLidarTopView</code> is <code>true</code>)</td>
+            <td><code>true</code> to write LiDAR top-views in current working directory (if <code>bVisLidarTopView = true</code>)</td>
         </tr>
         <tr>
             <td><code>bSaveOutputFrames</code></td>
             <td><code>false</code></td>
-            <td><code>true</code> to write output frames in current working directory (if <code>bVisFinalOutput</code> is <code>true</code>)</td>
+            <td><code>true</code> to write output frames in current working directory (if <code>bVisFinalOutput = true</code>)</td>
         </tr>
         <tr>
             <td rowspan=4><b>Outlier detection and diagnostics options</b></td>
@@ -79,7 +79,7 @@ Additionally, all tasks are timed to monitor their efficiency.
         <tr>
             <td><code>bShowRemoved</code></td>
             <td><code>true</code></td>
-            <td>Euclidean clustering only. <code>true</code> to also display colorless outliers (if <code>bRenderClusters</code> is <code>true</code>)</td>
+            <td>Euclidean clustering only. <code>true</code> to also display colorless outliers (if <code>bRenderClusters = true</code>)</td>
         </tr>
     </tbody>
 </table>
