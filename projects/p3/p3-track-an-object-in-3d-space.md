@@ -53,12 +53,12 @@ Additionally, all tasks are timed to monitor their efficiency.
         <tr>
             <td><code>bSaveLidarTopView</code></td>
             <td><code>false</code></td>
-            <td><code>true</code> to write LiDAR top-views in current working directory (if <code>bVisLidarTopView = true</code>)</td>
+            <td><code>true</code> to write LiDAR top-views inside the current working directory (if <code>bVisLidarTopView = true</code>)</td>
         </tr>
         <tr>
             <td><code>bSaveOutputFrames</code></td>
             <td><code>false</code></td>
-            <td><code>true</code> to write output frames in current working directory (if <code>bVisFinalOutput = true</code>)</td>
+            <td><code>true</code> to write output frames inside the current working directory (if <code>bVisFinalOutput = true</code>)</td>
         </tr>
         <tr>
             <td rowspan=4><b>Outlier detection and diagnostics options</b></td>
@@ -74,7 +74,7 @@ Additionally, all tasks are timed to monitor their efficiency.
         <tr>
             <td><code>bRenderClusters</code></td>
             <td><code>false</code></td>
-            <td>Euclidean clustering only. <code>true</code> to visualize 3D LiDAR point clusters</td>
+            <td>Euclidean clustering only. <code>true</code> to render 3D LiDAR point clusters</td>
         </tr>
         <tr>
             <td><code>bShowRemoved</code></td>
