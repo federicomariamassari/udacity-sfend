@@ -127,7 +127,7 @@ To establish a connection between the YOLOv3 bounding boxes and the enclosed key
 
 ### FP.4: Compute Camera-based TTC
 
-The base code for camera-based time-to-collision computation is taken from [10]. The suggested default value, which was determined heuristically [11]
+The main reference for camera-based time-to-collision computation is the solution to [10]. `minDistance` (the minimum threshold to avoid ambiguous matches when keypoints are too close or have too similar descriptors) is kept as 100, as both smaller and larger values were found to cause large swings in the final TTC estimates [11]. Tukey's fences are then applied to the filtered heights ratios before using the median ratio as input to time-to-collision.
 
 ## Resources
 
