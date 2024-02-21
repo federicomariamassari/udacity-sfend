@@ -131,7 +131,15 @@ The main reference for camera-based time-to-collision computation is the solutio
 
 ### FP.5: Performance Evaluation 1
 
+### FP.6: Performance Evaluation 2
 
+To determine the best detector-descriptor pair for the camera-based time-to-collision, I rely on three criteria:
+
+1. Proximity to the ground truth proxy (LiDAR time-to-collision, Tukey);
+2. Speed of the detector-descriptor combination;
+3. Relatively decreasing monotonicity of the time-to-collision estimate.
+
+I consider all frames until the vehicle is nearly stationary (48), at which point the LiDAR TTC estimate becomes unreliable since the previous and current median values are so close to each other that their difference (at the denominator) is almost zero, leading to a spike in the TTC output.
 
 ## Resources
 
