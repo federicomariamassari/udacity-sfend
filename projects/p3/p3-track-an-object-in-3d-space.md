@@ -96,7 +96,7 @@ Once the map is populated, the query-train index pairs for which the counter is 
 
 ### FP.2: Compute LiDAR-based TTC
 
-LiDAR time-to-collision logic is handled by [`computeTTCLidar`](). Extreme or otherwise unreliable data are discarded using one of the available filtering methods as input to function [`removeOutliers`](). TTC is then given by one of the below formulae (CVM, CAM), where $\tilde{x}$ is the median of all x-coordinates of the usable points (a proxy for distance $d$):
+LiDAR time-to-collision logic is handled by [`computeTTCLidar`](). Extreme or otherwise unreliable data are discarded using one of the available filtering methods as input to function [`removeOutliers`](). TTC is then given by the Constant Velocity Model (CVM) formula, with $\tilde{x}$ the median of all x-coordinates of the usable points (a proxy for distance $d$):
 
 $$
 \text{TTC}_ {\text{CVM}} = d_1 \times \frac{\Delta t}{d_0 - d_1} = \tilde{x}_{\text{curr}} \times \frac{\Delta t}{\tilde{x} _{\text{prev}} - \tilde{x} _{\text{curr}}}
@@ -128,6 +128,10 @@ To establish a connection between the YOLOv3 bounding boxes and the enclosed key
 ### FP.4: Compute Camera-based TTC
 
 The main reference for camera-based time-to-collision computation is the solution to [10]. `minDistance` (the minimum threshold to avoid ambiguous matches when keypoints are too close or have too similar descriptors) is kept as 100, as both smaller and larger values were found to cause large swings in the final TTC estimates [11]. Tukey's fences are then applied to the filtered heights ratios before using the median ratio as input to time-to-collision.
+
+### FP.5: Performance Evaluation 1
+
+
 
 ## Resources
 
