@@ -96,7 +96,7 @@ Once the map is populated, the query-train index pairs for which the counter is 
 
 ### FP.2: Compute LiDAR-based TTC
 
-LiDAR time-to-collision logic is handled by [`computeTTCLidar`](). Extreme or otherwise unreliable data are discarded using one of the available filtering methods as input to function [`removeOutliers`](). TTC is then given by one of the below formulae (CVM, CAM), where $\tilde{x}$ is the median of all x-coordinates of the usable points (a proxy for distance $d$):
+LiDAR time-to-collision logic is handled by [`computeTTCLidar`](). Extreme or otherwise unreliable data are discarded using one of the available filtering methods as input to function [`removeOutliers`](). TTC is then given by the Constant Velocity Model (CVM) formula, with $\tilde{x}$ the median of all x-coordinates of the usable points (a proxy for distance $d$):
 
 $$
 \text{TTC}_ {\text{CVM}} = d_1 \times \frac{\Delta t}{d_0 - d_1} = \tilde{x}_{\text{curr}} \times \frac{\Delta t}{\tilde{x} _{\text{prev}} - \tilde{x} _{\text{curr}}}
@@ -128,6 +128,18 @@ To establish a connection between the YOLOv3 bounding boxes and the enclosed key
 ### FP.4: Compute Camera-based TTC
 
 The main reference for camera-based time-to-collision computation is the solution to [10]. `minDistance` (the minimum threshold to avoid ambiguous matches when keypoints are too close or have too similar descriptors) is kept as 100, as both smaller and larger values were found to cause large swings in the final TTC estimates [11]. Tukey's fences are then applied to the filtered heights ratios before using the median ratio as input to time-to-collision.
+
+### FP.5: Performance Evaluation 1
+
+### FP.6: Performance Evaluation 2
+
+To determine the best detector-descriptor pair for the camera-based time-to-collision, I rely on three criteria:
+
+1. Proximity to the ground truth proxy (LiDAR time-to-collision, Tukey);
+2. Speed of the detector-descriptor combination;
+3. Relatively decreasing monotonicity of the time-to-collision estimate.
+
+I consider all frames until the vehicle is nearly stationary (48), at which point the LiDAR TTC estimate becomes unreliable since the previous and current median values are so close to each other that their difference (at the denominator) is almost zero, leading to a spike in the TTC output.
 
 ## Resources
 
