@@ -6,7 +6,11 @@
 
 Additionally, all tasks are timed to monitor their efficiency.
 
+__Figure 1: Caption__
+
 ## Project Structure
+
+__Figure 2: Directory Structure Tree__
 
 ```bash
 .
@@ -162,6 +166,18 @@ An alternative option, which also considers dimensions $y$ and $z$ in the outlie
 | `minSize`  | 15            | Minimum cluster size. Clusters smaller than this threshold will be discarded as outliers. |
 | `maxSize`  | 600           | Maximum cluster size. Clusters larger than this threshold will also be discarded. |
 
+<table>
+  <tr>
+  <td align="center"><b>Figure 3.A</b>: Tukey's fences</td>
+  <td align="center"><b>Figure 3.B</b>: Euclidean Clustering</td>
+  <tr>
+  </tr>
+  <tr>
+    <td align="center"><img align="center" src="img/mov2.gif" width="475"/></td>
+    <td align="center"><img align="center" src="img/mov3.gif" width="475"/></td>
+  </tr>
+</table>
+
 ### FP.3: Associate Keypoint Correspondences with Bounding Boxes
 
 To establish a connection between the YOLOv3 bounding boxes and the enclosed keypoints, I proceed as follows. For each match, I extract the keypoint descriptors for both the previous and the current frame; if the region of interest (ROI) of the latter [8] contains the associated feature, I compute the Euclidean distance (L2-norm) between the train and the query keypoints and preliminary push it back into a vector. As we expect a rigid transformation of the preceding vehicle [9] given the focus on a straight ego lane, I then remove all enclosed matches whose distance exceeds 1.5 times the median (the mean is not a robust enough estimator). The remaining correspondences, both matches and keypoints, are finally assigned back to their respective `BoundingBox` attributes. This logic is handled by [`clusterKptMatchesWithROI`]().
@@ -180,7 +196,7 @@ To determine the best detector-descriptor pair for the camera-based time-to-coll
 2. Speed of the detector-descriptor combination;
 3. Relatively decreasing monotonicity of the time-to-collision estimate.
 
-I consider all frames until the vehicle is nearly stationary (48), at which point the LiDAR TTC estimate becomes unreliable since the previous and current median values are so close to each other that their difference (at the denominator) is almost zero, leading to sudden spikes in the TTC output. The results are available in [`p3_performance_evaluation.xls`](./analysis/p3_performance_evaluation.xls).
+I consider all frames until the vehicle is nearly stationary (48), at which point the LiDAR TTC estimate becomes unreliable since the previous and current median values are so close to each other that their difference (at the denominator) is almost zero, leading to sudden spikes in the TTC output. `bExtraAccuracy = false` as default. The results are available in [`p3_performance_evaluation.xls`](./analysis/p3_performance_evaluation.xls).
 
 __Figure 3: Camera-based Time-to-Collision vs LiDAR ground truth proxy__
 <img src="./img/img1.svg" width="1000">
