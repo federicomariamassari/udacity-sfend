@@ -6,6 +6,47 @@
 
 Additionally, all tasks are timed to monitor their efficiency.
 
+## Project Structure
+
+```bash
+.
+├── analysis
+│   └── p3_performance_evaluation.xls
+├── build
+│   ├── ...
+│   └── 3D_object_tracking
+├── CMakeLists.txt
+├── dat
+│   └── yolo
+│       ├── coco.names
+│       ├── yolov3.cfg
+│       └── yolov3.weights
+├── images
+│   └── KITTI
+│       └── 2011_09_26
+│           ├── image_02
+│           │   └── data
+│           │       ├── 0000000000.png
+│           │       ├── ...
+│           │       └── 0000000077.png
+│           └── velodyne_points
+│               └── data
+│                   ├── 0000000000.bin
+│                   ├── ...
+│                   └── 0000000077.bin
+└── src
+    ├── camFusion.hpp
+    ├── camFusion_Student.cpp
+    ├── dataStructures.h
+    ├── FinalProject_Camera.cpp
+    ├── lidarData.cpp
+    ├── lidarData.hpp
+    ├── matching2D.hpp
+    ├── matching2D_Student.cpp
+    ├── objectDetection2D.cpp
+    └── objectDetection2D.hpp
+```
+
 ### Options
 
 <table>
@@ -139,9 +180,9 @@ To determine the best detector-descriptor pair for the camera-based time-to-coll
 2. Speed of the detector-descriptor combination;
 3. Relatively decreasing monotonicity of the time-to-collision estimate.
 
-I consider all frames until the vehicle is nearly stationary (48), at which point the LiDAR TTC estimate becomes unreliable since the previous and current median values are so close to each other that their difference (at the denominator) is almost zero, leading to a spike in the TTC output.
+I consider all frames until the vehicle is nearly stationary (48), at which point the LiDAR TTC estimate becomes unreliable since the previous and current median values are so close to each other that their difference (at the denominator) is almost zero, leading to sudden spikes in the TTC output. The results are available in [`p3_performance_evaluation.xls`](./analysis/p3_performance_evaluation.xls).
 
-__Camera-based Time-to-Collision vs LiDAR ground truth proxy__
+__Figure 3: Camera-based Time-to-Collision vs LiDAR ground truth proxy__
 <img src="./img/img1.svg" width="1000">
 
 ## Resources
