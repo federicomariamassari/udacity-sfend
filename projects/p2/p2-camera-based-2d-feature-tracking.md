@@ -25,6 +25,8 @@ __Figure 2: Directory Structure Tree__
 
 ```bash
 .
+├── analysis
+│   └── performance_evaluation.xls
 ├── build
 │   ├── ...
 │   └── 2D_feature_tracking
@@ -37,8 +39,6 @@ __Figure 2: Directory Structure Tree__
 │                   ├── 0000000000.png
 │                   ├── ...
 │                   └── 0000000009.png
-├── analysis
-│   └── performance_evaluation.xls
 └── src
     ├── dataStructures.h
     ├── matching2D.hpp
