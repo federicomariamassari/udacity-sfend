@@ -28,7 +28,7 @@ __Figure 2: Directory Structure Tree__
 ├── analysis
 │   └── performance_evaluation.xls
 ├── build
-│   ├── ... 
+│   ├── ...
 │   └── 2D_feature_tracking
 ├── CMakeLists.txt
 ├── images
