@@ -141,6 +141,8 @@ To determine the best detector-descriptor pair for the camera-based time-to-coll
 
 I consider all frames until the vehicle is nearly stationary (48), at which point the LiDAR TTC estimate becomes unreliable since the previous and current median values are so close to each other that their difference (at the denominator) is almost zero, leading to a spike in the TTC output.
 
+![Camera TTC candidates](./img/img1.svg)
+
 ## Resources
 
 1. https://knowledge.udacity.com/questions/570553
