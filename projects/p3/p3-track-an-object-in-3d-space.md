@@ -4,11 +4,20 @@
 
 ## Overview
 
+The final project of the camera course involves combining LiDAR and camera data to accurately calculate the time-to-collision (TTC) with a vehicle in front, within the framework of a Collision Detection System (CDS).
+
 Additionally, all tasks are timed to monitor their efficiency.
 
 __Figure 1: Caption__
 
 ## Project Structure
+
+The directory structure tree for the project appears in Figure 2. In particular:
+
+- `src` includes main file `FinalProject_Camera.cpp` (executable: `3D_object_tracking`) and `camFusion_Student.cpp`, which contains the logic for 3D object tracking and TTC computation;
+- `dat` holds pre-trained YOLOv3 config files, weights, and COCO class names;
+- `images` has input camera frames and LiDAR point cloud binaries;
+- `analysis` contains a spreadsheet with output statistics on LiDAR and camera-based TTC combinations.
 
 __Figure 2: Directory Structure Tree__
 
@@ -52,6 +61,8 @@ __Figure 2: Directory Structure Tree__
 ```
 
 ### Options
+
+Options can be set from within an `Options` struct in the main file.
 
 <table>
     <thead>
@@ -166,7 +177,7 @@ An alternative option, which also considers dimensions $y$ and $z$ in the outlie
 | `minSize`  | 15            | Minimum cluster size. Clusters smaller than this threshold will be discarded as outliers. |
 | `maxSize`  | 600           | Maximum cluster size. Clusters larger than this threshold will also be discarded. |
 
-A visual comparison of the two algorithms is given in Figure 3.
+A visual comparison of the two algorithms is given in Figure 3 (white points do not enter the TTC calculation).
 
 <table>
   <tr>
