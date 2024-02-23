@@ -119,12 +119,12 @@ __Figure 2: Directory Structure Tree__
         <tr>
             <td><code>bRenderClusters</code></td>
             <td><code>false</code></td>
-            <td>Euclidean clustering only. <code>true</code> to render 3D LiDAR point clusters</td>
+            <td><code>true</code> to render 3D LiDAR point clusters</td>
         </tr>
         <tr>
             <td><code>bShowRemoved</code></td>
             <td><code>true</code></td>
-            <td>Euclidean clustering only. <code>true</code> to also display colorless outliers (if <code>bRenderClusters = true</code>)</td>
+            <td><code>true</code> to also display colorless outliers (if <code>bRenderClusters = true</code>)</td>
         </tr>
     </tbody>
 </table>
@@ -165,6 +165,8 @@ An alternative option, which also considers dimensions $y$ and $z$ in the outlie
 | `radius`   | 0.12          | Distance tolerance to query point for the neighborhood search. This value will be squared (L2-norm) [7]. |
 | `minSize`  | 15            | Minimum cluster size. Clusters smaller than this threshold will be discarded as outliers. |
 | `maxSize`  | 600           | Maximum cluster size. Clusters larger than this threshold will also be discarded. |
+
+A visual comparison of the two algorithms is given in Figure 3.
 
 <table>
   <tr>
