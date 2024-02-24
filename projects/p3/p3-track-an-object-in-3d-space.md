@@ -4,14 +4,12 @@
 
 ## Overview
 
-The final project of the camera course involves fusing data from LiDAR and camera sensors to reliably estimate time-to-collision (TTC) with a vehicle in front, in the context of a Collision Detection System (CDS). After detecting and classifying the objects on the road using deep-learning framework YOLOv3 (You Only Look Once) [Figure 1], I identify the LiDAR points and keypoint matches that fall inside the region of interest (ROI) of the preceding vehicle's 2D bounding box across consecutive frame pairs, and use these to compute robust TTC estimates for both LiDAR and camera [Figure 2]. All tasks are timed to monitor their efficiency.
+The final project of the camera course involves fusing data from LiDAR and camera sensors to reliably estimate time-to-collision (TTC) with a vehicle in front, in the context of a Collision Detection System (CDS). After detecting and classifying the objects on the road using deep-learning framework YOLOv3 (You Only Look Once) [Figure 1], I identify the LiDAR points and keypoint matches that fall inside the region of interest (ROI) of the preceding vehicle's 2D bounding box across consecutive frame pairs, and use them to compute robust TTC estimates for both LiDAR and camera [Figure 2]. All tasks are timed to monitor their efficiency.
 
 __Figure 1: YOLOv3 2D Bounding Boxes__
-
 ![YOLOv3 Bounding Boxes](./img/mov4.gif)
 
 __Figure 2: Time-to-Collision Estimates (Tukey, AKAZE-AKAZE)__
-
 ![Tukey AKAZE-AKAZE TTC](./img/mov5.gif)
 
 ## Project Structure
@@ -209,6 +207,24 @@ To establish a connection between the YOLOv3 bounding boxes and the enclosed key
 The main reference for camera-based time-to-collision computation is the solution to [10]. `minDistance` (the minimum threshold to avoid ambiguous matches when keypoints are too close or have too similar descriptors) is kept as 100, as both smaller and larger values were found to cause large swings in the final TTC estimates [11]. Tukey's fences are then applied to the filtered heights ratios before using the median ratio as input to time-to-collision.
 
 ### FP.5: Performance Evaluation 1
+
+LiDAR TTC estimates are generally stable, decreasing smoothly over time (especially in later frames) as ego vehicle approaches the car in front. There are, however, some exceptions.
+
+#### Medians Are Too Close
+
+Take, for example, frames 3-4.
+
+<table>
+  <tr>
+  <td align="center"><b>Figure 5.A</b>: Tukey's fences</td>
+  <td align="center"><b>Figure 5.B</b>: Euclidean Clustering</td>
+  <tr>
+  </tr>
+  <tr>
+    <td align="center"><img align="center" src="img/mov6a.gif" width="475"/></td>
+    <td align="center"><img align="center" src="img/mov6b.gif" width="475"/></td>
+  </tr>
+</table>
 
 ### FP.6: Performance Evaluation 2
 
