@@ -210,19 +210,7 @@ The main reference for camera-based time-to-collision computation is the solutio
 
 LiDAR TTC estimates are generally stable, decreasing smoothly over time (especially in later frames) as ego vehicle approaches the car in front. There are, however, some exceptions, largely due to the simplistic nature of the Constant Velocity Model (CVM) adopted.
 
-__Median values are too close.__ Small variations in the denominator $\tilde{x} _{\text{prev}} - \tilde{x} _{\text{curr}}$ can cause large swings in TTC estimates, especially when the difference between the two medians (which are close to each other by construction) approaches 0. Ironically, less robust statistics like the mean, which is heavily affected by outliers, would lead to more stable TTC values under CVM in these cases. Take, for instance, image pairs 1-2 and 3-4 (with outliers removed using Tukey's fences). $\tilde{x}_1$ = 8.009 and $\tilde{x}_2$ = 7.945, so $\tilde{x}_1 - \tilde{x}_2$ = 0.064 and TTC = 12.41 seconds. However, $\tilde{x}_3$ = 7.889 and $\tilde{x}_4$ = 7.842, so $\tilde{x}_3 - \tilde{x}_4$ = 0.047 and TTC = 16.69 seconds. Hence, a reduction in the denominator of less than 0.02 causes a spike in TTC of more than 4 seconds. I could think of two ways to mitigate the problem. One is to decrease the sampling frequency, setting for example `imgStepWidth = 4` (2.5 Hz), which would remove some noise due to nearly identical observations. Another one is to fine-tune the Euclidean Clustering algorithm to filter out possible outliers along the $y$ and $z$ dimensions as well, so as to make the median values less similar.
-
-<table>
-  <tr>
-  <td align="center"><b>Figure 5.A</b>: Tukey's fences</td>
-  <td align="center"><b>Figure 5.B</b>: Euclidean Clustering</td>
-  <tr>
-  </tr>
-  <tr>
-    <td align="center"><img align="center" src="img/mov6a.gif" width="475"/></td>
-    <td align="center"><img align="center" src="img/mov6b.gif" width="475"/></td>
-  </tr>
-</table>
+__Median values are too close.__ Small variations in the denominator $\tilde{x} _{\text{prev}} - \tilde{x} _{\text{curr}}$ can cause large swings in TTC estimates, especially when the difference between the two medians (which are close to each other by construction) approaches 0. Ironically, less robust statistics like the mean, which is heavily affected by outliers, would lead to more stable TTC values under CVM in these cases. Take, for instance, image pairs 1-2 and 3-4 (with outliers removed using Tukey's fences). $\tilde{x}_1$ = 8.009 and $\tilde{x}_2$ = 7.945, so $\tilde{x}_1 - \tilde{x}_2$ = 0.064 and TTC = 12.41 seconds. However, $\tilde{x}_3$ = 7.889 and $\tilde{x}_4$ = 7.842, so $\tilde{x}_3 - \tilde{x}_4$ = 0.047 and TTC = 16.69 seconds. Hence, a reduction in the denominator of less than 0.02 causes a spike in TTC of more than 4 seconds. I could think of two ways to mitigate the problem. One is to decrease the sampling frequency, setting for example `imgStepWidth = 4` (2.5 Hz), which would remove some noise due to nearly identical observations. Another one is to fine-tune the Euclidean Clustering algorithm to filter out possible outliers along the $y$ and $z$ dimensions as well, so as to make the median values less similar. For example, with `knn = 4` and `radius = 0.3`, $\tilde{x}_3$ = 7.890 and $\tilde{x}_4$ = 7.842, so $\tilde{x}_3 - \tilde{x}_4$ = 0.048 and TTC = 16.34 seconds.
 
 ### FP.6: Performance Evaluation 2
 
