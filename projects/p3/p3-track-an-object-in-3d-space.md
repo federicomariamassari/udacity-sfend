@@ -206,15 +206,6 @@ The main reference for camera-based time-to-collision computation is the solutio
 
 ### FP.5: Performance Evaluation 1
 
-Small variations in the denominator can cause large swings in TTC estimates, especially as the difference approaches $0$.
-
-| Image Pair | $\tilde{x}_ {\text{prev}}$ | $\tilde{x}_{\text{curr}}$ | Difference | LiDAR TTC |
-|:----------:| --------------------------:| -------------------------:| ----------:| ---:|
-| 0-1 | 7.889 | 7.842 | 0.047 | 16.685131 |
-| 1-2 | 7.889 | 7.842 | 0.047 | 16.685131 |
-| 3-4 | 7.889 | 7.842 | 0.047 | 16.685131 |
-
-
 ### FP.6: Performance Evaluation 2
 
 To determine the best detector-descriptor pair for the camera-based time-to-collision, I rely on three criteria:
