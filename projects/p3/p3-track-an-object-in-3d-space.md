@@ -4,22 +4,26 @@
 
 ## Overview
 
-The final project of the camera course involves fusing data from LiDAR and camera sensors to reliably estimate time-to-collision (TTC) with a vehicle in front, in the context of a Collision Detection System (CDS). After detecting and classifying the objects on the road using deep-learning framework YOLOv3 (You Only Look Once) [Figure 1], I identify the LiDAR points and keypoint matches that fall inside the region of interest (ROI) of the preceding vehicle's 2D bounding box across consecutive frame pairs, and use these to compute robust TTC estimates for both LiDAR and camera. All tasks are timed to monitor their efficiency.
+The final project of the camera course involves fusing data from LiDAR and camera sensors to reliably estimate time-to-collision (TTC) with a vehicle in front, in the context of a Collision Detection System (CDS). After detecting and classifying the objects on the road using deep-learning framework YOLOv3 (You Only Look Once) [Figure 1], I identify the LiDAR points and keypoint matches that fall inside the region of interest (ROI) of the preceding vehicle's 2D bounding box across consecutive frame pairs, and use these to compute robust TTC estimates for both LiDAR and camera [Figure 2]. All tasks are timed to monitor their efficiency.
 
 __Figure 1: YOLOv3 2D Bounding Boxes__
 
 ![YOLOv3 Bounding Boxes](./img/mov4.gif)
 
+__Figure 2: Time-to-Collision Estimates (Tukey, AKAZE-AKAZE)__
+
+![Tukey AKAZE-AKAZE TTC](./img/mov5.gif)
+
 ## Project Structure
 
-The directory structure tree for the project appears in Figure 2. In particular:
+The directory structure tree for the project appears in Figure 3. In particular:
 
 - `src` includes main file `FinalProject_Camera.cpp` (executable: `3D_object_tracking`) and `camFusion_Student.cpp`, which contains the logic for 3D object tracking and TTC computation;
 - `dat` holds pre-trained YOLOv3 config files, weights, and COCO dataset class names;
 - `images` has input camera frames and LiDAR point cloud binaries;
 - `analysis` contains a spreadsheet with output statistics on LiDAR and camera-based TTC combinations (FP.5, FP.6).
 
-__Figure 2: Directory Structure Tree__
+__Figure 3: Directory Structure Tree__
 
 ```bash
 .
@@ -182,12 +186,12 @@ An alternative option, which also considers dimensions $y$ and $z$ in the outlie
 | `minSize`  | 15            | Minimum cluster size. Clusters smaller than this threshold will be discarded as outliers. |
 | `maxSize`  | 600           | Maximum cluster size. Clusters larger than this threshold will also be discarded. |
 
-A visual comparison of the two algorithms is given in Figure 3 (white points do not enter the TTC calculation).
+A visual comparison of the two algorithms is given in Figure 4 (white points do not enter the TTC calculation).
 
 <table>
   <tr>
-  <td align="center"><b>Figure 3.A</b>: Tukey's fences</td>
-  <td align="center"><b>Figure 3.B</b>: Euclidean Clustering</td>
+  <td align="center"><b>Figure 4.A</b>: Tukey's fences</td>
+  <td align="center"><b>Figure 4.B</b>: Euclidean Clustering</td>
   <tr>
   </tr>
   <tr>
@@ -214,9 +218,9 @@ To determine the best detector-descriptor pair for the camera-based time-to-coll
 2. Speed of the detector-descriptor combination;
 3. Relatively decreasing monotonicity of the time-to-collision estimate.
 
-I consider all frames until the vehicle is nearly stationary (48), at which point the LiDAR TTC estimate becomes unreliable since the previous and current median values are so close to each other that their difference (at the denominator) is almost zero, leading to sudden spikes in the TTC output. `bExtraAccuracy = false` as default. The results are available in [`p3_performance_evaluation.xls`](./analysis/p3_performance_evaluation.xls).
+I consider all frames until the vehicle is nearly stationary (48), at which point the LiDAR TTC estimate becomes unreliable since the previous and current median values are so close to each other that their difference (at the denominator) is almost zero, leading to sudden spikes in both directions in the TTC output. `bExtraAccuracy = false` as per default. The results are available in [`p3_performance_evaluation.xls`](./analysis/p3_performance_evaluation.xls).
 
-__Figure 3: Camera-based Time-to-Collision vs LiDAR ground truth proxy__
+__Figure 5: Camera-based Time-to-Collision vs LiDAR ground truth proxy__
 <img src="./img/img1.svg" width="1000">
 
 ## Resources
