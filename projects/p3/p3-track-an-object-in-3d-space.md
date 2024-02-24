@@ -220,7 +220,7 @@ To determine the best detector-descriptor pair for the camera-based time-to-coll
 
 I consider all frames until the vehicle is nearly stationary (48), at which point the LiDAR TTC estimate becomes unreliable since the previous and current median values are so close to each other that their difference (at the denominator) is almost zero, leading to sudden spikes in both directions in the TTC output. `bExtraAccuracy = false` as per default. The results are available in [`p3_performance_evaluation.xls`](./analysis/p3_performance_evaluation.xls).
 
-__Figure 3: Camera-based Time-to-Collision vs LiDAR ground truth proxy__
+__Figure 5: Camera-based Time-to-Collision vs LiDAR ground truth proxy__
 <img src="./img/img1.svg" width="1000">
 
 ## Resources
