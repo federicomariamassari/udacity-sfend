@@ -208,11 +208,15 @@ The main reference for camera-based time-to-collision computation is the solutio
 
 ### FP.5: Performance Evaluation 1
 
-LiDAR TTC estimates are generally stable, decreasing smoothly over time (especially in later frames) as ego vehicle approaches the car in front. There are, however, some exceptions.
+LiDAR TTC estimates are generally stable, decreasing smoothly over time (especially in later frames) as ego vehicle approaches the car in front. There are, however, some exceptions, largely due to the simplistic nature of the Constant Velocity Model (CVM) adopted.
 
-#### Medians Are Too Close
+__Median values are too close.__ Small variations in the denominator $\tilde{x} _{\text{prev}} - \tilde{x} _{\text{curr}}$ can cause large swings in TTC estimates, especially so as the difference between the two medians (which are close to each other by construction) approaches 0. Ironically, less robust statistics like the mean (which is heavily affected by outliers) would lead to more stable TTC values under CVM, in these cases. Take, for example, frames 3-4.
 
-Take, for example, frames 3-4.
+| Image Pair | $\tilde{x}_ {\text{prev}}$ | $\tilde{x}_{\text{curr}}$ | Difference | LiDAR TTC |
+|:----------:| --------------------------:| -------------------------:| ----------:| ---:|
+| 1-2 | 8.009 | 7.945 | 0.064 | 12.414130 |
+| 2-3 | 7.945 | 7.889 | 0.056 | 14.087441 |
+| 3-4 | 7.889 | 7.842 | 0.047 | 16.685131 |
 
 <table>
   <tr>
