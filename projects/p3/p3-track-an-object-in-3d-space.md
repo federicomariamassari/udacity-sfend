@@ -4,20 +4,20 @@
 
 ## Overview
 
-The final project of the camera course involves combining LiDAR and camera data to accurately calculate the time-to-collision (TTC) with a vehicle in front, within the framework of a Collision Detection System (CDS).
+The final project of the camera course involves fusing data from LiDAR and camera sensors to reliably estimate time-to-collision (TTC) with a vehicle in front, in the context of a Collision Detection System (CDS). After detecting and classifying the objects on the road using deep-learning framework YOLOv3 (You Only Look Once) [Figure 1], I identify the LiDAR points and keypoint matches that fall inside the region of interest (ROI) of the preceding vehicle's 2D bounding box across consecutive frame pairs, and use these to compute robust TTC estimates for both LiDAR and camera. All tasks are timed to monitor their efficiency.
 
-Additionally, all tasks are timed to monitor their efficiency.
+__Figure 1: YOLOv3 2D Bounding Boxes__
 
-__Figure 1: Caption__
+![YOLOv3 Bounding Boxes](./img/mov4.gif)
 
 ## Project Structure
 
 The directory structure tree for the project appears in Figure 2. In particular:
 
 - `src` includes main file `FinalProject_Camera.cpp` (executable: `3D_object_tracking`) and `camFusion_Student.cpp`, which contains the logic for 3D object tracking and TTC computation;
-- `dat` holds pre-trained YOLOv3 config files, weights, and COCO class names;
+- `dat` holds pre-trained YOLOv3 config files, weights, and COCO dataset class names;
 - `images` has input camera frames and LiDAR point cloud binaries;
-- `analysis` contains a spreadsheet with output statistics on LiDAR and camera-based TTC combinations.
+- `analysis` contains a spreadsheet with output statistics on LiDAR and camera-based TTC combinations (FP.5, FP.6).
 
 __Figure 2: Directory Structure Tree__
 
@@ -62,7 +62,7 @@ __Figure 2: Directory Structure Tree__
 
 ### Options
 
-Options can be set from within an `Options` struct in the main file.
+Options can be set from within the `Options` struct in the main file.
 
 <table>
     <thead>
@@ -81,7 +81,7 @@ Options can be set from within an `Options` struct in the main file.
             <td><code>true</code> for more accurate YOLOv3 blob size $(448 \times 448)$, <code>false</code> for default $(416 \times 416)$* [3]</td>
         </tr>
         <tr>
-            <td rowspan=7><b>Visualisation and output options</b></td>
+            <td rowspan=8><b>Visualisation and output options</b></td>
             <td><code>bVisYoloBoundingBoxes</code></td>
             <td><code>false</code></td>
             <td><code>true</code> to show YOLOv3 bounding boxes, COCO names, and confidence levels for each frame</td>
@@ -105,6 +105,11 @@ Options can be set from within an `Options` struct in the main file.
             <td><code>bVisKeypointsOverlay</code></td>
             <td><code>true</code></td>
             <td><code>true</code> to additionally superimpose keypoints on preceding vehicle bounding box</td>
+        </tr>
+        <tr>
+            <td><code>bSaveYoloBBFrames</code></td>
+            <td><code>false</code></td>
+            <td><code>true</code> to write YOLOv3 bounding box frames inside the current working directory (if <code>bVisYoloBoundingBoxes = true</code>)</td>
         </tr>
         <tr>
             <td><code>bSaveLidarTopView</code></td>
