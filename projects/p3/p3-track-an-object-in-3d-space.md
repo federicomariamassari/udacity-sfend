@@ -210,13 +210,7 @@ The main reference for camera-based time-to-collision computation is the solutio
 
 LiDAR TTC estimates are generally stable, decreasing smoothly over time (especially in later frames) as ego vehicle approaches the car in front. There are, however, some exceptions, largely due to the simplistic nature of the Constant Velocity Model (CVM) adopted.
 
-__Median values are too close.__ Small variations in the denominator $\tilde{x} _{\text{prev}} - \tilde{x} _{\text{curr}}$ can cause large swings in TTC estimates, especially so as the difference between the two medians (which are close to each other by construction) approaches 0. Ironically, less robust statistics like the mean (which is heavily affected by outliers) would lead to more stable TTC values under CVM, in these cases. Take, for example, frames 3-4.
-
-| Image Pair | $\tilde{x}_ {\text{prev}}$ | $\tilde{x}_{\text{curr}}$ | Difference | LiDAR TTC |
-|:----------:| --------------------------:| -------------------------:| ----------:| ---:|
-| 1-2 | 8.009 | 7.945 | 0.064 | 12.414130 |
-| 2-3 | 7.945 | 7.889 | 0.056 | 14.087441 |
-| 3-4 | 7.889 | 7.842 | 0.047 | 16.685131 |
+__Median values are too close.__ Small variations in the denominator $\tilde{x} _{\text{prev}} - \tilde{x} _{\text{curr}}$ can cause large swings in TTC estimates, especially so as the difference between the two medians (which are close to each other by construction) approaches 0. Ironically, less robust statistics like the mean (which is heavily affected by outliers) would lead to more stable TTC values under CVM, in these cases. For instance, take image pairs 1-2 and 3-4 (with outliers removed using Tukey's fences). $\tilde{x}_1$ = 8.009 and $\tilde{x}_2$ = 7.945, so $\tilde{x}_1 - \tilde{x}_2$ = 0.064 and TTC = 12.41 seconds. However, $\tilde{x}_3$ = 7.889 and $\tilde{x}_4$ = 7.842, so $\tilde{x}_3 - \tilde{x}_4$ = 0.047 and TTC = 16.69 seconds. Hence, a reduction in the denominator of less than 0.02 causes a spike in TTC of more than 4 seconds.
 
 <table>
   <tr>
