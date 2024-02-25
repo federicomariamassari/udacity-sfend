@@ -186,7 +186,7 @@ An alternative option, which also considers dimensions $y$ and $z$ in the outlie
 
 A visual comparison of the two algorithms is given in Figure 4 (white points do not enter the TTC calculation).
 
-__Figure 4. LiDAR Outlier Detection__
+__Figure 4. LiDAR Outlier Detection by Algorithm__
 <table>
   <tr>
   <td align="center"><b>Figure 4.A</b>: Tukey's fences</td>
@@ -228,7 +228,7 @@ __Figure 5: LiDAR Top-View Perspectives__
   </tr>
 </table>
 
-__Vehicles are still.__ At the extreme, when both ego and the preceding vehicle are stationary, TTC estimates swing dramatically between large positive and large negative values based on negligible and almost random variations in the median values for both query and train frames. Large positive values makes sense: if both vehicles are still, the impact would never occur (in other words, TTC is infinite). Negative ones, however, do not. Figure 6 clearly displays this oscillating behaviour. `bExtraAccuracy = true` to avoid spurious bounding boxes.
+__Vehicles are still.__ At the extreme, when both ego and the preceding vehicle are stationary, TTC estimates swing dramatically between large positive and large negative values based on negligible and almost random variations in the median values for both query and train frames. Large positive values makes sense: if both vehicles are still, the impact would never occur (in other words, TTC is infinite). Negative ones, however, do not. Figure 6 clearly displays this oscillating behaviour. `bExtraAccuracy = true` to avoid spurious bounding boxes. The green dots, which do not belong to the vehicle in front, are filtered out from TTC calculation.
 
 __Figure 6: Erratic TTC behaviour when vehicle is still__
 ![LiDAR TTC vehicle still](./img/mov6.gif)
