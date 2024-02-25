@@ -214,8 +214,8 @@ __Median values are too close.__ Small variations in the denominator $\tilde{x} 
 
 <table>
   <tr>
-  <td align="center"><b>Figure 5.A</b>: Frame 3</td>
-  <td align="center"><b>Figure 5.B</b>: Frame 4</td>
+  <td align="center"><b>Figure 5.A</b>: Frame 0</td>
+  <td align="center"><b>Figure 5.B</b>: Frame 10</td>
   <tr>
   </tr>
   <tr>
