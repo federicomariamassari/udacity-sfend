@@ -186,6 +186,7 @@ An alternative option, which also considers dimensions $y$ and $z$ in the outlie
 
 A visual comparison of the two algorithms is given in Figure 4 (white points do not enter the TTC calculation).
 
+__Figure 4. LiDAR Outlier Detection__
 <table>
   <tr>
   <td align="center"><b>Figure 4.A</b>: Tukey's fences</td>
@@ -212,7 +213,7 @@ LiDAR TTC estimates are generally stable, decreasing smoothly over time (especia
 
 __Median values are too close.__ Small variations in the denominator $\tilde{x} _{\text{prev}} - \tilde{x} _{\text{curr}}$ can cause large swings in TTC estimates, especially when the difference between the two medians (which are close to each other by construction) approaches 0. Ironically, less robust statistics like the mean, which is heavily affected by outliers, would lead to more stable TTC values under CVM in these cases. Take, for instance, image pairs 1-2 and 3-4 (with outliers removed using Tukey's fences). $\tilde{x}_1$ = 8.009 and $\tilde{x}_2$ = 7.945, so $\tilde{x}_1 - \tilde{x}_2$ = 0.064 and TTC = 12.41 seconds. However, $\tilde{x}_3$ = 7.889 and $\tilde{x}_4$ = 7.842, so $\tilde{x}_3 - \tilde{x}_4$ = 0.047 and TTC = 16.69 seconds. Hence, a reduction in the denominator of less than 0.02 causes a spike in TTC of more than 4 seconds. I could think of two ways to mitigate the problem. One is to decrease the sampling frequency, setting for example `imgStepWidth = 4` (2.5 Hz), which would remove some noise due to nearly identical observations. Another one is to fine-tune the Euclidean Clustering algorithm to filter out possible outliers along the $y$ and $z$ dimensions as well, so as to make the median values less similar. For example, with `knn = 4` and `radius = 0.3`, $\tilde{x}_3$ = 7.890 and $\tilde{x}_4$ = 7.842, so $\tilde{x}_3 - \tilde{x}_4$ = 0.048 and TTC = 16.34 seconds.
 
-It is also possible to ballpark estimate the TTC by looking at the LiDAR top-view perspectives across subsequent frames. Figure 5 considers a time span of 1 second (10 Hz) between frame 0 (5.A) and frame 10 (5.B). Each blue line, starting from the bottom, represents a 2-meter mark, so that in frame 0 the tailgate of the preceding vehicle is at ~8 meters from ego, while in the frame 10 it is at ~7 meters and 40 cm. At current speed, distance would decrease by 6 meters every 10 seconds, so that the point of impact would occur approximately between 12 and 13 seconds, making any TTC value above 16 seconds implausible.
+It is also possible to ballpark estimate the TTC by looking at the LiDAR top-view perspectives across subsequent frames. Figure 5 considers a time span of 1 second (10 Hz) between frame 0 (5.A) and frame 10 (5.B). Each blue line, starting from the bottom, represents a 2-meter mark, so that in frame 0 the tailgate of the preceding vehicle is at ~8 meters from ego, while in the frame 10 it is at ~7 meters and 40 cm. At current speed, distance would decrease by 6 meters every 10 seconds, so that the point of impact would occur approximately between 12 and 14 seconds, making any TTC value above 16 seconds implausible.
 
 __Figure 5: LiDAR Top-View Perspectives__
 <table>
@@ -227,8 +228,9 @@ __Figure 5: LiDAR Top-View Perspectives__
   </tr>
 </table>
 
-__Vehicles are still.__ At the extreme, when both ego and the preceding vehicle are not moving, TTC estimates swing dramatically between large positive and large negative values, based on negligible and almost random variations in the median values for the query and the train frames. Intuitively, this behaviour makes sense: if both vehicles are still, the impact would never occur (in other words, TTC is infinite).
+__Vehicles are still.__ At the extreme, when both ego and the preceding vehicle are stationary, TTC estimates swing dramatically between large positive and large negative values based on negligible and almost random variations in the median values for both query and train frames. Large positive values makes sense: if both vehicles are still, the impact would never occur (in other words, TTC is infinite). Negative ones, however, do not. Figure 6 clearly displays this behaviour. `bExtraPrecision = true` to avoid spurious bounding boxes.
 
+__Figure 6: Erratic TTC behaviour when vehicle is still__
 ![LiDAR TTC vehicle still](./img/mov6.gif)
 
 ### FP.6: Performance Evaluation 2
