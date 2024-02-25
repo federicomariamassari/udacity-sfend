@@ -228,7 +228,7 @@ __Figure 5: LiDAR Top-View Perspectives__
   </tr>
 </table>
 
-__Vehicles are still.__ At the extreme, when both ego and the preceding vehicle are stationary, TTC estimates swing dramatically between large positive and large negative values based on negligible and almost random variations in the median values for both query and train frames. Large positive values makes sense: if both vehicles are still, the impact would never occur (in other words, TTC is infinite). Negative ones, however, do not. Figure 6 clearly displays this behaviour. `bExtraPrecision = true` to avoid spurious bounding boxes.
+__Vehicles are still.__ At the extreme, when both ego and the preceding vehicle are stationary, TTC estimates swing dramatically between large positive and large negative values based on negligible and almost random variations in the median values for both query and train frames. Large positive values makes sense: if both vehicles are still, the impact would never occur (in other words, TTC is infinite). Negative ones, however, do not. Figure 6 clearly displays this oscillating behaviour. `bExtraAccuracy = true` to avoid spurious bounding boxes.
 
 __Figure 6: Erratic TTC behaviour when vehicle is still__
 ![LiDAR TTC vehicle still](./img/mov6.gif)
