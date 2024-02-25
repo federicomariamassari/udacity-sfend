@@ -233,6 +233,11 @@ __Vehicles are still.__ At the extreme, when both ego and the preceding vehicle 
 __Figure 6: Erratic TTC behaviour when vehicle is still__
 ![LiDAR TTC vehicle still](./img/mov6.gif)
 
+__LiDAR points number varies across frames.__
+
+__Figure 7: Variable number of points across frames__
+![Uneven number of points](./img/mov7.gif)
+
 ### FP.6: Performance Evaluation 2
 
 To determine the best detector-descriptor pair for the camera-based time-to-collision, I rely on three criteria:
