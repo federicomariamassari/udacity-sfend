@@ -233,7 +233,7 @@ __Vehicles are still.__ At the extreme, when both ego and the preceding vehicle 
 __Figure 6: Erratic TTC behaviour when vehicle is still__
 ![LiDAR TTC vehicle still](./img/mov6.gif)
 
-__Size and shape of the points' distribution varies across frames.__ Median values and TTC estimates can also be affected by the varying sample size and shape (skewness, excess kurtosis) of the distribution of LiDAR points across frames. This behaviour is apparent in frames 10-12. Sample size is post outliers filtering. Negatively (resp., positively) -skewed distributions have more points on the LHS (RHS) of the preceding vehicle [12]; distributions with negative (resp., positive) excess kurtosis are thin-tailed or platykurtic (fat-tailed, leptokurtic) [13]. From these higher-order moments, one can see the distributions of points in pictures 10-11 are closer in shape than those of frames 11-12, so the median difference of the former is smaller and TTC larger [Figure 7].
+__Size and shape of the points' distribution varies across frames.__ Median values and TTC estimates can also be affected by the varying sample size and shape (skewness, excess kurtosis) of the distribution of LiDAR points across frames. This behaviour is apparent in frames 10-12. Sample size is post outliers filtering. Negatively (resp., positively) -skewed distributions have more points on the LHS (RHS) of the preceding vehicle [12]; distributions with negative (resp., positive) excess kurtosis are thin-tailed or platykurtic (fat-tailed, leptokurtic) [13]. From these higher-order moments, one can see the distributions of points in pictures 10-11 are closer in shape than those in frames 11-12, so the median difference of the former is smaller and TTC larger [Figure 7].
 
 | Frame | Sample size | Median (x-coordinate) | Median difference | TTC | Skewness | Excess kurtosis | Points distribution |
 |------:|------------:|----------------------:|------------------:|----:|---------:|----------------:|:--------------------|
@@ -241,11 +241,12 @@ __Size and shape of the points' distribution varies across frames.__ Median valu
 | 11 | 283 | 7.426 | 0.06 | 12.376679 | -0.343114 | -0.242634 | Negatively-skewed, platykurtic |
 | 12 | 293 | 7.346 | 0.08 | 9.182509 | 0.360459 | -0.17982 | Positively-skewed, platykurtic |
 
-__Figure 7: Points distribution and TTC (frames 10-12)__
+__Figure 7: Points distribution and TTC (Frames 10-12)__
 ![Uneven number of points](./img/mov7.gif)
 
-__Spurious bounding boxes.__ 
+__Spurious bounding boxes.__ Keeping the default YOLOv3 blob size $(416 \times 416)$ for images 48-77 introduces an extra bounding box in each frame which severely distorts TTC calculations [Figure 8] [3]. Slightly increasing the size to $(448 \times 448)$ solves the problem. Interestingly, choosing larger values like $(608 \times 608)$ reintroduces the issue, maybe because the larger bounding box also becomes more accurate.
 
+__Figure 8: Extra bounding boxes with blob size 416 x 416 (Frame 48)__
 ![Spurious bounding boxes](./img/mov8.gif)
 
 ### FP.6: Performance Evaluation 2
