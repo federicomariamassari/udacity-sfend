@@ -228,15 +228,25 @@ __Figure 5: LiDAR Top-View Perspectives__
   </tr>
 </table>
 
-__Vehicles are still.__ At the extreme, when both ego and the preceding vehicle are stationary, TTC estimates swing dramatically between large positive and large negative values based on negligible and almost random variations in the median values for both query and train frames. Large positive values makes sense: if both vehicles are still, the impact would never occur (in other words, TTC is infinite). Negative ones, however, do not. Figure 6 clearly displays this oscillating behaviour. `bExtraAccuracy = true` to avoid spurious bounding boxes. The green dots, which do not belong to the vehicle in front, are filtered out from TTC calculation.
+__Vehicles are still.__ At the extreme, when both ego and the preceding vehicle are stationary, TTC estimates swing dramatically between large positive and large negative values based on negligible and almost random variations in the median values for both query and train frames. Large positive values make sense: if both vehicles are still, the impact would never occur (in other words, TTC is infinite). Negative ones, however, do not. Figure 6 clearly displays this oscillating behaviour. `bExtraAccuracy = true` to avoid spurious bounding boxes. The green dots, which do not belong to the vehicle in front, are filtered out from TTC calculation.
 
 __Figure 6: Erratic TTC behaviour when vehicle is still__
 ![LiDAR TTC vehicle still](./img/mov6.gif)
 
-__LiDAR points number varies across frames.__
+__Size and shape of the points' distribution varies across frames.__ Median values and TTC estimates can also be affected by the varying sample size and shape (skewness, excess kurtosis) of the distribution of LiDAR points across frames. This behaviour is apparent in frames 10-12. Sample size is post outliers filtering. Negatively (resp., positively) -skewed distributions have more points on the LHS (RHS) of the preceding vehicle [12]; distributions with negative (resp., positive) excess kurtosis are thin-tailed or platykurtic (fat-tailed, leptokurtic) [13]. From these higher-order moments, one can see the distributions of points in pictures 10-11 are closer in shape than those of frames 11-12, so the median difference of the former is smaller and TTC larger [Figure 7].
 
-__Figure 7: Variable number of points across frames__
+| Frame | Sample size | Median (x-coordinate) | Median difference | TTC | Skewness | Excess kurtosis | Points distribution |
+|------:|------------:|----------------------:|------------------:|----:|---------:|----------------:|:--------------------|
+| 10 | 266 | 7.486 | - | - | 0.0979933 | -0.265167 | Positively-skewed, platykurtic |
+| 11 | 283 | 7.426 | 0.06 | 12.376679 | -0.343114 | -0.242634 | Negatively-skewed, platykurtic |
+| 12 | 293 | 7.346 | 0.08 | 9.182509 | 0.360459 | -0.17982 | Positively-skewed, platykurtic |
+
+__Figure 7: Points distribution and TTC (frames 10-12)__
 ![Uneven number of points](./img/mov7.gif)
+
+__Spurious bounding boxes.__ 
+
+![Spurious bounding boxes](./img/mov8.gif)
 
 ### FP.6: Performance Evaluation 2
 
@@ -264,5 +274,7 @@ __Figure 5: Camera-based Time-to-Collision vs LiDAR ground truth proxy__
 9. https://knowledge.udacity.com/questions/624666
 10. Lesson 3: Estimate TTC with a Camera, Engineering a Collision Detection System, Udacity Sensor Fusion Nanodegree
 11. https://knowledge.udacity.com/questions/668076
+12. https://en.wikipedia.org/wiki/Skewness
+13. https://en.wikipedia.org/wiki/Kurtosis
 
 [Home](../../README.md) | Previous: [Camera-Based 2D Feature Tracking](../p2/p2-camera-based-2d-feature-tracking.md) | Next: 
