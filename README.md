@@ -83,6 +83,10 @@ Set both `bCompareDetectors` and `bCompareDescriptors` to `false` to visualize m
 
 ### Overview
 
+_Fuse LiDAR and camera data to compute a robust time-to-collision estimate._
+
+In part 2 of the camera course, I integrate data from LiDAR and camera sensors to provide an estimate of time-to-collision (TTC) with a vehicle in front, in the context of a Collision Detection System (CDS). After classifying the objects on the road using deep learning framework YOLOv3, I identify the LiDAR points and keypoint matches that fall within the region of interest (ROI) of the 2D bounding box enclosing the preceding car, and use these to compute reliable estimates of TTC for both sensors.
+
 __[Link to code](projects/p3/src)__ | [Starter Code from Udacity](https://github.com/udacity/SFND_3D_Object_Tracking)
 
 ![SIFT Time-to-Collision](./projects/p3/img/mov1.gif)
