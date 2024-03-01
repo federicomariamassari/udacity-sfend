@@ -4,7 +4,7 @@
 
 ## Overview
 
-The final project of the camera course involves fusing data from LiDAR and camera sensors to reliably estimate time-to-collision (TTC) with a vehicle in front, in the context of a Collision Detection System (CDS). After detecting and classifying the objects on the road using deep-learning framework YOLOv3 (You Only Look Once) [Figure 1], I identify the LiDAR points and keypoint matches that fall inside the region of interest (ROI) of the preceding vehicle's 2D bounding box across consecutive frame pairs, and use them to compute robust TTC estimates for both LiDAR and camera [Figure 2]. All tasks are timed to monitor their efficiency.
+The final project of the camera course involves fusing data from LiDAR and camera sensors to reliably estimate time-to-collision (TTC) with a vehicle in front, in the context of a Collision Detection System (CDS). After detecting and classifying the objects on the road using deep-learning framework YOLOv3 (You Only Look Once) [Figure 1], I identify the LiDAR points and keypoint matches that fall inside the region of interest (ROI) of the preceding vehicle's 2D bounding box across consecutive frame pairs, and use these to compute robust TTC estimates for both LiDAR and camera [Figure 2]. All tasks are timed to monitor their efficiency.
 
 __Figure 1: YOLOv3 2D Bounding Boxes__
 ![YOLOv3 Bounding Boxes](./img/mov4.gif)
@@ -147,7 +147,7 @@ Options can be set from within the `Options` struct in the main file.
     </tbody>
 </table>
 
-(*) Set to `true` to avoid spurious bounding boxes if `imgEndIndex` $>= 48$.
+(*) Set to `true` to avoid spurious bounding boxes if `imgEndIndex` >= 48.
 
 ## Final Report
 
@@ -175,7 +175,7 @@ This option filters out as outliers all points whose x-coordinate (measuring the
 
 #### Euclidean Clustering
 
-An alternative option, which also considers dimensions $y$ and $z$ in the outlier detection phase, is Euclidean clustering [5]. The main reference for implementation (via Point Cloud Library instead of OpenCV), is [6]. Instead of choosing the cluster with the largest number of points to compute TTC, as [5] suggests, I just remove those clusters whose size is smaller than a predefined threshold `minSize` (main options) and use the remainder. Euclidean clustering is considerably slower than Tukey's fences (~10x with default values), hence harder to justify, in the current implementation, for real-time applications. The below parameters play a role in fine-tuning the algorithm:
+An alternative option, which also considers dimensions $y$ and $z$ in the outlier detection phase, is Euclidean clustering [5]. The main reference for implementation (which used Point Cloud Library instead of OpenCV), is [6]. Instead of choosing the cluster with the largest number of points to compute TTC, as [5] suggests, I remove those clusters whose size is smaller than a predefined threshold `minSize` (main options) and use the remainder. Euclidean clustering is considerably slower than Tukey's fences (~10x with default values), hence harder to justify, in the current implementation, for real-time applications. The below parameters play a role in fine-tuning the algorithm:
 
 | Parameter  | Default value | Explanation |
 | :--------- | :------------ | :-----------|
@@ -184,7 +184,7 @@ An alternative option, which also considers dimensions $y$ and $z$ in the outlie
 | `minSize`  | 15            | Minimum cluster size. Clusters smaller than this threshold will be discarded as outliers. |
 | `maxSize`  | 600           | Maximum cluster size. Clusters larger than this threshold will also be discarded. |
 
-A visual comparison of the two algorithms is given in Figure 4 (white points do not enter the TTC calculation).
+A visual comparison of the two algorithms using `renderClusters` is given in Figure 4 (white points do not enter the TTC calculation).
 
 __Figure 4. LiDAR Outlier Detection by Algorithm__
 <table>
@@ -259,7 +259,7 @@ To determine the best detector-descriptor pair for the camera-based time-to-coll
 
 I consider all frames until the vehicle is nearly stationary (48), at which point the LiDAR TTC estimate becomes unreliable since the previous and current median values are so close to each other that their difference (at the denominator) is almost zero, leading to sudden spikes in both directions in the TTC output. `bExtraAccuracy = false` as per default. The results are available in [`p3_performance_evaluation.xls`](./analysis/p3_performance_evaluation.xls).
 
-__Figure 5: Camera-based Time-to-Collision vs LiDAR ground truth proxy__
+__Figure 9: Camera-based Time-to-Collision vs LiDAR ground truth proxy__
 <img src="./img/img1.svg" width="1000">
 
 ## Resources
