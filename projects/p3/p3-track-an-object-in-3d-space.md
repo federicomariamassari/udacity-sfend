@@ -261,14 +261,14 @@ I consider all frames until the vehicle is nearly stationary (48), at which poin
 
 Among all possible pairs, three combinations are shortlisted: SIFT-BRISK, AKAZE-AKAZE, and SHITOMASI-BRISK. If SURF is also included, then SURF-ORB.
 
-__Winner.__ Overall, the best combination appears to be SIFT-BRISK. Although quite slow (~50 ms per frame), it performs very well in terms of both criteria (1) and (3) [Figure 9]. It is true that TTC estimates swing quite widely in the first few frames, being +/- 2 seconds off, but they soon align with the ground truth proxy, leaving enough time for ego car to break, while still at a safe distance from the preceding vehicle. The assumption that the mid-to-last segment of the road is the most impactful to avoid collision depends, however, on the initial speed of ego car. If it is too high, the algorithm might be too slow to react, hence valid alternatives would be SURF-ORB (~25-30 ms), if considered, or SHITOMASI-BRISK (~12-15 ms). Both would allow to brake sooner and in a smoother way.
+__Winner.__ Overall, the best combination appears to be SIFT-BRISK. Although quite slow (~50 ms per frame), it performs very well in terms of both criteria (1) and (3) [Figure 9]. It is true that TTC estimates swing quite widely in the first few frames, being +/- 2 seconds off, but they soon align with the ground truth proxy, leaving enough time for ego car to break, when still at a safe distance from the preceding vehicle. The assumption that the mid-to-last segment of the road is the most impactful to avoid collision depends, however, on the initial speed of ego car. If it is too high, the algorithm might be too slow to react, hence valid alternatives would be SURF-ORB (~25-30 ms), which is unfortunately not in scope for this project, and SHITOMASI-BRISK (~12-15 ms). Both would allow to brake sooner and in a smoother way.
 
-__Runner-Ups.__
-
-AKAZE-AKAZE is another great combination, but it has a few shortcomings: it is the slowest among the pairs considered (~70-80 ms per frame) and it tends to overestimate time-to-collision in the mid-to-last segment, raising the chance of bumping into the vehicle in front.
+__Runner-Ups.__ AKAZE-AKAZE comes out in second place. Despite being the slowest among the pairs considered (~70-80 ms per frame, often impractical for real-time applications), it is quite stable and aligned to the LiDAR proxy throughout the early-to-middle road segment, giving ego vehicle enough time to slow down, reducing the chance of incidents. SHITOMASI-BRISK is third. By far the fastest algorithm, it nevertheless systematically overestimates TTC by ~2-3 seconds after frame 10, making it harder to stop at a safe distance from the car in front.
 
 __Figure 9: Camera-based Time-to-Collision vs LiDAR ground truth proxy__
 <img src="./img/img1.svg" width="1000">
+
+Though not in scope for this project, it is worth mentioning that SURF-ORB achieves the best balance between speed and accuracy, and should be favoured in the context of a collision detection system despite being slightly optimistic with TTC in the later frames [Figure 10].
 
 __Figure 10: SIFT-BRISK vs SURF-ORB vs LiDAR ground truth proxy__
 <img src="./img/img2.svg" width="1000">
