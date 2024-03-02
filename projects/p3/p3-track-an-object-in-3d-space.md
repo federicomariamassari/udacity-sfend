@@ -19,7 +19,7 @@ The directory structure tree for the project appears in Figure 3. In particular:
 - `src` includes main file `FinalProject_Camera.cpp` (executable: `3D_object_tracking`) and `camFusion_Student.cpp`, which contains the logic for 3D object tracking and TTC computation;
 - `dat` holds pre-trained YOLOv3 config files, weights, and COCO dataset class names;
 - `images` has input camera frames and LiDAR point cloud binaries;
-- `analysis` contains a spreadsheet with output statistics on LiDAR and camera-based TTC combinations (FP.5, FP.6).
+- `analysis` contains a spreadsheet with output statistics and charts on LiDAR and camera-based TTC combinations (FP.5, FP.6).
 
 __Figure 3: Directory Structure Tree__
 
@@ -101,7 +101,7 @@ Options can be set from within the `Options` struct in the main file.
         <tr>
             <td><code>bVisFinalOutput</code></td>
             <td><code>true</code></td>
-            <td><code>true</code> to view final output image with superimposed time-to-collision estimates</td>
+            <td><code>true</code> to view final output images with superimposed time-to-collision estimates</td>
         </tr>
         <tr>
             <td><code>bVisKeypointsOverlay</code></td>
@@ -127,7 +127,7 @@ Options can be set from within the `Options` struct in the main file.
             <td rowspan=4><b>Outlier detection and diagnostics options</b></td>
             <td><code>FilteringMethod</code></td>
             <td><code>TUKEY</code></td>
-            <td>Outlier filtering method. Either <code>TUKEY</code> for Tukey's fences [4] or <code>EUCLIDEAN_CLUSTERING</code> [6]</td>
+            <td>Outlier filtering method. Either <code>TUKEY</code> for Tukey's fences [4] or <code>EUCLIDEAN_CLUSTERING</code> for the homonymous algorithm [6]</td>
         </tr>
         <tr>
             <td><code>bLimitKpts</code></td>
@@ -155,7 +155,7 @@ Options can be set from within the `Options` struct in the main file.
 
 The main reference for this task is [1]. To match bounding box pairs, I create a map object in which, for each element, the key will be a pair of bounding box indices (associated to the previous and current frames, respectively) and the value a counter of all occurrences of such key pair among the keypoint matches. For each match, after extracting the respective feature points in both frames [2], I first loop through all the bounding boxes in the query (previous) image to check which of them contains the related point; if a correspondence is found, I then run through all bounding boxes in the train (current) image to find the ones which also include the associated point. For those pairs where both conditions are met, the counter is incremented. The default overlap threshold value of 0.4 for the YOLOv3 non-maxima suppression algorithm does not guarantee a keypoint is contained in one and only one bounding box, so I avoid early termination once a correspondence is found despite the increase in computational time.
 
-Once the map is populated, the query-train index pairs for which the counter is largest (one for each query bounding box index) are kept. Many-to-one cases in which multiple previous bounding boxes are associated to the same current one are not removed, as they do not seem to distort the analysis (for example, they are not related to cases of "spurious bounding boxes" [3] mentioned further below). The object-matching logic is found in [`matchBoundingBoxes`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p3/src/camFusion_Student.cpp#L131) and called from the [main file](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p3/src/FinalProject_Camera.cpp#L221).
+Once the map is populated, the query-train index pairs for which the counter is largest (one for each query bounding box index) are kept. Many-to-one cases in which multiple previous bounding boxes are associated to the same current one are not removed, as they do not seem to distort the analysis (for example, they are not related to cases of "spurious bounding boxes" [3] mentioned in section FP.5). The object-matching logic is found in [`matchBoundingBoxes`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p3/src/camFusion_Student.cpp#L131) and called from the [main file](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p3/src/FinalProject_Camera.cpp#L221).
 
 ### FP.2: Compute LiDAR-based TTC
 
@@ -179,7 +179,7 @@ An alternative option, which also considers dimensions $y$ and $z$ in the outlie
 
 | Parameter  | Default value | Explanation |
 | :--------- | :------------ | :-----------|
-| `knn`      | 5             | Number $k$ of neighbors to include at each radius search. Set $k > 3$ to ensure at least one new point is considered at each iteration (there will be duplicates), but not too large to avoid excessive increase in computational time. |
+| `knn`      | 5             | Number $k$ of neighbors to include at each radius search. Set $k > 3$ to ensure at least one new point is considered at each iteration (there will be duplicates), but not too large, to avoid excessive increase in computational time. |
 | `radius`   | 0.12          | Distance tolerance to query point for the neighborhood search. This value will be squared (L2-norm) [7]. |
 | `minSize`  | 15            | Minimum cluster size. Clusters smaller than this threshold will be discarded as outliers. |
 | `maxSize`  | 600           | Maximum cluster size. Clusters larger than this threshold will also be discarded. |
@@ -233,7 +233,7 @@ __Vehicles are still.__ At the extreme, when both ego and the preceding vehicle 
 __Figure 6: Erratic TTC behaviour when vehicle is still__
 ![LiDAR TTC vehicle still](./img/mov6.gif)
 
-__Size and shape of the points' distribution varies across frames.__ Median values and TTC estimates can also be affected by the varying sample size and shape (skewness, excess kurtosis) of the distribution of LiDAR points across frames. This behaviour is apparent in frames 10-12. Sample size is post outliers filtering. Negatively (resp., positively) -skewed distributions have more points on the LHS (RHS) of the preceding vehicle [12]; distributions with negative (resp., positive) excess kurtosis are thin-tailed or platykurtic (fat-tailed, leptokurtic) [13]. From these higher-order moments, one can see the distributions of points in pictures 10-11 are closer in shape than those in frames 11-12, so the median difference of the former is smaller and TTC larger [Figure 7].
+__Size and shape of the points' distribution varies across frames.__ Median values and TTC estimates can also be affected by the varying sample size and shape (skewness, excess kurtosis) of the distribution of LiDAR points across frames. This behaviour is apparent in frames 10-12. Sample size is post outlier filtering. Negatively (resp., positively) -skewed distributions have more points on the LHS (RHS) of the preceding vehicle [12]; distributions with negative (resp., positive) excess kurtosis are thin-tailed or platykurtic (fat-tailed, leptokurtic) [13]. From these higher-order moments, one can see the distributions of points in pictures 10-11 are closer in shape than those in frames 11-12, so the median difference of the former is smaller and TTC larger [Figure 7].
 
 | Frame | Sample size | Median (x-coordinate) | Median difference | TTC | Skewness | Excess kurtosis | Points distribution |
 |------:|------------:|----------------------:|------------------:|----:|---------:|----------------:|:--------------------|
@@ -261,7 +261,7 @@ I consider all frames until the vehicle is nearly stationary (48), at which poin
 
 Among all possible pairs, three combinations are shortlisted: SIFT-BRISK, AKAZE-AKAZE, and SHITOMASI-BRISK. If SURF is also included, then SURF-ORB.
 
-__Winner.__ Overall, the best combination appears to be SIFT-BRISK. Although quite slow (~50 ms per frame), it performs very well in terms of both criteria (1) and (3) [Figure 9]. It is true that TTC estimates swing quite widely in the first few frames, being +/- 2 seconds off, but they soon align with the ground truth proxy, leaving enough time for ego car to break, when still at a safe distance from the preceding vehicle. The assumption that the mid-to-last segment of the road is the most impactful to avoid collision depends, however, on the initial speed of ego car. If it is too high, the algorithm might be too slow to react, hence valid alternatives would be SURF-ORB (~25-30 ms), which is unfortunately not in scope for this project, and SHITOMASI-BRISK (~12-15 ms). Both would allow to brake sooner and in a smoother way.
+__Winner.__ Overall, the best combination appears to be SIFT-BRISK. Although quite slow (~50 ms per frame), it performs very well in terms of both criteria (1) and (3) [Figure 9]. It is true that TTC estimates swing quite widely in the first few frames, being +/- 2 seconds off, but they soon align with the ground truth proxy, leaving enough time for ego car to break, when still at a safe distance from the preceding vehicle. The assumption that the mid-to-last segment of the road is the most impactful to avoid collision depends, however, on the initial speed of ego car. If it is too high, the algorithm might be too slow to react, hence valid alternatives would be SURF-ORB (~25-30 ms), which is unfortunately not part of this project, and SHITOMASI-BRISK (~12-15 ms). Both would allow to brake sooner and in a smoother way.
 
 __Runner-Ups.__ AKAZE-AKAZE comes out in second place. Despite being the slowest among the pairs considered (~70-80 ms per frame, often impractical for real-time applications), it is quite stable and aligned to the LiDAR proxy throughout the early-to-middle road segment, giving ego vehicle enough time to slow down, reducing the chance of incidents. SHITOMASI-BRISK is third. By far the fastest algorithm, it nevertheless systematically overestimates TTC by ~2-3 seconds after frame 10, making it harder to stop at a safe distance from the car in front.
 
