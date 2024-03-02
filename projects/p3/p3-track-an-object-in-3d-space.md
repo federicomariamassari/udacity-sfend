@@ -273,6 +273,12 @@ Though not in scope for this project, it is worth mentioning that SURF-ORB achie
 __Figure 10: SIFT-BRISK vs SURF-ORB vs LiDAR ground truth proxy__
 <img src="./img/img2.svg" width="1000">
 
+Camera-based TTC estimates have drawbacks as well, some related to the simplistic nature of the constant velocity model, some others linked to the specific detector-descriptor combination chosen.
+
+__Missing or invalid estimates.__
+
+__Keypoints not on the preceding vehicle.__
+
 ## Resources
 
 1. https://knowledge.udacity.com/questions/570553
