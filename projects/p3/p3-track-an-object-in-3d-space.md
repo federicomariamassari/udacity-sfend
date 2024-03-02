@@ -246,7 +246,7 @@ __Figure 7: Points distribution and TTC (Frames 10-12)__
 
 __Spurious bounding boxes.__ Keeping the default YOLOv3 blob size $(416 \times 416)$ for images 48-77 introduces an extra bounding box in each frame which severely distorts TTC calculations [Figure 8] [3]. Slightly increasing the size to $(448 \times 448)$ solves the problem. Interestingly, choosing larger values like $(608 \times 608)$ reintroduces the issue, maybe because the larger bounding box also becomes more accurate.
 
-__Figure 8: Extra bounding boxes with blob size 416 x 416 (Frame 48)__
+__Figure 8: Extra bounding box with blob size 416 x 416 (Frame 48)__
 ![Spurious bounding boxes](./img/mov8.gif)
 
 ### FP.6: Performance Evaluation 2
@@ -259,14 +259,19 @@ To determine the best detector-descriptor pair for the camera-based time-to-coll
 
 I consider all frames until the vehicle is nearly stationary (48), at which point the LiDAR TTC estimate becomes unreliable since the previous and current median values are so close to each other that their difference (at the denominator) is almost zero, leading to sudden spikes in both directions in the TTC output. `bExtraAccuracy = false` as per default. The results are available in [`p3_performance_evaluation.xls`](./analysis/p3_performance_evaluation.xls).
 
-Among all possible pairs, three combinations are shortlisted: SIFT-BRISK, AKAZE-AKAZE, and SHITOMASI-BRISK [Figure 9]. If SURF is also included, then SURF-ORB.
+Among all possible pairs, three combinations are shortlisted: SIFT-BRISK, AKAZE-AKAZE, and SHITOMASI-BRISK. If SURF is also included, then SURF-ORB.
 
 __Winner.__ Overall, the best combination appears to be SIFT-BRISK. Although quite slow (~50 ms per frame), it performs very well in terms of both criteria (1) and (3) [Figure 9]. It is true that TTC estimates swing quite widely in the first few frames, being +/- 2 seconds off, but they soon align with the ground truth proxy, leaving enough time for ego car to break, while still at a safe distance from the preceding vehicle. The assumption that the mid-to-last segment of the road is the most impactful to avoid collision depends, however, on the initial speed of ego car. If it is too high, the algorithm might be too slow to react, hence valid alternatives would be SURF-ORB (~25-30 ms), if considered, or SHITOMASI-BRISK (~12-15 ms). Both would allow to brake sooner and in a smoother way.
 
 __Runner-Ups.__
 
+AKAZE-AKAZE is another great combination, but it has a few shortcomings: it is the slowest among the pairs considered (~70-80 ms per frame) and it tends to overestimate time-to-collision in the mid-to-last segment, raising the chance of bumping into the vehicle in front.
+
 __Figure 9: Camera-based Time-to-Collision vs LiDAR ground truth proxy__
 <img src="./img/img1.svg" width="1000">
+
+__Figure 10: SIFT-BRISK vs SURF-ORB vs LiDAR ground truth proxy__
+<img src="./img/img2.svg" width="1000">
 
 ## Resources
 
