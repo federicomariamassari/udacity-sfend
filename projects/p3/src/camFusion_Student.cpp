@@ -208,47 +208,68 @@ double percentile(const vector<double>& vec, const float q)
   {
     if (vecSize % 2 == 1)
       return vec[vecSize * q];
-
     else
       return 0.5 * (vec[vecSize * q - 1] + vec[vecSize * q]);
   }
 
   double index = (vecSize - 1) * q;
-
   return vec[floor(index)] + (index - floor(index)) * (vec[ceil(index)] - vec[floor(index)]);
 }
 
+// FP.2, FP.5
 double mean(const vector<double>& vec)
 {
   return accumulate(vec.begin(), vec.end(), 0.) / vec.size();
 }
 
+// FP.5
+double variance(const vector<double>& vec)
+{
+  double mu = mean(vec);
+
+  return accumulate(vec.begin(), vec.end(), 0., 
+    [mu](double sum, const double x) { return sum + pow(x - mu, 2); }) / (vec.size() - 1);
+}
+
+// FP.5
+double skewness(const vector<double>& vec)
+{
+  double mu = mean(vec);
+
+  double numerator = accumulate(vec.begin(), vec.end(), 0., 
+    [mu](double sum, const double x) { return sum + pow(x - mu, 3); }) / vec.size();
+
+  double denominator = pow(variance(vec), 1.5);
+
+  return numerator / denominator;
+}
+
+// FP.5
+double excess_kurtosis(const vector<double>& vec)
+{
+  double mu = mean(vec);
+
+  double numerator = accumulate(vec.begin(), vec.end(), 0., 
+    [mu](double sum, const double x) { return sum + pow(x - mu, 4); }) / vec.size();
+
+  double denominator = pow(variance(vec), 2);
+
+  return numerator / denominator - 3;  // As 3 is the kurtosis of the symmetric Gaussian distribution
+}
+
 // FP.2
-void renderClusters(const vector<LidarPoint>& src, const vector<set<int>>& clusters, const vector<set<int>>& removed,
- bool bShowRemoved)
+void renderClusters(const vector<vector<LidarPoint>>& clusters, const vector<vector<LidarPoint>>& removed, 
+  bool bShowRemoved)
 {
   cv::viz::Viz3d window("Filtered LiDAR point cloud");
   window.setBackgroundColor(cv::viz::Color::black());
-
-  set<int> removedIds;
-
-  if (bShowRemoved)
-  {
-    for (int i = 0; i < src.size(); ++i)
-      removedIds.insert(i);
-  }
 
   for (size_t i = 0; i < clusters.size(); ++i)
   {
     vector<cv::Point3f> points;
 
-    for (int id : clusters[i])
-    {  
-      points.push_back(cv::Point3f(src[id].x, src[id].y, src[id].z));
-
-      if (bShowRemoved)
-        removedIds.erase(id);  // Pop ids of kept point to only preserve removed ones
-    }
+    for (const auto& point : clusters[i])
+      points.push_back(cv::Point3f(point.x, point.y, point.z));
 
     cv::viz::WCloud cloud(points);
     cloud.setRenderingProperty(cv::viz::POINT_SIZE, 6.0);
@@ -260,10 +281,10 @@ void renderClusters(const vector<LidarPoint>& src, const vector<set<int>>& clust
       color = cv::viz::Color::red();  // [1]
     
     else if (i % 3 == 1)
-        color = cv::viz::Color::blue();
+      color = cv::viz::Color::blue();
     
     else
-        color = cv::viz::Color::green();
+      color = cv::viz::Color::green();
 
     cloud.setColor(color);
 
@@ -271,91 +292,40 @@ void renderClusters(const vector<LidarPoint>& src, const vector<set<int>>& clust
     window.showWidget(cloudName, cloud);
   }
 
-  if (bShowRemoved)  // Removed clusters will be colorless
+  if (bShowRemoved)  // Removed clusters will be colorless  
   {
-    vector<cv::Point3f> removed;
+    vector<cv::Point3f> discarded;
 
-    for (int id : removedIds)
-      removed.push_back(cv::Point3f(src[id].x, src[id].y, src[id].z));
+    for (size_t i = 0; i < removed.size(); ++i)
+    {
+      for (const auto& point : removed[i])
+        discarded.push_back(cv::Point3f(point.x, point.y, point.z));
+    }
 
-    cv::viz::WCloud cloud(removed);
+    cv::viz::WCloud cloud(discarded);
     cloud.setRenderingProperty(cv::viz::POINT_SIZE, 6.0);
     cloud.setColor(cv::viz::Color::white());
     
-    window.showWidget("removed", cloud);
+    window.showWidget("discarded", cloud);
   }
 
   window.spin();  // Trigger event loop
 }
 
-// FP.2: Print Euclidean clustering statistics
-void printStatistics(const vector<LidarPoint>& src, const vector<set<int>>& clusters, const vector<set<int>>& removed,
-  float radius, int minSize, int maxSize)
-{
-  cout << "Source: " << src.size() << " points" << endl;
-  cout << endl;
-
-  cout << "Filtering method: Euclidean clustering" << endl;
-  cout << "Radius: " << radius << " (sq.: " << radius*radius << ")" << endl;
-  cout << endl;
-
-  cout << "Min cluster size: " << right << setw(4) << minSize << endl;
-  cout << "Max cluster size: " << right << setw(4) << maxSize << endl;
-  cout << endl;
-
-  int pointsKept = 0, pointsRemoved = 0;
-
-  for (auto& cluster : clusters)
-  {
-    cout << left << setw(25) << "Found cluster of size: " << right << setw(4) << cluster.size() << endl;
-    pointsKept += cluster.size();
-  }
-
-  cout << string(30, '-') << endl;
-  cout << left << setw(25) << "Total points kept: " << right << setw(4) << pointsKept << endl;
-  cout << endl;
-
-  for (auto& cluster : removed)
-  {
-    cout << left << setw(25) << "Removed cluster of size: " << right << setw(4) << cluster.size() << endl;
-    pointsRemoved += cluster.size();
-  }
-
-  cout << string(30, '-') << endl;
-  cout << left << setw(25) << "Total points removed: " << right << setw(4) << pointsRemoved << endl;
-  cout << endl;
-}
-
-// FP.5, FP.6: Print time-to-collision summary statistics
-void printStatistics(const int imgStartIndex, const vector<vector<double>>& ttcStats)
-{
-  cout << string(40, '*') << endl;
-  cout << right << setw(10) << "IMAGE PAIR" << right << setw(15) << "LIDAR TTC" << right << setw(15) 
-    << "CAMERA TTC" << endl;
-  cout << string(40, '*') << endl;
-
-  int index = (imgStartIndex);
-  for (size_t i = 0; i < ttcStats.size(); ++i)
-  {
-    cout << right << setw(10) << to_string(index) + "-" + to_string(++index) << right << setw(15) << ttcStats[i][0] 
-      << right << setw(15) << ttcStats[i][1] << endl;
-  }
-}
-
 // FP.2
 template<typename T>
-void clusterHelper(int index, const cv::Mat& cloud, set<int>& cluster, vector<bool>& processed,
-  cv::flann::GenericIndex<T>& tree, float radius, int knn, int minSize, int maxSize)
+void clusterHelper(int index, const vector<LidarPoint>& src, const cv::Mat& srcMat, vector<LidarPoint>& cluster, 
+  vector<bool>& processed, cv::flann::GenericIndex<T>& tree, float radius, int knn, int minSize, int maxSize)
 {
   processed[index] = true;
-  cluster.insert(index);
-  
+  cluster.push_back(src[index]);
+
   // Will contain (sorted) ids and distances of points close enough to query point, -1 elsewhere
   cv::Mat nearest (1, knn, cv::DataType<int>::type, cv::Scalar::all(-1));
   cv::Mat distances (1, knn, cv::DataType<float>::type, cv::Scalar::all(-1));
 
   // Square radius as we are using L2-norm [4]; for cvflann::SearchParams see [5]
-  tree.radiusSearch(cloud.row(index), nearest, distances, radius*radius, cvflann::SearchParams());
+  tree.radiusSearch(srcMat.row(index), nearest, distances, radius*radius, cvflann::SearchParams());
 
   for (size_t j = 0; j < nearest.cols; ++j)
   {
@@ -367,13 +337,13 @@ void clusterHelper(int index, const cv::Mat& cloud, set<int>& cluster, vector<bo
     if (!processed[id])
 
       // Insert all points close enough to query point into the cluster
-      clusterHelper(id, cloud, cluster, processed, tree, radius, knn, minSize, maxSize);
+      clusterHelper(id, src, srcMat, cluster, processed, tree, radius, knn, minSize, maxSize);
   }
 }
 
 // FP.2
-void euclideanClustering(const vector<LidarPoint>& src, vector<set<int>>& clusters, vector<set<int>>& removed,
-  float radius, int knn, int minSize, int maxSize)
+void euclideanClustering(const vector<LidarPoint>& src, vector<vector<LidarPoint>>& clusters, 
+  vector<vector<LidarPoint>>& removed, float radius, int knn, int minSize, int maxSize)
 {
   // Convert src to matrix for nearest neighbor search [2]. Downcast to float for faster processing with minimal 
   // change in output, if any
@@ -397,9 +367,9 @@ void euclideanClustering(const vector<LidarPoint>& src, vector<set<int>>& cluste
     if (processed[i])  // Skip
       continue;
 
-    set<int> cluster;
+    vector<LidarPoint> cluster;
 
-    clusterHelper(i, srcMat, cluster, processed, kdtree, radius, knn, minSize, maxSize);
+    clusterHelper(i, src, srcMat, cluster, processed, kdtree, radius, knn, minSize, maxSize);
 
     if (cluster.size() >= minSize && cluster.size() <= maxSize)
       clusters.push_back(cluster);
@@ -411,7 +381,7 @@ void euclideanClustering(const vector<LidarPoint>& src, vector<set<int>>& cluste
 
 // FP.2
 void removeOutliers(vector<LidarPoint>& src, vector<LidarPoint>& dst, FilteringMethod method, float radius, int knn,
-  int minSize, int maxSize, bool bRenderClusters, bool bShowRemoved)
+  int minSize, int maxSize, bool bRenderClusters, bool bShowRemoved, bool bPrintStats)
 {
   switch (method)
   {
@@ -433,11 +403,35 @@ void removeOutliers(vector<LidarPoint>& src, vector<LidarPoint>& dst, FilteringM
       double lowerBound = q1 - 1.5 * IQR;
       double upperBound = q3 + 1.5 * IQR;
 
+      vector<LidarPoint> removed;
+
       for (const auto& point : src)
       {
         // Only keep points inside Tukey's fences
         if (point.x >= lowerBound && point.x <= upperBound)
           dst.push_back(point);
+
+        else
+          removed.push_back(point);
+      }
+
+      if (bPrintStats)
+      {
+        printFilteringStats(src, dst, removed, lowerBound, upperBound);
+
+        vector<double> dst_x (dst.size(), 0.);
+        for (size_t i = 0; i < dst.size(); ++i)
+          dst_x[i] = dst[i].x;
+
+        printDistributionStats(dst_x);
+      }
+      
+      if (bRenderClusters)
+      {
+        vector<vector<LidarPoint>> kept { dst };
+        vector<vector<LidarPoint>> discarded { removed };
+
+        renderClusters(kept, discarded, bShowRemoved);
       }
 
       break;
@@ -445,22 +439,31 @@ void removeOutliers(vector<LidarPoint>& src, vector<LidarPoint>& dst, FilteringM
 
     case FilteringMethod::EUCLIDEAN_CLUSTERING:  // [2]
     {
-      vector<set<int>> clusters, removed;
+      vector<vector<LidarPoint>> clusters, removed;
 
       euclideanClustering(src, clusters, removed, radius, knn, minSize, maxSize);
 
       for (auto& cluster : clusters)
       {
-        for (int id : cluster)
-          dst.push_back(src[id]);  // Will compute time-to-collision with remaining points
+        for (const auto& point : cluster)
+          dst.push_back(point);  // Will compute time-to-collision with remaining points
       }
 
       sort(dst.begin(), dst.end(), [](const LidarPoint& p1, const LidarPoint& p2) { return p1.x < p2.x; });
 
+      if (bPrintStats)
+      { 
+        printFilteringStats(src, clusters, removed, radius, minSize, maxSize);
+
+        vector<double> dst_x (dst.size(), 0.);
+        for (size_t i = 0; i < dst.size(); ++i)
+          dst_x[i] = dst[i].x;
+
+        printDistributionStats(dst_x);
+      }
+
       if (bRenderClusters)
-        renderClusters(src, clusters, removed, bShowRemoved);
-      
-      printStatistics(src, clusters, removed, radius, minSize, maxSize);
+        renderClusters(clusters, removed, bShowRemoved);
 
       break;
     }
@@ -480,11 +483,11 @@ void computeTTCLidar(vector<LidarPoint>& lidarPointsPrev, vector<LidarPoint>& li
   // Time the outlier removal process
   auto startTime = chrono::steady_clock::now();
 
-  removeOutliers(lidarPointsPrev, filteredPrev, filteringMethod, radius, knn, minSize, maxSize, 
-    bRenderClusters, bShowRemoved);
+  removeOutliers(lidarPointsPrev, filteredPrev, filteringMethod, radius, knn, minSize, maxSize, bRenderClusters, 
+    bShowRemoved, false);
   
-  removeOutliers(lidarPointsCurr, filteredCurr, filteringMethod, radius, knn, minSize, maxSize, 
-    bRenderClusters, bShowRemoved);
+  removeOutliers(lidarPointsCurr, filteredCurr, filteringMethod, radius, knn, minSize, maxSize, bRenderClusters, 
+    bShowRemoved, true);
 
   auto endTime = chrono::steady_clock::now();
   auto elapsedTime = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
@@ -498,7 +501,7 @@ void computeTTCLidar(vector<LidarPoint>& lidarPointsPrev, vector<LidarPoint>& li
   for (size_t i = 0; i < filteredPrev.size(); ++i)
     filteredXPrev[i] = filteredPrev[i].x;
 
-    vector<double> filteredXCurr (filteredCurr.size(), 0.);
+  vector<double> filteredXCurr (filteredCurr.size(), 0.);
 
   for (size_t i = 0; i < filteredCurr.size(); ++i)
     filteredXCurr[i] = filteredCurr[i].x;
@@ -508,6 +511,8 @@ void computeTTCLidar(vector<LidarPoint>& lidarPointsPrev, vector<LidarPoint>& li
 
   // Compute stable time-to-collision assuming a constant velocity model
   TTC = medianXCurr * dT / (medianXPrev - medianXCurr);
+
+  printTTCStats(medianXPrev, medianXCurr, TTC);
 
   endTime = chrono::steady_clock::now();
   elapsedTime = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
@@ -583,6 +588,7 @@ void computeTTCCamera(vector<cv::KeyPoint>& kptsPrev, vector<cv::KeyPoint>& kpts
     // Filter out outliers or mismatches
     for (auto it2 = kptMatches.begin() + 1; it2 != kptMatches.end(); ++it2)  // Inner keypoint loop
     {
+      // To avoid ambiguous matches when keypoints are too close with too similar descriptors
       double minDistance = 100.0;  // [1]
 
       cv::KeyPoint kptInnerPrev = kptsPrev.at(it2->queryIdx);
@@ -602,6 +608,8 @@ void computeTTCCamera(vector<cv::KeyPoint>& kptsPrev, vector<cv::KeyPoint>& kpts
 
   if (distRatios.size() == 0)  // Only continue if list of distance ratios is not empty
   {
+    cerr << endl << "(!) WARNING: No usable distance ratio to compute TTC. Skipping..." << endl << endl;
+
     TTC = NAN;
     return;
   }
@@ -609,12 +617,174 @@ void computeTTCCamera(vector<cv::KeyPoint>& kptsPrev, vector<cv::KeyPoint>& kpts
   // Compute camera-based TTC from distance ratios
   sort(distRatios.begin(), distRatios.end());
 
-  double medianDistRatio = percentile(distRatios, 0.5);  // As robust to outliers
-  
+  // Apply Tukey's fences to the distance ratios
+  vector<double> filteredDistRatios;
+
+  double q1 = percentile(distRatios, .25);
+  double q3 = percentile(distRatios, .75);
+  double IQR = (q3 - q1);
+
+  double lowerBound = q1 - 1.5 * IQR;
+  double upperBound = q3 + 1.5 * IQR;
+
+  for (const auto& ratio : distRatios)
+  {
+    // Only keep points inside Tukey's fences
+    if (ratio >= lowerBound && ratio <= upperBound)
+      filteredDistRatios.push_back(ratio);
+  }
+
+  // Calculate median after filtering
+  double medianDistRatio = percentile(filteredDistRatios, 0.5);  // As robust to outliers
+
+  printFilteringStats(distRatios, filteredDistRatios, medianDistRatio);
+  printDistributionStats(filteredDistRatios);
+
   double dT = 1 / frameRate;
   TTC = -dT / (1 - medianDistRatio);
 
+  printTTCStats(TTC);
+
   auto endTime = chrono::steady_clock::now();
   auto elapsedTime = chrono::duration_cast<chrono::microseconds>(endTime - startTime);
-  cout << "Camera time-to-collision calculation took: " << elapsedTime.count() / 1000. << " ms" << endl;
+  cout << "Camera time-to-collision calculation took: " << elapsedTime.count() / 1000. << " ms" << endl << endl;
+}
+
+/*********************************************************************************************************************
+ * PRINT FUNCTIONS
+ *********************************************************************************************************************/
+
+// FP.2: Print Tukey's fences statistics
+void printFilteringStats(const vector<LidarPoint>& src, const vector<LidarPoint>& kept, 
+  const vector<LidarPoint>& removed, double lowerBound, double upperBound)
+{
+  cout << "OUTLIER DETECTION AND FILTERING (LIDAR)" << endl;
+  cout << string(50, '-') << endl;
+
+  cout << "Source: " << src.size() << " points" << endl;
+  cout << "Filtering method: Tukey's fences" << endl << endl;
+
+  cout << "Lower Bound: " << lowerBound << endl;
+  cout << "Upper Bound: " << upperBound << endl << endl;
+
+  cout << left << setw(22) << "Total points kept:" << right << setw(10) << kept.size() << endl;
+  cout << left << setw(22) << "Total points removed:" << right << setw(10) << removed.size() << endl;
+}
+
+// FP.2: Print Euclidean clustering statistics
+void printFilteringStats(const vector<LidarPoint>& src, const vector<vector<LidarPoint>>& clusters, 
+  const vector<vector<LidarPoint>>& removed, float radius, int minSize, int maxSize)
+{
+  cout << "OUTLIER DETECTION AND FILTERING (LIDAR)" << endl;
+  cout << string(50, '-') << endl;
+
+  cout << "Source: " << src.size() << " points" << endl;
+  cout << "Filtering method: Euclidean clustering" << endl << endl;
+
+  cout << "Radius: " << radius << " (sq.: " << radius*radius << ")" << endl << endl;
+
+  cout << "Min cluster size: " << right << setw(4) << minSize << endl;
+  cout << "Max cluster size: " << right << setw(4) << maxSize << endl << endl;
+
+  int pointsKept = 0, pointsRemoved = 0;
+
+  for (auto& cluster : clusters)
+  {
+    cout << left << setw(25) << "Found cluster of size: " << right << setw(4) << cluster.size() << endl;
+    pointsKept += cluster.size();
+  }
+
+  cout << string(30, '-') << endl;
+  cout << left << setw(25) << "Total points kept: " << right << setw(4) << pointsKept << endl;
+  cout << endl;
+
+  for (auto& cluster : removed)
+  {
+    cout << left << setw(25) << "Removed cluster of size: " << right << setw(4) << cluster.size() << endl;
+    pointsRemoved += cluster.size();
+  }
+
+  cout << string(30, '-') << endl;
+  cout << left << setw(25) << "Total points removed: " << right << setw(4) << pointsRemoved << endl;
+  cout << endl;
+}
+
+// FP.6: Print camera-based filtering statistics
+void printFilteringStats(const vector<double> distRatios, const vector<double> filteredDistRatios, 
+  double medianDistRatio)
+{
+  cout << endl;
+  cout << "OUTLIER DETECTION AND FILTERING (CAMERA)" << endl;
+  cout << string(50, '-') << endl;
+
+  vector<string> header = {"Candidate distance ratios:", "Available ratios post filtering:", "Median distance ratio:"};
+
+  if (filteredDistRatios.empty())
+    cerr << endl << "(!) WARNING: No distance ratio matches the filtering criteria. Skipping..." << endl << endl;
+  else
+  {
+    cout << left << setw(35) << header[0] << right << setw(15) << distRatios.size() << endl;
+    cout << left << setw(35) << header[1] << right << setw(15) << filteredDistRatios.size() << endl;
+    cout << left << setw(35) << header[2] << right << setw(15) << medianDistRatio << endl << endl;
+  }
+
+  if (medianDistRatio == 1)
+    cerr << "(!) WARNING: Median distance ratio equal to 1. TTC estimate will be -inf." << endl << endl;
+}
+
+// FP.5, FP.6
+void printDistributionStats(const vector<double>& vec)
+{
+  double csi = skewness(vec);
+  double kappa = excess_kurtosis(vec);
+
+  cout << endl;
+  cout << "Distribution statistics (kept)" << endl << string(32, '-') << endl;
+
+  cout << left << setw(22) << "Mean:" << right << setw(10) << mean(vec) << endl;
+  cout << left << setw(22) << "Standard deviation:" << right << setw(10) << sqrt(variance(vec)) << endl;
+  cout << left << setw(22) << "Skewness:" << right << setw(10) << csi << endl;
+  cout << left << setw(22) << "Excess kurtosis:" << right << setw(10) << kappa << endl << endl;
+
+  string description = (csi < 0) ? "Negatively-skewed" : "Positively-skewed";
+  description += ", ";
+  description += (kappa < 0) ? "platykurtic" : "leptokurtic";
+
+  cout << "Distribution shape: " << description << endl << endl;
+}
+
+// FP.2: Print LiDAR time-to-collision statistics
+void printTTCStats(const double medianXPrev, const double medianXCurr, const double TTC)
+{
+  cout << endl << "LIDAR TIME-TO-COLLISION STATISTICS" << endl;
+  cout << string(50, '-') << endl;
+
+  cout << left << setw(35) << "Previous median (x-coordinate):" << right << setw(15) << medianXPrev << endl;
+  cout << left << setw(35) << "Current median (x-coordinate):" << right << setw(15) << medianXCurr << endl;
+  cout << left << setw(35) << "Difference:" << right << setw(15) << (medianXPrev - medianXCurr) << endl;
+  cout << left << setw(35) << "TTC:" << right << setw(15) << TTC << endl << endl;
+}
+
+// FP.6: Print camera time-to-collision statistics
+void printTTCStats(const double TTC)
+{
+  cout << endl << "CAMERA TIME-TO-COLLISION STATISTICS" << endl;
+  cout << string(50, '-') << endl;
+
+  cout << left << setw(35) << "TTC:" << right << setw(15) << TTC << endl << endl;
+}
+
+// FP.5, FP.6: Print time-to-collision summary statistics
+void printSummaryStats(const int imgStartIndex, const vector<vector<double>>& ttcStats)
+{
+  cout << string(40, '*') << endl;
+  cout << setw(10) << "IMAGE PAIR" << right << setw(15) << "LIDAR TTC" << right << setw(15) << "CAMERA TTC" << endl;
+  cout << string(40, '*') << endl;
+
+  int index = (imgStartIndex);
+  for (size_t i = 0; i < ttcStats.size(); ++i)
+  {
+    cout << right << setw(10) << to_string(index) + "-" + to_string(++index) << right << setw(15) << ttcStats[i][0] 
+      << right << setw(15) << ttcStats[i][1] << endl;
+  }
 }

@@ -83,7 +83,7 @@ Options can be set from within the `Options` struct in the main file.
             <td><code>true</code> for more accurate YOLOv3 blob size $(448 \times 448)$, <code>false</code> for default $(416 \times 416)$* [3]</td>
         </tr>
         <tr>
-            <td rowspan=8><b>Visualisation and output options</b></td>
+            <td rowspan=9><b>Visualisation and output options</b></td>
             <td><code>bVisYoloBoundingBoxes</code></td>
             <td><code>false</code></td>
             <td><code>true</code> to show YOLOv3 bounding boxes, COCO names, and confidence levels for each frame</td>
@@ -104,9 +104,14 @@ Options can be set from within the `Options` struct in the main file.
             <td><code>true</code> to view final output images with superimposed time-to-collision estimates</td>
         </tr>
         <tr>
+            <td><code>bVisLidarOverlay</code></td>
+            <td><code>true</code></td>
+            <td><code>true</code> to additionally superimpose LiDAR points on preceding vehicle bounding box (if <code>bVisFinalOutput = true</code>)</td>
+        </tr>
+        <tr>
             <td><code>bVisKeypointsOverlay</code></td>
             <td><code>true</code></td>
-            <td><code>true</code> to additionally superimpose keypoints on preceding vehicle bounding box</td>
+            <td><code>true</code> to additionally superimpose keypoints on preceding vehicle bounding box (if <code>bVisFinalOutput = true</code>)</td>
         </tr>
         <tr>
             <td><code>bSaveYoloBBFrames</code></td>
@@ -281,9 +286,13 @@ $$
 \text{TTC}_ {\text{CVM}}^{\text{Camera}} = -\Delta T \times \left( 1-\frac{d_0}{d_1} \right)^{-1} = -\Delta T \times \left( 1-\frac{h_1}{h_0} \right)^{-1} = -\Delta T \times \left( 1-\frac{\tilde{x} _{\text{curr}}}{\tilde{x} _{\text{prev}}} \right)^{-1}
 $$
 
-An example is the HARRIS-BRISK pair.
+An example is the HARRIS-BRISK pair [Figure 11].
 
-__Figure 11: HARRIS-BRISK TTC estimates__
+
+
+Similar issues occur with  (frames )
+
+__Figure 11: HARRIS-BRISK TTC estimates (Brute Force)__
 ![HARRIS-BRISK TTC is off](./img/mov9.gif)
 
 ## Resources

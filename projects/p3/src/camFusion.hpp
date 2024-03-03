@@ -83,6 +83,35 @@ void matchBoundingBoxes(std::vector<cv::DMatch>& matches, std::map<int, int>& bb
 double percentile(const std::vector<double>& vec, const float q);
 
 /**
+ * @brief FP.5, FP.6: Compute the sample excess kurtosis of a vector's components using estimator g_2 in [1].
+ *   Excess kurtosis is defined as kurtosis - 3, where 3 is the kurtosis of the symmetric Gaussian distribution.
+ *   Distributions with negative (positive) excess kurtosis are thin-tailed or platykurtic (fat-tailed, leptokurtic).
+ * 
+ * @param vec The input vector.
+ * 
+ * Resources:
+ * 
+ * [1] - https://en.wikipedia.org/wiki/Kurtosis
+ */
+double excess_kurtosis(const std::vector<double>& vec);
+
+/**
+ * @brief FP.5, FP.6: Compute the sample skewness of a vector's components using estimator b_1 in [1].
+ * 
+ * Resources:
+ * 
+ * [1] - https://en.wikipedia.org/wiki/Skewness
+ */
+double skewness(const std::vector<double>& vec);
+
+/**
+ * @brief FP.5, FP.6: Compute the sample variance of a vector's components.
+ * 
+ * @param vec The input vector.
+ */
+double variance(const std::vector<double>& vec);
+
+/**
  * @brief FP.2: Compute the simple average of a vector's components.
  * 
  * @param vec The input vector.
@@ -109,7 +138,6 @@ enum class FilteringMethod
 /**
  * @brief FP.2: Render a 3-dimensional LiDAR point cloud in OpenCV (code suggested by Udacity GPT).
  * 
- * @param src The input LiDAR point cloud data.
  * @param clusters The populated Euclidean clusters container.
  * @param removed The container of discarded points.
  * @param bShowRemoved Whether to also render discarded clusters (in white). 
@@ -118,36 +146,15 @@ enum class FilteringMethod
  * 
  * [1] - https://docs.opencv.org/4.2.0/d4/dba/classcv_1_1viz_1_1Color.html
  */
-void renderClusters(const std::vector<LidarPoint>& src, const std::vector<std::set<int>>& clusters, 
-  const std::vector<std::set<int>>& removed, bool bShowRemoved=true);
-
-
-/**
- * @brief FP.2: Display output statistics from Euclidean clustering.
- * 
- * @param src The input LiDAR point cloud data.
- * @param clusters Container of points kept after Euclidean clustering.
- * @param removed Container of points removed after Euclidean clustering.
- * @param radius Distance tolerance to query point used for the neighborhood search.
- * @param minSize Minimum acceptable size for a cluster.
- * @param maxSize Maximum acceptable size for a cluster.
- */
-void printStatistics(const std::vector<LidarPoint>& src, const std::vector<std::set<int>>& clusters, 
-  const std::vector<std::set<int>>& removed, float radius, int minSize, int maxSize);
-
-/**
- * @brief FP.5, FP.6: Print summary statistics on time-to-collision for all image pairs in scope.
- * 
- * @param imgStartIndex First file index loaded.
- * @param ttcStats Collection of statistics on LiDAR and camera TTC for all image pairs.
- */
-void printStatistics(const int imgStartIndex, const std::vector<std::vector<double>>& ttcStats);
+void renderClusters(const std::vector<std::set<int>>& clusters, const std::vector<std::set<int>>& removed, 
+  bool bShowRemoved=true);
 
 /**
  * @brief FP.2: Recursive function to compute the nearest neighbors of a query point based on input L2-norm [1] [2].
  * 
  * @param index Id of the query point.
- * @param cloud The input LiDAR point cloud data.
+ * @param src The input LiDAR point cloud data.
+ * @param srcMat The input LiDAR point cloud data in matrix form.
  * @param cluster The cluster instance, to populate.
  * @param processed Container to mark visited query points.
  * @param tree FLANN KD-Tree structure.
@@ -163,8 +170,8 @@ void printStatistics(const int imgStartIndex, const std::vector<std::vector<doub
  * [2] - https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p1/src/custom/clustering.h
  */
 template<typename T>
-void clusterHelper(int index, const cv::Mat& cloud, std::set<int>& cluster, std::vector<bool>& processed, 
-  cv::flann::GenericIndex<T>& tree, float radius, int knn, int minSize, int maxSize);
+void clusterHelper(int index, const std::vector<LidarPoint>& src, const cv::Mat& srcMat, std::vector<LidarPoint>& cluster, 
+  std::vector<bool>& processed, cv::flann::GenericIndex<T>& tree, float radius, int knn, int minSize, int maxSize);
 
 /**
  * @brief FP.2: Cluster input data based on the Euclidean distance (L2-norm) from a query point [1].
@@ -186,8 +193,8 @@ void clusterHelper(int index, const cv::Mat& cloud, std::set<int>& cluster, std:
  * [5] - https://vovkos.github.io/doxyrest-showcase/opencv/sphinxdoc/struct_cvflann_SearchParams.html
  * [6] - https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p1/src/custom/clustering.h
  */
-void euclideanClustering(const std::vector<LidarPoint>& src, std::vector<std::set<int>>& clusters, 
-  std::vector<std::set<int>>& removed, float radius, int knn, int minSize, int maxSize);
+void euclideanClustering(const std::vector<LidarPoint>& src, std::vector<std::vector<LidarPoint>>& clusters, 
+  std::vector<std::vector<LidarPoint>>& removed, float radius, int knn, int minSize, int maxSize);
 
 /** 
  * @brief FP.2: Filter out outliers from a cloud of 3-dimensional points based on the desired filtering method.
@@ -204,6 +211,7 @@ void euclideanClustering(const std::vector<LidarPoint>& src, std::vector<std::se
  * @param maxSize Maximum cluster size. Clusters larger than this value will be broken down.
  * @param bRenderClusters Whether to display 3D rendering of clustered LiDAR points.
  * @param bShowRemoved Whether to include colorless outlier points in the rendering view.
+ * @param bShowRemoved Whether to print statistics on filtering outcome and distribution of points.
  * 
  * Resources:
  * 
@@ -212,7 +220,7 @@ void euclideanClustering(const std::vector<LidarPoint>& src, std::vector<std::se
  * [3] - https://docs.opencv.org/4.2.0/db/d18/classcv_1_1flann_1_1GenericIndex.html
  */
 void removeOutliers(std::vector<LidarPoint>& src, std::vector<LidarPoint>& dst, FilteringMethod method, float radius,
-  int knn, int minSize, int maxSize, bool bRenderClusters, bool bShowRemoved);
+  int knn, int minSize, int maxSize, bool bRenderClusters, bool bShowRemoved, bool bPrintStats=true);
 
 /**
  * @brief FP.2: Compute stable LiDAR time-to-collision (TTC) between consecutive frames assuming constant velocity [1].
@@ -222,15 +230,15 @@ void removeOutliers(std::vector<LidarPoint>& src, std::vector<LidarPoint>& dst, 
  * @param frameRate Time between two measurements, in seconds.
  * @param TTC LiDAR time-to-collision measure, to populate.
  * @param filteringMethod Outlier filtering method, either Tukey's fences [2] or Euclidean clustering [3].
- * 
+ * @param bRenderClusters Whether to display 3D rendering of clustered LiDAR points.
+ * @param bShowRemoved Whether to include colorless outlier points in the rendering view.
+
  * Euclidean clustering -only parameters:
  * 
  * @param radius Distance tolerance to query point for the neighborhood search; will be squared (L2-norm).
  * @param knn No. of points to include at each radius search.
  * @param minSize Minimum cluster size. Clusters smaller than this value will be discarded as outliers.
  * @param maxSize Maximum cluster size. Clusters larger than this value will be broken down.
- * @param bRenderClusters Whether to display 3D rendering of clustered LiDAR points.
- * @param bShowRemoved Whether to include colorless outlier points in the rendering view.
  * 
  * Resources:
  * 
@@ -276,5 +284,71 @@ void clusterKptMatchesWithROI(BoundingBox& boundingBox, std::vector<cv::KeyPoint
  */
 void computeTTCCamera(std::vector<cv::KeyPoint>& kptsPrev, std::vector<cv::KeyPoint>& kptsCurr,
   std::vector<cv::DMatch> kptMatches, double frameRate, double& TTC, cv::Mat* visImg=nullptr);
+
+/**
+ * @brief FP.2: Display output statistics from Tukey's fences.
+ * 
+ * @param src The input LiDAR point cloud data.
+ * @param kept Container of points kept post filtering.
+ * @param removed Container of points removed by filtering.
+ * @param lowerBound The lower Tukeys' fence.
+ * @param upperBound The upper Tukey's fence.
+ */
+void printFilteringStats(const std::vector<LidarPoint>& src, const std::vector<LidarPoint>& kept, 
+  const std::vector<LidarPoint>& removed, double lowerBound, double upperBound);
+
+/**
+ * @brief FP.2: Display output statistics from Euclidean clustering.
+ * 
+ * @param src The input LiDAR point cloud data.
+ * @param clusters Container of points kept after Euclidean clustering.
+ * @param removed Container of points removed after Euclidean clustering.
+ * @param radius Distance tolerance to query point used for the neighborhood search.
+ * @param minSize Minimum acceptable size for a cluster.
+ * @param maxSize Maximum acceptable size for a cluster.
+ */
+void printFilteringStats(const std::vector<LidarPoint>& src, const std::vector<std::vector<LidarPoint>>& clusters, 
+  const std::vector<std::vector<LidarPoint>>& removed, float radius, int minSize, int maxSize);
+
+/**
+ * @brief FP.6: Print camera-based filtering statistics.
+ * 
+ * @param distRatios Candidate distance ratios.
+ * @param filteredDistRatios Available distance ratios post filtering.
+ * @param medianDistRatio Median distance ratio to compute TTC.
+ */
+void printFilteringStats(const std::vector<double> distRatios, const std::vector<double> filteredDistRatios, 
+  double medianDistRatio);
+
+/**
+ * @brief FP.5, FP.6: Print moments, size, and shape statistics on the distribution of input points.
+ * 
+ * @param vec The input data.
+ */
+void printDistributionStats(const std::vector<double>& vec);
+
+/**
+ * @brief: FP.2: Print LiDAR time-to-collision statistics.
+ * 
+ * @param medianXPrev Median x-coordinate of the LiDAR points in the previous frame.
+ * @param medianXCurr Median x-coordinate of the LiDAR points in the current frame.
+ * @param TTC LiDAR time-to-collision based on the previous and current frames.
+ */
+void printTTCStats(const double medianXPrev, const double medianXCurr, const double TTC);
+
+/**
+ * @brief FP.6: Print camera time-to-collision statistics.
+ * 
+ * @param TTC Camera time-to-collision based on the previous and current frames.
+ */
+void printTTCStats(const double TTC);
+
+/**
+ * @brief FP.5, FP.6: Print summary statistics on time-to-collision for all image pairs in scope.
+ * 
+ * @param imgStartIndex First file index loaded.
+ * @param ttcStats Collection of statistics on LiDAR and camera TTC for all image pairs.
+ */
+void printSummaryStats(const int imgStartIndex, const std::vector<std::vector<double>>& ttcStats);
 
 #endif /* CAMFUSION_HPP */

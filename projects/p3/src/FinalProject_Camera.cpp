@@ -31,7 +31,7 @@ struct Options
   /*******************************************************************************************************************
    * 2D FEATURE TRACKING OPTIONS
    *******************************************************************************************************************/
-  string detectorType = "FAST";  // HARRIS, SHITOMASI, FAST, BRISK ORB, AKAZE, SIFT, SURF
+  string detectorType = "FAST";  // HARRIS, SHITOMASI, FAST, BRISK, ORB, AKAZE, SIFT, SURF
   string descriptorType = "BRIEF";  // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT, SURF
   string descriptorGroup = "DES_BINARY";  // DES_BINARY, DES_HOG
 
@@ -43,7 +43,7 @@ struct Options
    *******************************************************************************************************************/
   int imgStartIndex = 0;  // First file index to load (assumes LiDAR and camera names have same naming convention)
   int imgEndIndex = 18;  // Last file index to load (default: 18; maximum: 77)
-  int imgStepWidth = 1;  // 10/n Hz, n = 1, ... (if 2, skip every other image)
+  int imgStepWidth = 1;  // 10/n Hz, n = 1, ... (if 2, skip every other image; 10 frames == 1 second)
 
   bool bExtraAccuracy = false;  // true for more-accurate YOLOv3 blob size (448 x 448), false for default (416 x 416).
                                 // If imgEndIndex >= 48, set to true to avoid spurious bounding boxes!
@@ -58,8 +58,10 @@ struct Options
                                      // (if bVisLidarTopView = true) false to proceed with TTC calculation
 
   bool bVisFinalOutput = true;  // true to view final output image with superimposed time-to-collision estimates
-  bool bVisKeypointsOverlay = false;  // true to additionally superimpose keypoints on preceding vehicle bounding box
+  bool bVisLidarOverlay = true;  // true to additionally superimpose LiDAR points on preceding vehicle bounding box
+  bool bVisKeypointsOverlay = true;  // true to additionally superimpose keypoints on preceding vehicle bounding box
 
+  bool bSaveYoloBBFrames = false;  // true to write YOLO frames in working directory (if bVisYoloBoundingBoxes = true)
   bool bSaveLidarTopView = false;  // true to write LiDAR top-views in working directory (if bVisLidarTopView = true)
   bool bSaveOutputFrames = false;  // true to write output frames in working directory (if bVisFinalOutput = true)
 
@@ -68,12 +70,13 @@ struct Options
    *******************************************************************************************************************/
 
   // LiDAR 3D points outlier removal method
-  FilteringMethod filteringMethod = FilteringMethod::EUCLIDEAN_CLUSTERING;  // TUKEY, EUCLIDEAN_CLUSTERING
+  FilteringMethod filteringMethod = FilteringMethod::TUKEY;  // TUKEY, EUCLIDEAN_CLUSTERING
 
-  bool bRenderClusters = false;  // true to visualize 3D LiDAR point clusters
+  bool bLimitKpts = false;  // true to limit the number of keypoints; Helpful for debugging and learning, but it
+                            // will lead to instability in time-to-collision calculations (NaN values)
+
+  bool bRenderClusters = false;  // true to visualize 3D LiDAR point clusters after Euclidean clustering
   bool bShowRemoved = true;  // true to also display colorless outliers (if bRenderClusters = true)
-
-  bool bLimitKpts = false;  // true to limit the number of keypoints (helpful for debugging and learning)
 
   // EUCLIDEAN CLUSTERING -ONLY OPTIONS
 
@@ -83,12 +86,6 @@ struct Options
   float radius = 0.12;  // Distance tolerance to query point for the neighborhood search; will be squared (L2-norm).
   int minSize = 15;  // Minimum cluster size. Clusters smaller than this value will be discarded as outliers.
   int maxSize = 600;  // Maximum cluster size. Clusters larger than this value will also be discarded.
-
-  /*******************************************************************************************************************
-   * MOTION MODEL OPTIONS
-   *******************************************************************************************************************/
-
-  bool bUseConstantAcceleration = false;  // true for constant acceleration (CAM), false for constant velocity (CVM)               --- TODO: Implement
 };
 
 
@@ -177,17 +174,20 @@ int main(int argc, const char *argv[])
     frame.cameraImg = img;
     dataBuffer.push_back(frame);
 
-    cout << "#1 : LOAD IMAGE INTO BUFFER done" << endl << endl;
+    cout << "#1: LOAD IMAGE INTO BUFFER done" << endl << endl;
 
     /* DETECT & CLASSIFY OBJECTS */
 
     float confThreshold = 0.2;
     float nmsThreshold = 0.4;
+
+    string yoloSaveAs = "yolo_" + imgNumber.str() + imgFileType;
+
     detectObjects((dataBuffer.end() - 1)->cameraImg, (dataBuffer.end() - 1)->boundingBoxes, confThreshold, 
       nmsThreshold, yoloBasePath, yoloClassesFile, yoloModelConfiguration, yoloModelWeights, opts.bVisYoloBoundingBoxes, 
-      opts.bExtraAccuracy);
+      opts.bExtraAccuracy, opts.bSaveYoloBBFrames, yoloSaveAs);
 
-    cout << "#2 : DETECT & CLASSIFY OBJECTS done" << endl << endl;
+    cout << "#2: DETECT & CLASSIFY OBJECTS done" << endl << endl;
 
     /* CROP LIDAR POINTS */
 
@@ -202,7 +202,7 @@ int main(int argc, const char *argv[])
   
     (dataBuffer.end() - 1)->lidarPoints = lidarPoints;
 
-    cout << "#3 : CROP LIDAR POINTS done" << endl << endl;
+    cout << "#3: CROP LIDAR POINTS done" << endl << endl;
 
     /* CLUSTER LIDAR POINT CLOUD */
 
@@ -223,7 +223,7 @@ int main(int argc, const char *argv[])
         opts.bSaveLidarTopView, lidarSaveAs, true);
     }
 
-    cout << "#4 : CLUSTER LIDAR POINT CLOUD done" << endl << endl;
+    cout << "#4: CLUSTER LIDAR POINT CLOUD done" << endl << endl;
     
     if (opts.bStopAtLidarTopView)
     {
@@ -268,7 +268,7 @@ int main(int argc, const char *argv[])
     // Push keypoints and descriptor for current frame to end of data buffer
     (dataBuffer.end() - 1)->keypoints = keypoints;
 
-    cout << "#5 : DETECT KEYPOINTS done" << endl << endl;
+    cout << "#5: DETECT KEYPOINTS done" << endl << endl;
 
     /* EXTRACT KEYPOINT DESCRIPTORS */
 
@@ -279,11 +279,12 @@ int main(int argc, const char *argv[])
     // Push descriptors for current frame to end of data buffer
     (dataBuffer.end() - 1)->descriptors = descriptors;
 
-    cout << "#6 : EXTRACT DESCRIPTORS done" << endl << endl;
+    cout << "#6: EXTRACT DESCRIPTORS done" << endl << endl;
 
     if (dataBuffer.size() > 1)  // Wait until at least two images have been processed
     {
-      cout << "Comparing images: " << imgIndex-1 << " and " << imgIndex << endl;  
+      cout << "Comparing images: " << (opts.imgStartIndex + imgIndex - 1) << " and " << 
+        (opts.imgStartIndex + imgIndex) << endl;
 
       /* MATCH KEYPOINT DESCRIPTORS */
 
@@ -298,7 +299,7 @@ int main(int argc, const char *argv[])
       // Store matches in current data frame
       (dataBuffer.end() - 1)->kptMatches = matches;
 
-      cout << "#7 : MATCH KEYPOINT DESCRIPTORS done" << endl << endl;
+      cout << "#7: MATCH KEYPOINT DESCRIPTORS done" << endl << endl;
       
       /* TRACK 3D OBJECT BOUNDING BOXES */
 
@@ -315,7 +316,7 @@ int main(int argc, const char *argv[])
       // Store matches in current data frame
       (dataBuffer.end()-1)->bbMatches = bbBestMatches;
 
-      cout << "#8 : TRACK 3D OBJECT BOUNDING BOXES done" << endl << endl;
+      cout << "#8: TRACK 3D OBJECT BOUNDING BOXES done" << endl << endl;
 
 
       /* COMPUTE TTC ON OBJECT IN FRONT */
@@ -349,6 +350,14 @@ int main(int argc, const char *argv[])
 
           try
           {
+            if (imgIndex == 1)  // To display outlier statistics for the first image as well
+            {
+              vector<LidarPoint> filtered;
+
+              removeOutliers(prevBB->lidarPoints, filtered, opts.filteringMethod, opts.radius, opts.knn, opts.minSize, 
+                opts.maxSize, opts.bRenderClusters, opts.bShowRemoved, true);
+            }
+
             computeTTCLidar(prevBB->lidarPoints, currBB->lidarPoints, sensorFrameRate, ttcLidar, opts.filteringMethod, 
               opts.radius, opts.knn, opts.minSize, opts.maxSize, opts.bRenderClusters, opts.bShowRemoved);
             
@@ -383,7 +392,9 @@ int main(int argc, const char *argv[])
           if (opts.bVisFinalOutput)
           {
             cv::Mat visImg = (dataBuffer.end() - 1)->cameraImg.clone();
-            showLidarImgOverlay(visImg, currBB->lidarPoints, P_rect_00, R_rect_00, RT, &visImg);
+
+            if (opts.bVisLidarOverlay)
+              showLidarImgOverlay(visImg, currBB->lidarPoints, P_rect_00, R_rect_00, RT, &visImg);
 
             if (opts.bVisKeypointsOverlay)
               cv::drawKeypoints(visImg, currBB->keypoints, visImg, cv::Scalar::all(-1), 
@@ -394,7 +405,9 @@ int main(int argc, const char *argv[])
 
             char str[200];
             sprintf(str, "TTC Lidar: %f s, TTC Camera: %f s", ttcLidar, ttcCamera);
-            putText(visImg, str, cv::Point2f(80, 50), cv::FONT_HERSHEY_PLAIN, 2, cv::Scalar(0, 0, 255));
+
+            // Font and size specifications were changed to make it more visible on the screen
+            putText(visImg, str, cv::Point2f(80, 50), cv::FONT_HERSHEY_DUPLEX, 1, cv::Scalar(0, 0, 255));
 
             string windowName = "Final Results: TTC";
             cv::namedWindow(windowName, 4);
@@ -404,10 +417,10 @@ int main(int argc, const char *argv[])
             {
               string saveAs = opts.detectorType + "_" + opts.descriptorType + "_" + imgNumber.str() + imgFileType;
               imwrite(saveAs, visImg);
-              cout << endl << "Saved image: " << saveAs << endl;
+              cout << endl << "Saved image: " << saveAs << endl << endl;
             }
 
-            cout << endl << "Press key to continue to next frame" << endl << endl;
+            cout << "Press key to continue to next frame" << endl << endl;
             cv::waitKey(0);
           }
 
@@ -416,8 +429,8 @@ int main(int argc, const char *argv[])
     }
   } // eof loop over all images
 
-  // Print summary statistics on time-to-collision for all in-scope image pairs
-  printStatistics(opts.imgStartIndex, ttcStats);
+  // Print TTC summary statistics for all image pairs in scope
+  printSummaryStats(opts.imgStartIndex, ttcStats);
 
   return 0;
 }
