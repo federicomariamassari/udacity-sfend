@@ -162,7 +162,7 @@ Once the map is populated, the query-train index pairs for which the counter is 
 LiDAR time-to-collision logic is handled by [`computeTTCLidar`](). Extreme or otherwise unreliable data are discarded using one of the available filtering methods as input to function [`removeOutliers`](). TTC is then given by the Constant Velocity Model (CVM) formula, with $\tilde{x}$ ($x$ tilde) the median of all x-coordinates of the usable points (a proxy for distance $d$):
 
 $$
-\text{TTC}_ {\text{CVM}} = d_1 \times \frac{\Delta t}{d_0 - d_1} = \tilde{x}_{\text{curr}} \times \frac{\Delta t}{\tilde{x} _{\text{prev}} - \tilde{x} _{\text{curr}}}
+\text{TTC}_ {\text{CVM}}^{\text{LiDAR}} = d_1 \times \frac{\Delta t}{d_0 - d_1} = \tilde{x}_{\text{curr}} \times \frac{\Delta t}{\tilde{x} _{\text{prev}} - \tilde{x} _{\text{curr}}}
 $$
 
 ### Outlier Removal
@@ -275,7 +275,13 @@ __Figure 10: SIFT-BRISK vs SURF-ORB vs LiDAR ground truth proxy__
 
 Camera-based TTC estimates have issues as well, some related to the simplistic nature of the constant velocity model, some others linked to the specific detector-descriptor combination chosen.
 
-__Invalid estimates.__
+__Invalid estimates.__ Certain algorithms can lead to distance ratios which are very close to, or equal to 1. When these ratios enter the camera-based TTC formula, similarly to what happened with LiDAR, they produce estimates which are either unreasonably large, in absolute terms, or infinite. Using the median ratio to reduce the influence of outliers could exacerbate this issue because most unitary values tend to cluster around the center of the distribution.
+
+$$
+\text{TTC}_ {\text{CVM}}^{\text{Camera}} = -\Delta T \times \left( 1-\frac{d_0}{d_1} \right)^{-1} = -\Delta T \times \left( 1-\frac{h_1}{h_0} \right)^{-1} = -\Delta T \times \left( 1-\frac{\tilde{x} _{\text{curr}}}{\tilde{x} _{\text{prev}}} \right)^{-1}
+$$
+
+An example is the HARRIS-BRISK pair.
 
 ## Resources
 
