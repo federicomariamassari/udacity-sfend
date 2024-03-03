@@ -5,7 +5,8 @@ using namespace std;
 
 
 void detectObjects(cv::Mat& img, vector<BoundingBox>& bBoxes, float confThreshold, float nmsThreshold, string basePath, 
-  string classesFile, string modelConfiguration, string modelWeights, bool bVis, bool& bExtraAccuracy)
+  string classesFile, string modelConfiguration, string modelWeights, bool bVis, bool& bExtraAccuracy, 
+  bool& bSaveYoloBBFrames, string saveAs)
 {
   // Time the YOLOv3 classification process
   auto startTime = chrono::steady_clock::now();
@@ -133,8 +134,14 @@ void detectObjects(cv::Mat& img, vector<BoundingBox>& bBoxes, float confThreshol
     }
 
     string windowName = "Object classification";
-    cv::namedWindow( windowName, 1 );
-    cv::imshow( windowName, visImg );
+    cv::namedWindow(windowName, 1);
+    cv::imshow(windowName, visImg);
+
+  if (bSaveYoloBBFrames)
+  {
+    imwrite(saveAs, visImg);
+    cout << "Saved image: " << saveAs << endl;
+  }
 
     cv::waitKey(0);  // Wait for key to be pressed
   }

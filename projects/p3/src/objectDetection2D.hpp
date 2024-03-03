@@ -29,9 +29,11 @@
  * @param modelWeights File containing a set of pre-trained YOLOv3 weights. 
  * @param bVis Whether to display the object detection output: bounding boxes, names, and confidence levels.
  * @param bExtraAccuracy If true, increase blob pixel size from (416 x 416) to (448 x 448); must be a multiple of 32.
+ * @param bSaveYoloBBFrames If true, save frame with superimposed YOLOv3 bounding boxes inside working directory.
+ * @param saveAs Name of the frame with superimposed YOLOv3 bounding boxes to save, if bSaveYoloBBFrames = true.
  */
 void detectObjects(cv::Mat& img, std::vector<BoundingBox>& bBoxes, float confThreshold, float nmsThreshold, 
   std::string basePath, std::string classesFile, std::string modelConfiguration, std::string modelWeights, 
-  bool bVis, bool& bExtraAccuracy);
+  bool bVis, bool& bExtraAccuracy, bool& bSaveYoloBBFrames, std::string saveAs);
 
 #endif /* OBJECTDETECTION2D_HPP */
