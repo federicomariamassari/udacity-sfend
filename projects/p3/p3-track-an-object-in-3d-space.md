@@ -283,6 +283,9 @@ $$
 
 An example is the HARRIS-BRISK pair.
 
+__Figure 11: HARRIS-BRISK TTC estimates__
+![HARRIS-BRISK TTC is off](./img/mov9.gif)
+
 ## Resources
 
 1. https://knowledge.udacity.com/questions/570553
