@@ -15,7 +15,7 @@ void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool b
   double k = 0.04;  // Free parameter of the Harris detector (unused with bUseHarrisDetector = false)
 
   // Apply corner detection
-  double t = (double)cv::getTickCount();
+  double t = (double) cv::getTickCount();
   vector<cv::Point2f> corners;
   cv::goodFeaturesToTrack(img, corners, maxCorners, qualityLevel, minDistance, cv::Mat(), blockSize, false, k);
 

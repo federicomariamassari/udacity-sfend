@@ -350,7 +350,7 @@ int main(int argc, const char *argv[])
 
           try
           {
-            if (imgIndex == 1)  // To display outlier statistics for the first image as well
+            if (imgIndex == 1)  // Custom addition to display outlier statistics for the first image as well
             {
               vector<LidarPoint> filtered;
 
