@@ -415,7 +415,7 @@ void removeOutliers(vector<LidarPoint>& src, vector<LidarPoint>& dst, FilteringM
           removed.push_back(point);
       }
 
-      if (bPrintStats)
+      if (bPrintStats)  // Hard-coded, not selectable
       {
         printFilteringStats(src, dst, removed, lowerBound, upperBound);
 
@@ -425,7 +425,7 @@ void removeOutliers(vector<LidarPoint>& src, vector<LidarPoint>& dst, FilteringM
 
         printDistributionStats(dst_x);
       }
-      
+
       if (bRenderClusters)
       {
         vector<vector<LidarPoint>> kept { dst };
@@ -480,9 +480,10 @@ void computeTTCLidar(vector<LidarPoint>& lidarPointsPrev, vector<LidarPoint>& li
 
   vector<LidarPoint> filteredPrev, filteredCurr;
 
-  // Time the outlier removal process
+  // Time the outlier detection and removal process
   auto startTime = chrono::steady_clock::now();
 
+  // Only display statistics for the current frame
   removeOutliers(lidarPointsPrev, filteredPrev, filteringMethod, radius, knn, minSize, maxSize, bRenderClusters, 
     bShowRemoved, false);
   
@@ -713,8 +714,7 @@ void printFilteringStats(const vector<LidarPoint>& src, const vector<vector<Lida
 void printFilteringStats(const vector<double> distRatios, const vector<double> filteredDistRatios, 
   double medianDistRatio)
 {
-  cout << endl;
-  cout << "OUTLIER DETECTION AND FILTERING (CAMERA)" << endl;
+  cout << endl << "OUTLIER DETECTION AND FILTERING (CAMERA)" << endl;
   cout << string(50, '-') << endl;
 
   vector<string> header = {"Candidate distance ratios:", "Available ratios post filtering:", "Median distance ratio:"};
@@ -725,7 +725,7 @@ void printFilteringStats(const vector<double> distRatios, const vector<double> f
   {
     cout << left << setw(35) << header[0] << right << setw(15) << distRatios.size() << endl;
     cout << left << setw(35) << header[1] << right << setw(15) << filteredDistRatios.size() << endl;
-    cout << left << setw(35) << header[2] << right << setw(15) << medianDistRatio << endl << endl;
+    cout << left << setw(35) << header[2] << right << setw(15) << medianDistRatio << endl;
   }
 
   if (medianDistRatio == 1)
@@ -768,7 +768,7 @@ void printTTCStats(const double medianXPrev, const double medianXCurr, const dou
 // FP.6: Print camera time-to-collision statistics
 void printTTCStats(const double TTC)
 {
-  cout << endl << "CAMERA TIME-TO-COLLISION STATISTICS" << endl;
+  cout << "CAMERA TIME-TO-COLLISION STATISTICS" << endl;
   cout << string(50, '-') << endl;
 
   cout << left << setw(35) << "TTC:" << right << setw(15) << TTC << endl << endl;
