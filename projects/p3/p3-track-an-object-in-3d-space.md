@@ -280,7 +280,7 @@ __Figure 10: SIFT-BRISK vs SURF-ORB vs LiDAR ground truth proxy__
 
 Camera-based TTC estimates have issues as well, some related to the simplistic nature of the constant velocity model, some others linked to the specific detector-descriptor combination chosen.
 
-__Invalid estimates.__ Certain algorithms can lead to distance ratios which are very close to, or equal to 1. When these ratios enter the camera-based TTC formula, similarly to what happened with LiDAR, they produce estimates which are either unreasonably large, in absolute terms, or infinite. Using the median ratio to reduce the influence of outliers could exacerbate this issue because most unitary values tend to cluster around the center of the distribution.
+__Invalid estimates.__ Certain algorithms can lead to distance ratios which are very close to, or equal to 1. When these ratios enter the camera-based TTC formula, similarly to what happened with LiDAR, they produce estimates which are either unreasonably large, in absolute terms, or infinite. Using the median ratio to reduce the influence of outliers could exacerbate this issue because most unitary values tend to cluster around the center of the distribution (in the formula below, the heights ratio $h_1 / h_0$ is used as a proxy for the distance ratio).
 
 $$
 \text{TTC}_ {\text{CVM}}^{\text{Camera}} = -\Delta T \times \left( 1-\frac{d_0}{d_1} \right)^{-1} = -\Delta T \times \left( 1-\frac{h_1}{h_0} \right)^{-1} = -\Delta T \times \left( 1-\frac{\tilde{x} _{\text{curr}}}{\tilde{x} _{\text{prev}}} \right)^{-1}
@@ -288,7 +288,15 @@ $$
 
 An example is the HARRIS-BRISK pair [Figure 11].
 
-__Figure 11: HARRIS-BRISK TTC estimates (Brute Force)__
+| Frame | Sample size* | Median distance ratio | TTC | Skewness | Excess kurtosis | Points distribution |
+|------:|------------:|----------------------:|----:|---------:|----------------:|:--------------------|
+| 2 | 6 | 1.35637 | 0.280604 | 0.492281 | -1.55721 | Positively-skewed, platykurtic |
+| 13 | 12 | 1.00018 | 568.322 | -0.321661 | -1.06773 | Negatively-skewed, platykurtic |
+| 18 | 3 | 1 | -inf | nan | nan | - |
+
+(*) Post filtering, Tukey's fences.
+
+__Figure 11: HARRIS-BRISK TTC estimates (Brute Force matching)__
 ![HARRIS-BRISK TTC is off](./img/mov9.gif)
 
 ## Resources
