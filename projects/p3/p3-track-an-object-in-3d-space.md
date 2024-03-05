@@ -280,13 +280,13 @@ __Figure 10: SIFT-BRISK vs SURF-ORB vs LiDAR ground truth proxy__
 
 Camera-based TTC estimates have issues as well, some related to the simplistic nature of the constant velocity model, some others linked to the specific detector-descriptor combination chosen.
 
-__Invalid estimates.__ Certain algorithms can lead to distance ratios which are very close to, or equal to 1. When these ratios enter the camera-based TTC formula, similarly to what happened with LiDAR, they produce estimates which are either unreasonably large, in absolute terms, or infinite. Using the median ratio to reduce the influence of outliers could exacerbate this issue because most unitary values tend to cluster around the center of the distribution (in the formula below, the heights ratio $h_1 / h_0$ is used as a proxy for the distance ratio).
+__Invalid estimates.__ Certain algorithms can lead to distance ratios which are very close to, or equal to 1. When these ratios (or equivalently, the heights ratio $h_1 / h_0$ as a proxy) enter the camera-based TTC formula, similarly to what happened with LiDAR, they produce estimates which are either unreasonably large, in absolute terms, or infinite. Using the median ratio to reduce the influence of outliers can exacerbate this issue because most unitary values tend to cluster around the center of the distribution. Dealing with a small, highly variable, and often non-representative sample size pre- and post- filtering could further undermine the estimation process.
 
 $$
 \text{TTC}_ {\text{CVM}}^{\text{Camera}} = -\Delta T \times \left( 1-\frac{d_0}{d_1} \right)^{-1} = -\Delta T \times \left( 1-\frac{h_1}{h_0} \right)^{-1} = -\Delta T \times \left( 1-\frac{\tilde{x} _{\text{curr}}}{\tilde{x} _{\text{prev}}} \right)^{-1}
 $$
 
-An example is the HARRIS-BRISK pair [Figure 11].
+An example is the HARRIS-BRISK pair [Figure 11]. In frame 2, the distribution of distance ratios is positively skewed, so the median value is much larger than 1 (the current median is much greater than the previous one) and the TTC estimate significantly reduced. On the contrary, in frame 13, despite the negative skew, the median value is really close to 1, so TTC spikes to >500 seconds. Finally, in frame 18, the median value is exactly 1, so TTC is -inf. Other combinations using the HARRIS, ORB, or FAST (FLANN-based) detector show the same behaviour.
 
 | Frame | Sample size* | Median distance ratio | TTC | Skewness | Excess kurtosis | Points distribution |
 |------:|------------:|----------------------:|----:|---------:|----------------:|:--------------------|
@@ -298,6 +298,8 @@ An example is the HARRIS-BRISK pair [Figure 11].
 
 __Figure 11: HARRIS-BRISK TTC estimates (Brute Force matching)__
 ![HARRIS-BRISK TTC is off](./img/mov9.gif)
+
+__Missing estimates.__
 
 ## Resources
 
