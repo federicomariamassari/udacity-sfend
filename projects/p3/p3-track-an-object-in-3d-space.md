@@ -26,7 +26,7 @@ __Figure 3: Directory Structure Tree__
 ```bash
 .
 ├── analysis
-│   └── p3_performance_evaluation.xls
+│   └── p3_performance_eval.gnumeric
 ├── build
 │   ├── ...
 │   └── 3D_object_tracking
@@ -262,7 +262,7 @@ To determine the best detector-descriptor pair for the camera-based time-to-coll
 2. Speed of the detector-descriptor combination;
 3. Relatively decreasing monotonicity of the time-to-collision estimate.
 
-I consider all frames until the vehicle is nearly stationary (48), at which point the LiDAR TTC estimate becomes unreliable since the previous and current median values are so close to each other that their difference (at the denominator) is almost zero, leading to sudden spikes in both directions in the TTC output. `bExtraAccuracy = false` as per default. The results are available in [`p3_performance_evaluation.xls`](./analysis/p3_performance_evaluation.xls).
+I consider all frames until the vehicle is nearly stationary (48), at which point the LiDAR TTC estimate becomes unreliable since the previous and current median values are so close to each other that their difference (at the denominator) is almost zero, leading to sudden spikes in both directions in the TTC output. `bExtraAccuracy = false` as per default. The results are available in [`p3_performance_eval.gnumeric`](./analysis/p3_performance_eval.gnumeric).
 
 Among all possible pairs, three combinations are shortlisted: SIFT-BRISK, AKAZE-AKAZE, and SHITOMASI-BRISK. If SURF is also included, then SURF-ORB.
 

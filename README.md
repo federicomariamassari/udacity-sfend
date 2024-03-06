@@ -102,3 +102,7 @@ cmake ..
 make
 ./3D_object_tracking
 ```
+
+## [Project 4: Radar Target Generation and Detection](projects/p4/p4-radar-target-generation-and-detection.md)
+
+### Overview
