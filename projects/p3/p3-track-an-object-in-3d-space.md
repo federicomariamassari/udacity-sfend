@@ -299,10 +299,27 @@ An example is the HARRIS-BRISK pair [Figure 11]. In frame 2, the distribution of
 __Figure 11: HARRIS-BRISK TTC estimates (Brute Force matching)__
 ![HARRIS-BRISK TTC is off](./img/mov9.gif)
 
-__Missing estimates.__ This issue arises when the chosen detector-descriptor pair is unable to produce reliable and consistent matches across frames, so that no valid distance ratio is left, either before or after filtering, to compute TTC—which is then nan. The most notable example is HARRIS-FREAK (FLANN-based), with the estimate missing in frames 1, 5, 6, 9, 13, 14, 18 [Figure 12].
+__Missing estimates.__ This issue arises when the chosen detector-descriptor pair is unable to produce reliable and consistent matches across frames, so that no valid distance ratio is left, either before or after filtering, to compute TTC—which is then nan. The most notable example is HARRIS-FREAK (FLANN-based), with the estimate missing in frames 1, 6, 9, 13, 14, 18 [Figure 12].
 
 __Figure 12: HARRIS-FREAK TTC estimates (FLANN-based matching)__
 ![HARRIS-FREAK TTC is nan](./img/mov10.gif)
+
+__Keypoints not on preceding vehicle.__ Finally, it is common for several algorithms to detect keypoints which do not belong to the preceding vehicle but to its shadow, the car on its right, or to the road, simply because these features exist within the region of interest of the vehicle's 2D bounding box. Leading examples of each are: BRISK-BRIEF (bottom-right corner, vehicle shadow); AKAZE-AKAZE (top-left corner, road surface); and FAST-BRISK (top-right corner, car on the right) [Figure 13].
+
+__Figure 13: Misleading camera features__
+
+<table>
+  <tr>
+    <td align="center"><b>BRISK-BRIEF</b></td>
+    <td align="center"><b>AKAZE-AKAZE</b></td>
+    <td align="center"><b>FAST-BRISK</b></td>
+  </tr>
+  <tr>
+    <td align="center"><img align="center" src="img/mov11-1.gif"/></td>
+    <td align="center"><img align="center" src="img/mov11-2.gif"/></td>
+    <td align="center"><img align="center" src="img/mov11-3.gif"/></td>
+  </tr>
+</table>
 
 ## Resources
 
