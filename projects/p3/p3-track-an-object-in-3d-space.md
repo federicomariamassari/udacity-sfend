@@ -304,14 +304,14 @@ __Missing estimates.__ This issue arises when the chosen detector-descriptor pai
 __Figure 12: HARRIS-FREAK TTC estimates (FLANN-based matching)__
 ![HARRIS-FREAK TTC is nan](./img/mov10.gif)
 
-__Keypoints not on preceding vehicle.__ Finally, it is common for several algorithms to detect keypoints which do not belong to the preceding vehicle but to its shadow, the car on its right, or to the road, simply because these features exist within the region of interest of the vehicle's 2D bounding box. Leading examples of each are: BRISK-BRIEF (bottom-right corner, vehicle shadow); AKAZE-AKAZE (top-left corner, road surface); and FAST-BRISK (top-right corner, car on the right) [Figure 13].
+__Keypoints not on preceding vehicle.__ Finally, it is common for several algorithms to detect keypoints which do not belong to the preceding vehicle but to its shadow, the car on its right, or to the road, simply because these features exist within the region of interest of the vehicle's 2D bounding box. Leading examples of each are: BRISK-BRIEF (bottom-right corner, car shadow); SIFT-SIFT (top-left corner, road surface); and FAST-BRISK (top-right corner, car on the right) [Figure 13].
 
 __Figure 13: Misleading camera features__
 
 <table>
   <tr>
     <td align="center"><b>BRISK-BRIEF</b></td>
-    <td align="center"><b>AKAZE-AKAZE</b></td>
+    <td align="center"><b>SIFT-SIFT</b></td>
     <td align="center"><b>FAST-BRISK</b></td>
   </tr>
   <tr>
