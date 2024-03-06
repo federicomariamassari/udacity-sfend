@@ -309,7 +309,7 @@ void renderClusters(const vector<vector<LidarPoint>>& clusters, const vector<vec
     window.showWidget("discarded", cloud);
   }
 
-  window.spin();  // Trigger event loop
+  window.spin();  // Trigger event loop, must be closed manually
 }
 
 // FP.2

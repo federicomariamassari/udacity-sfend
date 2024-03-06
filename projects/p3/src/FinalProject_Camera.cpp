@@ -31,8 +31,8 @@ struct Options
   /*******************************************************************************************************************
    * 2D FEATURE TRACKING OPTIONS
    *******************************************************************************************************************/
-  string detectorType = "FAST";  // HARRIS, SHITOMASI, FAST, BRISK, ORB, AKAZE, SIFT, SURF
-  string descriptorType = "BRIEF";  // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT, SURF
+  string detectorType = "SIFT";  // HARRIS, SHITOMASI, FAST, BRISK, ORB, AKAZE, SIFT, SURF
+  string descriptorType = "BRISK";  // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT, SURF
   string descriptorGroup = "DES_BINARY";  // DES_BINARY, DES_HOG
 
   string matcherType = "MAT_BF";  // MAT_BF, MAT_FLANN
@@ -55,7 +55,7 @@ struct Options
   bool bVisYoloBoundingBoxes = false;  // true to show YOLOv3 bounding boxes, COCO names and confidence for each frame
   bool bVisLidarTopView = false;  // true to display LiDAR top-view perspective, false to skip
   bool bStopAtLidarTopView = false;  // wrapper around the continue statement; true to cycle through LiDAR top-views
-                                     // (if bVisLidarTopView = true) false to proceed with TTC calculation
+                                     // (if bVisLidarTopView = true), false to proceed with TTC calculation
 
   bool bVisFinalOutput = true;  // true to view final output image with superimposed time-to-collision estimates
   bool bVisLidarOverlay = true;  // true to additionally superimpose LiDAR points on preceding vehicle bounding box
@@ -181,7 +181,7 @@ int main(int argc, const char *argv[])
     float confThreshold = 0.2;
     float nmsThreshold = 0.4;
 
-    string yoloSaveAs = "yolo_" + imgNumber.str() + imgFileType;
+    string yoloSaveAs = "yolo_" + imgNumber.str() + imgFileType;  // used if bSaveYoloBBFrames == true
 
     detectObjects((dataBuffer.end() - 1)->cameraImg, (dataBuffer.end() - 1)->boundingBoxes, confThreshold, 
       nmsThreshold, yoloBasePath, yoloClassesFile, yoloModelConfiguration, yoloModelWeights, opts.bVisYoloBoundingBoxes, 
