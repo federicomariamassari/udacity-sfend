@@ -299,7 +299,10 @@ An example is the HARRIS-BRISK pair [Figure 11]. In frame 2, the distribution of
 __Figure 11: HARRIS-BRISK TTC estimates (Brute Force matching)__
 ![HARRIS-BRISK TTC is off](./img/mov9.gif)
 
-__Missing estimates.__
+__Missing estimates.__ This issue arises when the chosen detector-descriptor pair is unable to produce reliable and consistent matches across frames, so that no valid distance ratio is left, either before or after filtering, to compute TTC—which is then nan. The most notable example is HARRIS-FREAK (FLANN-based), with the estimate missing in frames 1, 5, 6, 9, 13, 14, 18 [Figure 12].
+
+__Figure 12: HARRIS-FREAK TTC estimates (FLANN-based matching)__
+![HARRIS-FREAK TTC is nan](./img/mov10.gif)
 
 ## Resources
 
