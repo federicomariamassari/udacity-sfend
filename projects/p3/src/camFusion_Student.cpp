@@ -346,7 +346,7 @@ void euclideanClustering(const vector<LidarPoint>& src, vector<vector<LidarPoint
   vector<vector<LidarPoint>>& removed, float radius, int knn, int minSize, int maxSize)
 {
   // Convert src to matrix for nearest neighbor search [2]. Downcast to float for faster processing with minimal 
-  // change in output, if any
+  // change in output, if at all
 
   cv::Mat srcMat(src.size(), 3, CV_32F);
 
