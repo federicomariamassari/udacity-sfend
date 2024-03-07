@@ -62,6 +62,14 @@ __Figure 3: Directory Structure Tree__
     └── objectDetection2D.hpp
 ```
 
+### Required Files
+
+This repository does not store the YOLOv3 weights file, which needs to be downloaded inside the `dat/yolo` folder from CLI:
+
+```bash
+wget https://pjreddie.com/media/files/yolov3.weights
+```
+
 ### Options
 
 Options can be set from within the `Options` struct in the main file.
