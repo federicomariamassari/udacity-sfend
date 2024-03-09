@@ -93,7 +93,13 @@ __[Link to code](projects/p3/src)__ | [Starter Code from Udacity](https://github
 
 ### How to Build and Run the Project
 
-For the prerequisites, see project 2. Build and run as follows:
+For the prerequisites, see project 2. Download the YOLOv3 weights inside the `dat/yolo` folder:
+
+```bash
+wget https://pjreddie.com/media/files/yolov3.weights
+```
+
+Then build and run as follows:
 
 ```bash
 cd /home/$whoami/workspace/udacity-rsend/projects/p3
