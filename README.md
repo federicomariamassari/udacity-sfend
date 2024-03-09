@@ -9,7 +9,7 @@ My Udacity Sensor Fusion Engineer Nanodegree projects, in C++.
 * Ubuntu 20.04-5 LTS Focal Fossa running on UTM Virtual Machine on MacBook Pro M1 Max (aarch64)
 * Point Cloud Library 1.11 ([Built from Source](https://pcl.readthedocs.io/projects/tutorials/en/latest/compiling_pcl_posix.html#stable))
 * OpenCV 4.2.0 ([Built from Source](https://github.com/federicomariamassari/udacity-rsend/blob/main/projects/p4/p4-preliminary-config.md#3-rebuild-opencv-from-source-with-patented-modules))
-* MATLAB R2023b Home (on Apple Silicon)
+* MATLAB R2023b Home License (on Apple Silicon)
 
 ## [Project 1: LiDAR Obstacle Detection](projects/p1/p1-lidar-obstacle-detection.md)
 
