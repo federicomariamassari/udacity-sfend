@@ -113,3 +113,5 @@ make
 ## [Project 4: Radar Target Generation and Detection](projects/p4/p4-radar-target-generation-and-detection.md)
 
 ### Overview
+
+__[Link to code](projects/p4/src/radar_target_generation_and_detection.m)__
