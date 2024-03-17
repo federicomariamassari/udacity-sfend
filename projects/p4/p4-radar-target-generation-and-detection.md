@@ -42,6 +42,7 @@ $$
 
 ### Non-Thresholded Edges
 
+__Figure 3: 2D Cell-Averaging Constant False Alarm Rate__
 ![2D CA-CFAR](./img/img3.svg)
 
 [Home](../../README.md) | Previous: [Track an Object in 3D Space](../p3/p3-track-an-object-in-3d-space.md) | Next:
