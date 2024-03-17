@@ -38,11 +38,23 @@ $$
 
 ### Range FFT
 
+<table>
+  <tr>
+  <td align="center"><b>Figure 1.A</b>: Single-Sided Beat Signal Amplitude Spectrum</td>
+  <td align="center"><b>Figure 1.B</b>: Range-Doppler Map</td>
+  <tr>
+  </tr>
+  <tr>
+    <td align="center"><img align="center" src="img/img2a.svg" width="475"/></td>
+    <td align="center"><img align="center" src="img/img2b.svg" width="475"/></td>
+  </tr>
+</table>
+
 ### 2D CA-CFAR
 
 ### Non-Thresholded Edges
 
-__Figure 3: 2D Cell-Averaging Constant False Alarm Rate__
+__Figure 2: 2D Cell-Averaging Constant False Alarm Rate__
 ![2D CA-CFAR](./img/img3.svg)
 
 [Home](../../README.md) | Previous: [Track an Object in 3D Space](../p3/p3-track-an-object-in-3d-space.md) | Next:
