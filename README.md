@@ -116,7 +116,7 @@ make
 
 _Analyze radar signatures to detect and track objects._
 
-In this MATLAB project, I generate and propagate a radar signal, simulate its reflection off a target, process the received echo to estimate the target's range and velocity (Doppler) via Fast Fourier Transform (FFT), and finally suppress unwanted noise in the output using 2D Cell-Average Constant False Alarm Rate (CA-CFAR).
+In this MATLAB project, I generate and propagate a radar signal, simulate its reflection off a target, process the received echo to estimate the target's range and velocity (Doppler) via Fast Fourier Transform (FFT), and finally suppress unwanted noise in the output using 2D Cell-Averaging Constant False Alarm Rate (CA-CFAR).
 
 __[Link to code](projects/p4/src/radar_target_generation_and_detection.m)__
 
