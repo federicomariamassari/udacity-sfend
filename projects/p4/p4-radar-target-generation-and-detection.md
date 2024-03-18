@@ -52,9 +52,25 @@ $$
 
 ### 2D CA-CFAR
 
+<table>
+  <tr>
+  <td align="center"><b>Figure 2.A</b>: Large number of false positives (offset = 4)</td>
+  <td align="center"><b>Figure 2.B</b>: Faint target signal (offset = 10)</td>
+  <tr>
+  </tr>
+  <tr>
+    <td align="center"><img align="center" src="img/img4a.svg" width="475"/></td>
+    <td align="center"><img align="center" src="img/img4b.svg" width="475"/></td>
+  </tr>
+</table>
+
 ### Non-Thresholded Edges
 
-__Figure 2: 2D Cell-Averaging Constant False Alarm Rate__
+__Figure 3: 2D Cell-Averaging Constant False Alarm Rate__
 ![2D CA-CFAR](./img/img3.svg)
+
+## Resources
+
+1. 
 
 [Home](../../README.md) | Previous: [Track an Object in 3D Space](../p3/p3-track-an-object-in-3d-space.md) | Next:
