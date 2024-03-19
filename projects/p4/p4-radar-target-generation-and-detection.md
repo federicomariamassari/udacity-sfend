@@ -31,7 +31,7 @@ $$
 
 $$
 \text{slope} = \frac{\text{bandwidth}}{\text{chirp time}} = \frac{1.5\times 10^8\ \text{Hz}}{7.\overline{3} \times 10^{-6}\ \text{s}} =
- 2.0\overline{45}\times 10^{13}\ \text{s}^{-2}
+ 2.0\overline{45}\times 10^{13}\ \text{Hz/s}
 $$
 
 ### Simulation Loop
