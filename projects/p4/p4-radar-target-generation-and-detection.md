@@ -20,18 +20,18 @@ Most tasks are timed to monitor their efficiency.
 From the above parameter specifications, the Frequency-Modulated Continuous Wave (FMCW) is given by:
 
 $$
-\text{bandwidth} = \frac{\text{speed of light}}{2\times\text{range resolution}} = \frac{3\times 10^8}{2\times 1} =
- 1.5\times 10^8
+\text{bandwidth} = \frac{\text{speed of light}}{2\times\text{range resolution}} = \frac{3\times 10^8\ \text{m/s}}{2\times 1\ \text{m}} =
+ 1.5\times 10^8\ \text{Hz}
 $$
 
 $$
 \text{chirp time} = 5.5 \times 2 \times \frac{\text{max range}}{\text{speed of light}} = 5.5 \times 2 \times
- \frac{200}{3\times 10^8} = 7.\overline{3} \times 10^{-6}
+ \frac{200\ \text{m}}{3\times 10^8\ \text{m/s}} = 7.\overline{3} \times 10^{-6}\ \text{s}
 $$
 
 $$
-\text{slope} = \frac{\text{bandwidth}}{\text{chirp time}} = \frac{1.5\times 10^8}{7.\overline{3} \times 10^{-6}} =
- 2.0\overline{45}\times 10^{13}
+\text{slope} = \frac{\text{bandwidth}}{\text{chirp time}} = \frac{1.5\times 10^8\ \text{Hz}}{7.\overline{3} \times 10^{-6}\ \text{s}} =
+ 2.0\overline{45}\times 10^{13}\ \text{s}^{-2}
 $$
 
 ### Simulation Loop
@@ -56,7 +56,7 @@ $$
 
 #### Offset
 
-The optimal offset value was found to be 5-6. If the offset is too small (4 or below), a large number of false positives are detected [Figure 2.A]. If it is too large (e.g., 10), the target signal becomes too faint [Figure 2.B].
+The optimal offset value was found to be 5-6. If the offset is too small (4 or below), a large number of false positives are detected [Figure 2.A]. If it is too large (e.g., 10), the target signal becomes increasingly faint [Figure 2.B].
 
 <table>
   <tr>
