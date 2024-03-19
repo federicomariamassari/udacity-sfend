@@ -17,7 +17,7 @@ Most tasks are timed to monitor their efficiency.
 
 ### FMCW Waveform Design
 
-From the above parameter specifications, the Frequency-Modulated Continuous Wave (FMCW) [1] is given by:
+From the above parameter specifications, the Frequency-Modulated Continuous-Wave (FMCW) radar [1] waveform is given by:
 
 $$
 \text{bandwidth} = \frac{\text{speed of light}}{2\times\text{range resolution}} = \frac{3\times 10^8\ \text{m/s}}{2\times 1\ \text{m}} =
@@ -33,6 +33,8 @@ $$
 \text{slope} = \frac{\text{bandwidth}}{\text{chirp time}} = \frac{1.5\times 10^8\ \text{Hz}}{7.\overline{3} \times 10^{-6}\ \text{s}} =
  2.0\overline{45}\times 10^{13}\ \text{Hz/s}
 $$
+
+Chirp (sweep) time is set to 5.5 times the beat frequency, to avoid range ambiguity and improve the velocity estimate.
 
 ### Simulation Loop
 
