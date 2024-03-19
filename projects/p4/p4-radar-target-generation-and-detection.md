@@ -52,6 +52,8 @@ $$
 
 ### 2D CA-CFAR
 
+#### Training and Guard Cells
+
 #### Offset
 
 The optimal offset value was found to be 5-6. If the offset is too small (4 or below), a large number of false positives are detected [Figure 2.A]. If it is too large (e.g., 10), the target signal becomes too faint [Figure 2.B].
@@ -69,13 +71,6 @@ The optimal offset value was found to be 5-6. If the offset is too small (4 or b
 </table>
 
 ### Non-Thresholded Edges
-
-Edges are suppressed at matrix initialization. A matrix of zeros of size (range doppler X range range) is created. A copy is made from RDM as modifying the source matrix in place would lead to unwanted outcome [1]. Then, the submatrix that starts at training + guard cells for each dimension is populated by copying from the RDM matrix. This way, no need for post-processing edge suppression, which speeds up the entire process.
-
-```matlab
-RDM_copy = zeros(size(RDM));
-RDM_copy((Tr+Gr+1):end-(Tr+Gr), (Td+Gd+1):end-(Td+Gd)) = RDM((Tr+Gr+1):end-(Tr+Gr), (Td+Gd+1):end-(Td+Gd));
-```
 
 __Figure 3: 2D Cell-Averaging Constant False Alarm Rate__
 ![2D CA-CFAR](./img/img3.svg)
