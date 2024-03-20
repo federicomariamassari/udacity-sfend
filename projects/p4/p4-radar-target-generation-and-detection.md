@@ -56,6 +56,8 @@ Chirp (sweep) time is set to 5.5 times the beat frequency, to avoid range ambigu
 
 #### Training and Guard Cells
 
+Choosing an appropriate number of training and guard cells in the range and Doppler dimensions involves balancing speed and accuracy: a too small number of cells will disregard important information on the noise and may not prevent spillover from the cell under test; a too large number will instead significantly increase computational time. In this project, I set the number of training cells to 6 (range) and 4 (Doppler), and the number of guard cells to 3 in both dimensions.
+
 #### Offset
 
 The optimal offset value was found to be 5-6. If the offset is too small (4 or below), a large number of false positives are detected [Figure 2.A]. If it is too large (e.g., 10), the target signal becomes increasingly faint [Figure 2.B].
