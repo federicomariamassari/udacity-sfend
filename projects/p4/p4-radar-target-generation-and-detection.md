@@ -56,7 +56,7 @@ Chirp (sweep) time is set to 5.5 times the beat frequency, to avoid range ambigu
 
 #### Training and Guard Cells
 
-Choosing an appropriate number of training and guard cells in the range and Doppler dimensions involves balancing speed and accuracy: a too small number of cells will disregard important information on the noise and may not prevent spillover from the cell under test; a too large number will instead significantly increase computational time. In this project, I set the number of training cells to 6 (range) and 4 (Doppler), and the number of guard cells to 3 in both dimensions.
+Choosing an appropriate number of training and guard cells in the range and Doppler dimensions involves balancing speed and accuracy: a too small number of cells will disregard important information on the noise and may not prevent spillover from the cell under test; a too large number will instead significantly increase computational time. In this project, I set the number of training cells to 6 (range) and 4 (Doppler), and the number of guard cells to 3 (both dimensions). As a result, on a MacBook Pro M1 Max (64GB RAM) the 2D CA-CFAR algorithm yields the desired output in ~1 second with JIT compilation.
 
 #### Offset
 
