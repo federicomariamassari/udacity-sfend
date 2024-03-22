@@ -38,7 +38,19 @@ Chirp (sweep) time is set to 5.5 times the beat frequency, to avoid range ambigu
 
 ### Simulation Loop
 
-To complete the required steps in this section and in the following ones, I mostly use vectorized operations instead of looping through each single element, as the starting code suggests. First, I compute the vectors of range covered as $\textbf{r}_t = R + V\times\textbf{t}$ (constant velocity model) and round-trip time as $\mathbf{\tau} = (2\times\textbf{r}_t)/c$ (because the signal travels to the target and back at the speed of light). Then, I simulate the transmitted and received signals, $\textbf{T}_t$ and $\textbf{R}_t$, as:
+To complete the required steps in this section and in the following ones, I mostly use vectorized operations instead of looping through each single element as the starting code suggests, and in doing so, I do not pre-allocate memory to the variables since MATLAB's internal memory management on vectorized operations is efficient enough (source: Udacity GPT).
+
+First, I compute the vectors of range covered as $\textbf{r}_t = R + V\times\textbf{t}$ (constant velocity model) and round-trip time as $\mathbf{\tau} = (2\times\textbf{r}_t)/c$ (because the signal travels to the target and back at the speed of light). Then, I simulate the transmitted and received signals, $\textbf{T}_t$ and $\textbf{R}_t$, as:
+
+$$
+\textbf{T}_t = 
+$$
+
+$$
+\textbf{R}_t = 
+$$
+
+Finally, I calculate the mixed (or beat) signal as the element-wise multiplication:
 
 ### Range FFT
 
