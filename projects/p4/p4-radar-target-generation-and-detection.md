@@ -58,6 +58,8 @@ $$
 
 ### Range FFT
 
+After reshaping the beat signal into a matrix of size $\text{Nr}\times\text{Nd}$ (number of range cells $\times$ number of Doppler cells), a Fast Fourier Transform (FFT) is run along the range dimension, to convert from time domain $t$ to frequency domain $\omega$. The output (a vector of complex numbers) is then normalized, the absolute value taken, and since its a double-sided signal, only the first half of the samples are kept. The result appears in Figure 1.A: the x-axis starts at 0, so the signal has a peak exactly at $R$. Compared to the starting code, the y-axis is capped at 0.35, and the graph is made full-size (as opposed to subfigure).
+
 <table>
   <tr>
   <td align="center"><b>Figure 1.A</b>: Single-Sided Beat Signal Amplitude Spectrum</td>
