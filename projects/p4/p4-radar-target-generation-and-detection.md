@@ -34,7 +34,7 @@ $$
  2.0\overline{45}\times 10^{13}\ \text{Hz/s}
 $$
 
-Chirp (sweep) time is set to 5.5 times the beat frequency, to avoid range ambiguity and improve the velocity estimate. Speed of light is also denoted by the constant $c$.
+Chirp (sweep) time is set to 5.5 times the beat frequency, to avoid range ambiguity and improve the velocity estimate. Speed of light is also denoted by the constant $c \approx$ 300,000 km/s.
 
 ### Simulation Loop
 
