@@ -38,7 +38,7 @@ Chirp (sweep) time is set to 5.5 times the beat frequency, to avoid range ambigu
 
 ### Simulation Loop
 
-To complete the required steps in this section and in the following ones, I mostly use vectorized operations instead of looping through each single element as the starter code suggests. In doing so, I do not pre-allocate memory to the variables since MATLAB's internal memory management on vectorized operations is efficient enough (source: Udacity GPT).
+To complete the required steps in this section and in the following ones, I mostly use vectorized operations instead of looping through each single element as the starter code suggests. In doing so, I do not pre-allocate memory to the variables since MATLAB's internal memory management on vectorized operations is already optimized (source: Udacity GPT).
 
 From the target's initial position and velocity $R$ and $V$, I first compute the vector of range covered by the target vehicle as $\textbf{r}_t = R + V\times\textbf{t}$ (constant velocity model), and from that, the vector of round-trip time as $\mathbf{\tau} = (2\times\textbf{r}_t)/c$ (because the signal travels to the target and back at the speed of light). Then, I simulate the transmitted and received signals, $\textbf{T}_t$ and $\textbf{R}_t$, as:
 
@@ -58,7 +58,7 @@ $$
 
 ### Range FFT
 
-After reshaping the beat signal into a matrix of size $\text{Nr}\times\text{Nd}$ (number of range cells $\times$ number of Doppler cells), a Fast Fourier Transform (FFT) is run along the range dimension, to convert from time domain $t$ to frequency domain $\omega$. The output (a vector of complex numbers) is then normalized, the absolute value taken, and since its a double-sided signal, only the first half of the samples are kept. The result appears in Figure 1.A: the x-axis starts at 0, so the signal has a peak exactly at $R$. Compared to the starting code, the y-axis is capped at 0.35, and the plot is made full-size (as opposed to subfigure).
+After reshaping the beat signal into a matrix of size $\text{Nr}\times\text{Nd}$ (number of range cells $\times$ number of Doppler cells), a Fast Fourier Transform (FFT) is run along the range dimension, to convert from time domain $t$ to frequency domain $\omega$. The output (a vector of complex numbers) is then normalized, the absolute value taken, and since it's a double-sided signal only the first half of the samples are kept. The result appears in Figure 1.A: the x-axis starts at 0, so the signal has a peak exactly at $R$. Compared to the starting code, the y-axis is capped at 0.35, and the plot is made full-size (as opposed to a subfigure).
 
 ### Range-Doppler Map
 
@@ -99,6 +99,9 @@ The optimal offset value was found to be 5-6. If the offset is too small (4 or b
 </table>
 
 ### Non-Thresholded Edges
+
+Edge suppression is not required in this case, 
+
 
 __Figure 3: 2D Cell-Averaging Constant False Alarm Rate__
 ![2D CA-CFAR](./img/img3.svg)
