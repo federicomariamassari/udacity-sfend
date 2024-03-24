@@ -102,7 +102,7 @@ The optimal offset value was found to be 5-6. If the offset is too small (4 or b
   </tr>
 </table>
 
-### Non-Thresholded Edges
+#### Non-Thresholded Edges
 
 Edge suppression is not required because, as mentioned earlier, I initialize a matrix of zeros the size of the RDM and only populate, with contents from the latter, the submatrix that starts at the first and ends at the last CUT cell, in both dimensions. Hence, the band of training and guard cells framing the submatrix already has null components. The final output appears in Figure 3.
 
