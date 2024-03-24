@@ -126,3 +126,7 @@ __[Link to code](projects/p4/src/radar_target_generation_and_detection.m)__
     <td align="center"><img align="center" src="projects/p4/img/img1.svg" width="500"/></td>
   </tr>
 </table>
+
+### How to Run the Project
+
+If run locally, this project requires a valid MATLAB license plus Signal Processing Toolbox.
