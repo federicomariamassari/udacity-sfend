@@ -38,7 +38,7 @@ Chirp (sweep) time is set to 5.5 times the beat frequency, to avoid range ambigu
 
 ### Simulation Loop
 
-To complete the required steps in this section and in the following ones, I mostly use vectorized operations instead of looping through each single element as the starter code suggests. In doing so, I do not pre-allocate memory to the variables since MATLAB's internal memory management on vectorized operations is already optimized (source: Udacity GPT).
+To complete the required steps in this section and in the following ones, I mostly use vectorized operations instead of looping through each single element, as the starter code suggests. In doing so, I do not pre-allocate memory to the variables since MATLAB's internal memory management on vectorized operations is already optimized (source: Udacity GPT).
 
 From the target's initial position and velocity $R$ and $V$, I first compute the vector of range covered by the target vehicle as $\textbf{r}_t = R + V\times\textbf{t}$ (constant velocity model), and from that, the vector of round-trip time as $\mathbf{\tau} = (2\times\textbf{r}_t)/c$ (because the signal travels to the target and back at the speed of light). Then, I simulate the transmitted and received signals, $\textbf{T}_t$ and $\textbf{R}_t$, as:
 
@@ -62,7 +62,7 @@ After reshaping the beat signal into a matrix of size $\text{Nr}\times\text{Nd}$
 
 ### Range-Doppler Map
 
-The Range-Doppler Map (RDM), generated from a 2D FFT, is already present in the initial code. My contribution was simply to shorten the length of the y-axis (Doppler dimension) to fit within the velocity limits of [-70; +70] m/s [Figure 1.B].
+The Range-Doppler Map (RDM), generated from a 2D FFT, is already present in the initial code. My contribution was simply to shorten the length of the y-axis (Doppler dimension) to fit within the velocity limits of [-70; +70] m/s [Figure 1.B]. In the plot, notice the spread of energy along the Doppler axis, signalling the target's motion.
 
 <table>
   <tr>
