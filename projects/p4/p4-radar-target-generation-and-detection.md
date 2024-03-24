@@ -4,7 +4,7 @@
 
 ## Overview
 
-In this MATLAB project, I design and simulate all steps of a radar signal processing chain. After generating a specific waveform based on system requirements, I model a target's movement using constant velocity, then propagate the wave and calculate the mixed, or beat, signal for each time step. Next, I perform two passes of Fast Fourier Transform (FFT) on the data, one to identify the initial position of the vehicle, the other to also infer its speed in a Range-Doppler Map (RDM). Finally, I implement a 2D CA-CFAR algorithm to remove noise induced by heat and other environmental factors, and precisely locate the target. Most tasks are timed to monitor their efficiency.
+In this MATLAB project, I design and simulate all the steps of a radar signal processing chain. After generating a specific waveform based on system requirements, I model a target's movement using constant velocity, then propagate the wave and calculate the mixed, or beat, signal for each time step. Next, I perform two passes of Fast Fourier Transform (FFT) on the data, one to identify the initial position of the vehicle, the other to also infer its speed in a Range-Doppler Map (RDM). Finally, I implement a 2D CA-CFAR algorithm to remove noise induced by heat and other environmental factors, and precisely locate the target. Most tasks are timed to monitor their efficiency.
 
 ## Project Report
 
@@ -78,7 +78,9 @@ The Range-Doppler Map (RDM), generated from a 2D FFT, is already present in the 
 
 ### 2D CA-CFAR
 
-To remove clutter from unwanted sources such as non-target objects and radar thermal noise, I proceed to implement a 2D Cell-Averaging Constant False Alarm Rate (CA-CFAR) algorithm [3]. I start from a matrix of zeros the size of the Range-Doppler Map, and replace the null values in the submatrix starting at the top-left, and ending at the bottom-right, CUT cell with the corresponding content from the RDM [4]. The resulting matrix is the input for the 2D CA-CFAR.
+To remove clutter from unwanted sources such as non-target objects and radar thermal noise, I proceed to implement a 2D Cell-Averaging Constant False Alarm Rate (CA-CFAR) algorithm [3]. I start from a matrix of zeros the size of the Range-Doppler Map, and replace the null values in the submatrix starting at the top-left and ending at the bottom-right CUT cell with the corresponding content from the RDM [4]. The resulting matrix is the input for the 2D CA-CFAR.
+
+
 
 #### Training and Guard Cells
 
