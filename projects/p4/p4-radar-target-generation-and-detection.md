@@ -78,6 +78,8 @@ The Range-Doppler Map (RDM), generated from a 2D FFT, is already present in the 
 
 ### 2D CA-CFAR
 
+To remove clutter from unwanted sources such as non-target objects and radar thermal noise, I proceed to implement a 2D Cell-Averaging Constant False Alarm Rate (CA-CFAR) algorithm [3]. I start from a matrix of zeros the size of the Range-Doppler Map, and replace the null values in the submatrix starting at the top-left, and ending at the bottom-right, CUT cell with the corresponding content from the RDM [4]. The resulting matrix is the input for the 2D CA-CFAR.
+
 #### Training and Guard Cells
 
 Choosing an appropriate number of training and guard cells in the range and Doppler dimensions involves balancing speed and accuracy: a too small number of cells will disregard important information on the noise and may not prevent spillover from the cell under test; a too large number will instead significantly increase computational time. In this project, I set the number of training cells to 6 (range) and 4 (Doppler), and the number of guard cells to 3 (both dimensions). As a result, on a MacBook Pro M1 Max (64GB RAM) the 2D CA-CFAR algorithm yields the desired output in ~1 second with JIT compilation.
@@ -100,7 +102,7 @@ The optimal offset value was found to be 5-6. If the offset is too small (4 or b
 
 ### Non-Thresholded Edges
 
-Edge suppression is not required because, as mentioned above, I initialize a matrix of zeros the size of the RDM and only populate, with contents from the latter, the submatrix that starts at the first and ends at the last CUT cell, in both dimensions. Hence, the band of training and guard cells framing the submatrix already has null components.
+Edge suppression is not required because, as mentioned earlier, I initialize a matrix of zeros the size of the RDM and only populate, with contents from the latter, the submatrix that starts at the first and ends at the last CUT cell, in both dimensions. Hence, the band of training and guard cells framing the submatrix already has null components. The final output appears in Figure 3.
 
 __Figure 3: 2D Cell-Averaging Constant False Alarm Rate__
 ![2D CA-CFAR](./img/img3.svg)
@@ -109,6 +111,8 @@ __Figure 3: 2D Cell-Averaging Constant False Alarm Rate__
 
 1. [Frequency-Modulated Continuous-Wave Radar: radartutorial.eu](https://www.radartutorial.eu/02.basics/Frequency%20Modulated%20Continuous%20Wave%20Radar.en.html)
 2. [Wikipedia: Hadamard product (matrices)](https://en.wikipedia.org/wiki/Hadamard_product_(matrices))
-3. https://knowledge.udacity.com/questions/848592
+3. [Cell-Averaging Constant False Alarm Rate: radartutorial.eu](https://www.radartutorial.eu/01.basics/False%20Alarm%20Rate.en.html#abs3)
+4. https://knowledge.udacity.com/questions/848592
+5. Project Overview, Radar Target Generation and Detection, Udacity Sensor Fusion Nanodegree
 
 [Home](../../README.md) | Previous: [Track an Object in 3D Space](../p3/p3-track-an-object-in-3d-space.md) | Next:
