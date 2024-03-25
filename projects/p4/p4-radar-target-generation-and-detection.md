@@ -62,7 +62,7 @@ After reshaping the beat signal into a matrix of size $\text{Nr}\times\text{Nd}$
 
 ### Range-Doppler Map
 
-The Range-Doppler Map (RDM), generated from a 2D FFT, is already present in the initial code. My contribution was simply to shorten the length of the y-axis (Doppler dimension) to fit within the velocity limits of [-70; +70] m/s [Figure 1.B]. In the plot, notice the spread of energy along the Doppler axis, signalling the target's motion.
+The Range-Doppler Map (RDM), generated from a 2D FFT, is already present in the initial code. My contribution was simply to shorten the length of the y-axis (Doppler dimension) to fit within the velocity limits of [-70; +70] m/s [Figure 1.B]. In the plot, the spread of energy along the Doppler axis signals the target's motion.
 
 <table>
   <tr>
@@ -78,7 +78,17 @@ The Range-Doppler Map (RDM), generated from a 2D FFT, is already present in the 
 
 ### 2D CA-CFAR
 
-To remove clutter from unwanted sources such as non-target objects and radar thermal noise, I proceed to implement a 2D Cell-Averaging Constant False Alarm Rate (CA-CFAR) algorithm [3]. As input, I create a matrix of zeros the size of the Range-Doppler Map, and replace the null values in the submatrix delimited by the top-left and the bottom-right Cells Under Test (CUT) with the corresponding content from the RDM [4].
+To remove clutter from unwanted sources such as non-target objects and radar thermal noise, I proceed to implement a 2D Cell-Averaging Constant False Alarm Rate (CA-CFAR) algorithm [3] as follows:
+
+1. I start from a matrix of zeros the size of the Range-Doppler Map, and replace the null values in the submatrix delimited by the top-left and the bottom-right Cells Under Test (CUT) with the corresponding content from the RDM [4].
+
+2. In a nested for loop, I run through all the CUT cells in the above submatrix.
+
+3. At each iteration, I compute the aggregate noise level for the training cells around the CUT as the difference between the sum of the elements in two grids: the one containing all cells in scope (training, guard, and test) and the one containing only the guard and test cells. This method deviates from the nested loop procedure the starter code suggests [5], and is done to improve speed. As decibel values cannot be readily summed, I convert them to power using `db2pow` before the operation.
+
+4. The cumulative local noise is then reverted to decibel (a logarithmic measure) with `pow2db`, and an average measure is retrieved. The latter is used to apply boolean masking on the cell under test, which is set to 1 if the signal level of the CUT is greater than the average noise plus the offset and to 0 otherwise.
+
+5. Finally, the noise level is reset for a new pass.
 
 #### Training and Guard Cells
 
