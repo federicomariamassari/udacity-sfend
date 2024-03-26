@@ -86,7 +86,7 @@ To remove clutter from unwanted sources such as non-target objects and radar the
 
 3. At each iteration, I compute the aggregate noise level for the training cells around the CUT as the difference between the sum of the elements in two grids: the one containing all cells in scope (training, guard, and test) and the one containing only the guard and test cells. This method deviates from the nested loop procedure the starter code suggests [5], and is done to improve speed. As decibel values cannot be readily summed, I convert them to power using `db2pow` before the operation.
 
-4. The cumulative local noise is then reverted to decibel (a logarithmic measure) with `pow2db`, and an average measure is retrieved. The latter is used to apply boolean masking on the cell under test, which is set to 1 if the signal level of the CUT is greater than the average noise plus the offset and to 0 otherwise.
+4. The cumulative local noise is then reverted to decibel (a logarithmic measure) with `pow2db`, and an average measure is retrieved. The latter is used to apply boolean masking on the cell under test, which is set to 1 if the signal level of the CUT is greater than the average noise plus the offset, to 0 otherwise.
 
 5. Finally, the noise level is reset for a new pass.
 
