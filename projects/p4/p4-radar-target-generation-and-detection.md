@@ -34,13 +34,13 @@ $$
  2.0\overline{45}\times 10^{13}\ \text{Hz/s}
 $$
 
-Chirp (sweep) time is set to 5.5 times the beat frequency, to avoid range ambiguity and improve the velocity estimate. Speed of light is also denoted by the constant $c \approx$ 300,000 km/s.
+Chirp (sweep) time is set to 5.5 times the beat frequency, to avoid range ambiguity and improve the velocity estimate.
 
 ### Simulation Loop
 
 To complete the required steps in this section and in the following ones, I mostly use vectorized operations instead of looping through each single element, as the starter code suggests. In doing so, I do not pre-allocate memory to the variables since MATLAB's internal memory management on vectorized operations is already optimized (source: Udacity GPT).
 
-From the target's initial position and velocity $R$ and $V$, I first compute the vector of range covered by the target vehicle as $\textbf{r}_t = R + V\times\textbf{t}$ (constant velocity model), and from that, the vector of round-trip time as $\mathbf{\tau} = (2\times\textbf{r}_t)/c$ (because the signal travels to the target and back at the speed of light). Then, I simulate the transmitted and received signals, $\textbf{T}_t$ and $\textbf{R}_t$, as:
+From the target's initial position and velocity $R$ and $V$, I first compute the vector of range covered by the target vehicle as $\textbf{r}_t = R + V\times\textbf{t}$ (constant velocity model), and from that, the vector of round-trip time as $\mathbf{\tau} = (2\times\textbf{r}_t)/c$ (because the signal travels to the target and back at the speed of light, denoted by $c \approx$ 300,000 km/s). Then, I simulate the transmitted and received signals, $\textbf{T}_t$ and $\textbf{R}_t$, as:
 
 $$
 \textbf{T}_t = \cos \Bigl[2 \pi\times \Bigl(f_c\times \textbf{t} + \text{slope}\times \frac{\textbf{t} \odot \textbf{t}}{2}\Bigr)\Bigr]
