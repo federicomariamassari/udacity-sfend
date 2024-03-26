@@ -130,3 +130,7 @@ __[Link to code](projects/p4/src/radar_target_generation_and_detection.m)__
 ### How to Run the Project
 
 If run locally, this project requires a valid MATLAB license plus Signal Processing Toolbox.
+
+## [Project 5: Unscented Kálmán Filter Highway Project](projects/p5/p5-unscented-kalman-filter-highway-project.md)
+
+### Overview
