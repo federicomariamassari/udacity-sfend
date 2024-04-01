@@ -134,3 +134,5 @@ If run locally, this project requires a valid MATLAB license plus Signal Process
 ## [Project 5: Unscented Kálmán Filter Highway Project](projects/p5/p5-unscented-kalman-filter-highway-project.md)
 
 ### Overview
+
+__[Link to code](projects/p5/src)__ | [Starter Code from Udacity](https://github.com/udacity/SFND_Unscented_Kalman_Filter)
