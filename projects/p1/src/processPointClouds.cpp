@@ -28,7 +28,7 @@ typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::FilterCloud(ty
 
   std::cout << "Point Cloud size before filtering: " << cloud->points.size() << std::endl;
 
-  // Voxel grid point reduction [https://pcl.readthedocs.io/en/latest/voxel_grid.html]
+  // Voxel grid point reduction [https://pcl.readthedocs.io/projects/tutorials/en/latest/voxel_grid.html]
   typename pcl::PointCloud<PointT>::Ptr cloudFiltered (new pcl::PointCloud<PointT>);
 
   // Create the filtering object
