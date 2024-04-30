@@ -1,58 +1,78 @@
 /* \author Aaron Brown */
-// Handle logic for creating traffic on highway and animating it
+// Handle logic for creating traffic on a highway and animating it.
+
+#ifndef HIGHWAY_H
+#define HIGHWAY_H
 
 #include "render/render.h"
 #include "sensors/lidar.h"
 #include "tools.h"
 
+#include "custom/process_point_cloud.h"  // Voxel grid filtering, Euclidean clustering, bounding boxes
+#include "custom/process_point_cloud.cpp"  // To help linker
+
+
+/**
+ * Customise rendered output
+ */
+struct ProjectOptions
+{
+  CameraAngle setAngle = XY;
+
+  // Set which cars to track with UKF
+  std::vector<bool> trackCars = {true, true, true};  // Cars' initial positions from ego vehicle: SW, NE, S
+
+  // Visualize sensor measurements
+  bool visualize_lidar = true;  // true to display red orb
+  bool visualize_radar = true;  // true to display radar metric
+  bool visualize_pcd = true;  // true to display colorless LiDAR point clouds, false for stylised green car shapes
+
+  // Predict path in the future using UKF
+  double projectedTime = 2;
+  int projectedSteps = 6;
+
+  bool filterPointCloud = true;  // true to downsample input point cloud using voxel grid filtering
+  float voxelSide = 0.18f;  // 0.01f = 1 cm
+
+  bool cluster_pcd = true;
+
+  // Rendering options
+  bool renderBoxes = true;  // true to render simple (rectangular prism) bounding boxes around clusters
+};
+
+
 class Highway
 {
   public:
-
     std::vector<Car> traffic;
+    std::vector<Box> boxes;  // To store bounding boxes associated to traffic car clusters
     Car egoCar;
     Tools tools;
+
     bool pass = true;
     std::vector<double> rmseThreshold = {0.30, 0.16, 0.95, 0.70};
     std::vector<double> rmseFailLog = {0.0, 0.0, 0.0, 0.0};
     Lidar* lidar;
 
-    // Parameters
-    // --------------------------------
-    // Set which cars to track with UKF
-    std::vector<bool> trackCars = {true, true, true};
-
-    // Visualize sensor measurements
-    bool visualize_lidar = true;
-    bool visualize_radar = true;
-    bool visualize_pcd = false;
-    
-    // Predict path in the future using UKF
-    double projectedTime = 0;
-    int projectedSteps = 0;
-    // --------------------------------
-
-    Highway(pcl::visualization::PCLVisualizer::Ptr& viewer)
+    Highway(pcl::visualization::PCLVisualizer::Ptr& viewer, ProjectOptions& options)
     {
       tools = Tools();
-    
+
       egoCar = Car(Vect3(0, 0, 0), Vect3(4, 2, 2), Color(0, 1, 0), 0, 0, 2, "egoCar");
-      
+
       Car car1(Vect3(-10, 4, 0), Vect3(4, 2, 2), Color(0, 0, 1), 5, 0, 2, "car1");
-      
       std::vector<accuation> car1_instructions;
       accuation a = accuation(0.5*1e6, 0.5, 0.0);
       car1_instructions.push_back(a);
-      a = accuation(2.2*1e6, 0.0, -0.2);
+      a = accuation(2.2 * 1e6, 0.0, -0.2);
       car1_instructions.push_back(a);
-      a = accuation(3.3*1e6, 0.0, 0.2);
+      a = accuation(3.3 * 1e6, 0.0, 0.2);
       car1_instructions.push_back(a);
-      a = accuation(4.4*1e6, -2.0, 0.0);
+      a = accuation(4.4 * 1e6, -2.0, 0.0);
       car1_instructions.push_back(a);
-    
       car1.setInstructions(car1_instructions);
-      
-      if (trackCars[0])
+
+      if (options.trackCars[0])
       {
         UKF ukf1;
         car1.setUKF(ukf1);
@@ -62,100 +82,150 @@ class Highway
 
       Car car2(Vect3(25, -4, 0), Vect3(4, 2, 2), Color(0, 0, 1), -6, 0, 2, "car2");
       std::vector<accuation> car2_instructions;
-      a = accuation(4.0*1e6, 3.0, 0.0);
+      a = accuation(4.0 * 1e6, 3.0, 0.0);
       car2_instructions.push_back(a);
-      a = accuation(8.0*1e6, 0.0, 0.0);
+      a = accuation(8.0 * 1e6, 0.0, 0.0);
       car2_instructions.push_back(a);
       car2.setInstructions(car2_instructions);
-      
-      if (trackCars[1])
+
+      if (options.trackCars[1])
       {
         UKF ukf2;
         car2.setUKF(ukf2);
       }
+
       traffic.push_back(car2);
-    
+
       Car car3(Vect3(-12, 0, 0), Vect3(4, 2, 2), Color(0, 0, 1), 1, 0, 2, "car3");
       std::vector<accuation> car3_instructions;
-      a = accuation(0.5*1e6, 2.0, 1.0);
+      a = accuation(0.5 * 1e6, 2.0, 1.0);
       car3_instructions.push_back(a);
-      a = accuation(1.0*1e6, 2.5, 0.0);
+      a = accuation(1.0 * 1e6, 2.5, 0.0);
       car3_instructions.push_back(a);
-      a = accuation(3.2*1e6, 0.0, -1.0);
+      a = accuation(3.2 * 1e6, 0.0, -1.0);
       car3_instructions.push_back(a);
-      a = accuation(3.3*1e6, 2.0, 0.0);
+      a = accuation(3.3 * 1e6, 2.0, 0.0);
       car3_instructions.push_back(a);
-      a = accuation(4.5*1e6, 0.0, 0.0);
+      a = accuation(4.5 * 1e6, 0.0, 0.0);
       car3_instructions.push_back(a);
-      a = accuation(5.5*1e6, -2.0, 0.0);
+      a = accuation(5.5 * 1e6, -2.0, 0.0);
       car3_instructions.push_back(a);
-      a = accuation(7.5*1e6, 0.0, 0.0);
+      a = accuation(7.5 * 1e6, 0.0, 0.0);
       car3_instructions.push_back(a);
       car3.setInstructions(car3_instructions);
-      
-      if (trackCars[2])
+
+      if (options.trackCars[2])
       {
         UKF ukf3;
         car3.setUKF(ukf3);
       }
+
       traffic.push_back(car3);
 
-      lidar = new Lidar(traffic,0);
-    
-      // render environment
-      renderHighway(0,viewer);
+      lidar = new Lidar(traffic, 0);
+
+      // Render environment
+      renderHighway(0, viewer);
       egoCar.render(viewer);
       car1.render(viewer);
       car2.render(viewer);
       car3.render(viewer);
     }
-    
-    void stepHighway(double egoVelocity, long long timestamp, int frame_per_sec, 
-      pcl::visualization::PCLVisualizer::Ptr& viewer)
-    {
 
-      if (visualize_pcd)
+    void stepHighway(double egoVelocity, long long timestamp, int frame_per_sec, 
+      pcl::visualization::PCLVisualizer::Ptr& viewer, ProjectOptions& options)
+    {
+      if (options.visualize_pcd)  // Display and process point cloud LiDAR data
       {
         pcl::PointCloud<pcl::PointXYZ>::Ptr trafficCloud = tools.loadPcd("../src/sensors/data/pcd/highway_" + 
           std::to_string(timestamp) + ".pcd");
 
-        renderPointCloud(viewer, trafficCloud, "trafficCloud", Color((float)184/256,(float)223/256,(float)252/256));
-      }
-      
+        if (options.filterPointCloud)  // Voxel grid filtering
+        {
+          pcl::PointCloud<pcl::PointXYZ>::Ptr filteredCloud (new pcl::PointCloud<pcl::PointXYZ>);
 
-      // render highway environment with poles
-      renderHighway(egoVelocity*timestamp/1e6, viewer);
+          filterCloud<pcl::PointXYZ>(trafficCloud, filteredCloud, options.voxelSide);
+          trafficCloud = filteredCloud;
+        }
+
+        float clusterTol = 1.2;
+        int minSize = 50;
+        int maxSize = 1000;
+
+        if (options.cluster_pcd)  // Euclidean clustering
+        {
+          vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> clusters;
+          euclideanClustering<pcl::PointXYZ>(trafficCloud, clusters, clusterTol, minSize, maxSize);
+
+          renderClusters<pcl::PointXYZ>(viewer, clusters);
+
+          if (options.renderBoxes)  // Render simple bounding boxes
+          {
+            int clusterId = 0;
+            for (const auto& cluster : clusters)
+            {
+              Box box;
+              boundingBox<pcl::PointXYZ>(cluster, box);
+              renderBox(viewer, box, clusterId);
+              boxes.push_back(box);
+              ++clusterId;
+            }
+          }
+        }
+
+        else
+          renderPointCloud(viewer, trafficCloud, "trafficCloud", Color((float) 184/256, (float) 223/256, 
+            (float) 252/256));
+      }
+
+      // Render highway environment with poles
+      renderHighway(egoVelocity * timestamp / 1e6, viewer);
       egoCar.render(viewer);
-      
+
       for (int i = 0; i < traffic.size(); i++)
       {
-        traffic[i].move((double)1/frame_per_sec, timestamp);
-        
-        if (!visualize_pcd)
+        traffic[i].move((double) 1 / frame_per_sec, timestamp);
+
+        if (!options.visualize_pcd)
           traffic[i].render(viewer);
-        
-        // Sense surrounding cars with lidar and radar
-        if (trackCars[i])
+
+        // Sense surrounding cars with LiDAR and radar
+        if (options.trackCars[i])
         {
           VectorXd gt(4);
-          gt << traffic[i].position.x, traffic[i].position.y, traffic[i].velocity*cos(traffic[i].angle), 
-            traffic[i].velocity*sin(traffic[i].angle);
-          
+          gt << traffic[i].position.x, traffic[i].position.y, traffic[i].velocity * cos(traffic[i].angle), 
+            traffic[i].velocity * sin(traffic[i].angle);
+
           tools.ground_truth.push_back(gt);
-          tools.lidarSense(traffic[i], viewer, timestamp, visualize_lidar);
-          tools.radarSense(traffic[i], egoCar, viewer, timestamp, visualize_radar);
-          tools.ukfResults(traffic[i],viewer, projectedTime, projectedSteps);
+
+          if (options.visualize_pcd && options.cluster_pcd && options.renderBoxes)
+          {
+            // Sort bounding boxes in accordance with traffic vector
+            sortBoundingBoxes(traffic, boxes);
+            tools.lidarSense(traffic[i], boxes[i], viewer, timestamp, options.visualize_lidar);
+          }
+
+          else
+            tools.lidarSense(traffic[i], viewer, timestamp, options.visualize_lidar);
+
+          // PCD is only relevant when we compute the laser estimates
+          tools.radarSense(traffic[i], egoCar, viewer, timestamp, options.visualize_radar);
+
+          tools.ukfResults(traffic[i], viewer, options.projectedTime, options.projectedSteps);
           VectorXd estimate(4);
-          
+
           double v = traffic[i].ukf.x_(2);
           double yaw = traffic[i].ukf.x_(3);
-          double v1 = cos(yaw)*v;
-          double v2 = sin(yaw)*v;
-          
+          double v1 = cos(yaw) * v;
+          double v2 = sin(yaw) * v;
+
           estimate << traffic[i].ukf.x_[0], traffic[i].ukf.x_[1], v1, v2;
+
           tools.estimations.push_back(estimate);
         }
       }
+
+      boxes.clear();  // Avoid bounding boxes accumulation
 
       viewer->addText("Accuracy - RMSE:", 30, 300, 20, 1, 1, 1, "rmse");
       VectorXd rmse = tools.CalculateRMSE(tools.estimations, tools.ground_truth);
@@ -209,3 +279,5 @@ class Highway
       } 
     }
 };
+
+#endif /* HIGHWAY_H */

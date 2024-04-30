@@ -93,13 +93,16 @@ void sortBoundingBoxes(const std::vector<Car>& traffic, std::vector<Box>& boxes)
 
   for (const auto& car : traffic)
   {
-    std::sort(boxes.begin(), boxes.end(), [&](const Box& box1, const Box& box2) 
+    if (boxes.size() > 1)  // Avoid sorting if only one box
     {
-      return norm(car, box1) < norm(car, box2);
-    });
+      std::sort(boxes.begin(), boxes.end(), [&](const Box& box1, const Box& box2) 
+      {
+        return norm(car, box1) < norm(car, box2);
+      });
+    }
 
     sortedBoxes.push_back(boxes[0]);
-    boxes.erase(boxes.begin());
+    boxes.erase(boxes.begin());  // To speed up sorting
   }
 
   boxes = sortedBoxes;
