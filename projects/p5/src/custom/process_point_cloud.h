@@ -65,12 +65,20 @@ void renderClusters(pcl::visualization::PCLVisualizer::Ptr& viewer,
   const std::vector<typename pcl::PointCloud<PointT>::Ptr>& clusters);
 
 /**
- *
+ * @brief Helper function to compute the norm of a vector using (x, y) coordinates.
+ * 
+ * @param car A car object.
+ * @param box A bounding box framing a point cloud cluster.
  */
 float norm(const Car& car, const Box& box);
 
 /**
+ * @brief Match bounding boxes with the right car, to avoid LiDAR markers switching from box to box and confusing
+ *   predictions. This is a necessary step since Euclidean clustering does not preserve box-to-car associations when 
+ *   generating clusters and pushing them into a vector.
  * 
+ * @param traffic The structure containing car objects.
+ * @param boxes The structure containing (unsorted) bounding boxes.
  */
 void sortBoundingBoxes(const std::vector<Car>& traffic, std::vector<Box>& boxes);
 
