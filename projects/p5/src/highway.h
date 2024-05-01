@@ -16,7 +16,7 @@
  */
 struct ProjectOptions
 {
-  CameraAngle setAngle = XY;
+  CameraAngle setAngle = XY;  // Default, XY
 
   // Set which cars to track with UKF
   std::vector<bool> trackCars = {true, true, true};  // Cars' initial positions from ego vehicle: SW, NE, S
@@ -24,16 +24,21 @@ struct ProjectOptions
   // Visualize sensor measurements
   bool visualize_lidar = true;  // true to display red orb
   bool visualize_radar = true;  // true to display radar metric
-  bool visualize_pcd = true;  // true to display colorless LiDAR point clouds, false for stylised green car shapes
+  bool visualize_pcd = false;  // true to display colorless LiDAR point clouds, false for stylised green car shapes
 
   // Predict path in the future using UKF
   double projectedTime = 2;
   int projectedSteps = 6;
 
+  // Filtering options
   bool filterPointCloud = true;  // true to downsample input point cloud using voxel grid filtering
   float voxelSide = 0.18f;  // 0.01f = 1 cm
 
+  // Euclidean clustering options
   bool cluster_pcd = true;
+  float clusterTol = 1.2;  // In meters
+  int minSize = 50;
+  int maxSize = 1000;
 
   // Rendering options
   bool renderBoxes = true;  // true to render axis-aligned bounding boxes around clusters
@@ -146,14 +151,11 @@ class Highway
           trafficCloud = filteredCloud;
         }
 
-        float clusterTol = 1.2;
-        int minSize = 50;
-        int maxSize = 1000;
-
         if (options.cluster_pcd)  // Euclidean clustering
         {
           vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> clusters;
-          euclideanClustering<pcl::PointXYZ>(trafficCloud, clusters, clusterTol, minSize, maxSize);
+          euclideanClustering<pcl::PointXYZ>(trafficCloud, clusters, options.clusterTol, options.minSize, 
+            options.maxSize);
 
           renderClusters<pcl::PointXYZ>(viewer, clusters);
 

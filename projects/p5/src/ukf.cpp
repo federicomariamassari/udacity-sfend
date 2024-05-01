@@ -87,13 +87,23 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package)
         x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 0, 0, 0;
 
         /**
-         * To pass RMSE tests for all combinations of single and pairs of cars as well, the last 3
-         * diagonal elements of P_ are set to 1, 0.5, 0.25. If visualize_pcd = true, the RMSE thresholds
-         * will still be breached for X because the LiDAR point cloud often does not capture the full
-         * shape of the target objects.
+         * To pass the RMSE tests when all three cars together are considered [1], it is enough to initialize 
+         * the last three diagonal components of P_ to 1, 1, 1. To pass the tests for all possible combinations 
+         * of single cars and car pairs, initialize them to 1, 0.5, 0.25.
+         * 
+         * Optional: When visualize_pcd = true, the RMSE threshold for X will be breached because LiDAR point
+         * clouds often do not capture the entire shape of the target objects. One such example is when a car is
+         * right in front or behind ego vehicle. This issue happens both when the xy-centerpoint of the cluster's
+         * bounding box and when the cluster's centroid xy-coordinates [2] are used as LiDAR markers. In the latter
+         * case, the "visible" side of the target car shifts the centroid towards itself and away from the vehicle's
+         * real center, amplifying the error compared to the case in which the bounding box midpoint is used.
+         *
+         * [1] - https://knowledge.udacity.com/questions/1036196
+         * [2] - https://pointclouds.org/documentation/centroid_8h.html - compute3DCentroid() [3/4]
+         * 
          */
         P_.setZero();
-        P_.diagonal() << pow(std_laspx_, 2), pow(std_laspy_, 2), 1, 0.5, 0.25;
+        P_.diagonal() << pow(std_laspx_, 2), pow(std_laspy_, 2), 1, 1, 1;
 
         break;
 
