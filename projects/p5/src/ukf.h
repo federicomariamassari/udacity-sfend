@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include "Eigen/Dense"
+#include "Eigen/Dense"  // If Eigen is in the current working directory, else #include <Eigen/Dense>
 #include "measurement_package.h"
 
 class UKF
@@ -47,29 +47,63 @@ class UKF
     void UpdateRadar(MeasurementPackage meas_package);
 
     /** 
-     * @brief Generate UKF sigma points based on posterior state vector x_{k|k} and covariance matrix P_{k|k}
-     *   representing the distribution of the current state (custom addition).
+     * @brief Generate UKF augmented sigma points based on posterior state vector x_{k|k} and covariance matrix 
+     *   P_{k|k} representing the distribution of the current state (custom addition).
+     * 
+     * Resources:
+     * 
+     * [1] - Lesson 17: Augmentation Assignment 1, Augmented Kálmán Filters, Udacity Sensor Fusion
      */
-    void AugmentedSigmaPoints();
+    void AugmentedSigmaPoints();  // Function name from [1]
 
     /**
      * @brief Predict k+1 sigma points according to CTRV model (custom addition).
-     * 
+
      * @param delta_t Current time step.
+     * 
+     * Resources:
+     * 
+     * [1] - Lesson 20: Sigma Point Prediction Assignment 1, Augmented Kálmán Filters, Udacity Sensor Fusion
      */
-    void SigmaPointsPrediction(double& delta_t);
+    void SigmaPointsPrediction(double& delta_t);  // Function name from [1]
+
+    /**
+     * @brief Normalize angles to remove -/+ 2*pi in the results [1].
+     * 
+     * Resources:
+     * 
+     * [1] - Lesson 24: Predicted Mean and Covariance Assignment 2, Augmented Kálmán Filters, Udacity Sensor Fusion
+     */
+    Eigen::ArrayXd normalizeAnglesHelper(Eigen::ArrayXd arr);  // Refactoring suggested by Udacity GPT
+
+    /**
+     * @brief Predict a priori mean state vector x_{k+1|k} and covariance matrix P_{k+1|k} using sigma points.
+     * 
+     * Resources:
+     * 
+     * [1] - Lesson 23: Predicted Mean and Covariance Assignment 1, Augmented Kálmán Filters, Udacity Sensor Fusion
+     */
+    void PredictMeanAndCovariance();  // Function name from [1]
+
+    /**
+     * @brief Compute predicted measurement mean and covariance matrix for a radar sensor.
+     * 
+     * Resources:
+     * 
+     * [1] - Lesson 26: Predict Radar Measurement Assignment 1, Augmented Kálmán Filters, Udacity Sensor Fusion
+     */
+    void PredictRadarMeasurement();  // Function name from [1]
 
     /**
      * @brief 
      * 
-     * @param arr An array, usually a matrix row, of angles to normalize.
+     * @param The latest radar measurement data.
+     * 
+     * Resources:
+     * 
+     * [1] - Lesson 29: UKF Update Assignment 1, Augmented Kálmán Filters, Udacity Sensor Fusion
      */
-    Eigen::ArrayXd normalizeAnglesHelper(Eigen::ArrayXd arr);
-
-    /**
-     * @brief Predict a priori mean state vector x_{k+1|k} and covariance matrix P_{k+1|k} using sigma points.
-     */
-    void PredictMeanAndCovariance();
+    void UpdateState(MeasurementPackage meas_package);  // Function name from [1]
 
     // Initially set to false, set to true in the first call of ProcessMeasurement
     bool is_initialized_;
@@ -85,9 +119,6 @@ class UKF
 
     // State covariance matrix
     Eigen::MatrixXd P_;
-
-    // Augmented sigma points matrix (custom addition)
-    Eigen::MatrixXd Xsig_aug_;
 
     // Predicted sigma points matrix
     Eigen::MatrixXd Xsig_pred_;
@@ -130,6 +161,25 @@ class UKF
 
     // Sigma point spreading parameter
     double lambda_;
+
+    /*****************************************************************************************************************
+     * CUSTOM ADDITIONS
+     *****************************************************************************************************************/
+
+    // Augmented sigma points matrix
+    Eigen::MatrixXd Xsig_aug_;
+
+    // Predicted measurement mean
+    Eigen::VectorXd z_pred_;
+
+    // Predicted measurement covariance matrix
+    Eigen::MatrixXd S_;
+
+    // Residuals from the difference between predicted state and sigma points
+    Eigen::MatrixXd x_diff_; 
+
+    // Residuals from the difference between predicted measurements and sigma points
+    Eigen::MatrixXd z_diff_;
 };
 
 #endif /* UKF_H */

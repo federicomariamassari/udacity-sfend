@@ -1,7 +1,6 @@
 #ifndef PROCESS_POINT_CLOUD_H
 #define PROCESS_POINT_CLOUD_H
 
-
 #include <algorithm>  // To sort bounding boxes based on associated cars' positions (x, y)
 #include <cmath>
 #include <vector>
@@ -14,7 +13,6 @@
 #include <pcl/segmentation/extract_clusters.h>
 
 #include "../render/box.h"
-
 
 /**
  * @brief Perform voxel (volumetric pixel) grid filtering on an input point cloud [1] [2].

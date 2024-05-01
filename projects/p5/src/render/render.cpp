@@ -5,7 +5,6 @@
 
 using namespace std;
 
-
 void renderHighway(double distancePos, pcl::visualization::PCLVisualizer::Ptr& viewer)
 {
   // Units in meters

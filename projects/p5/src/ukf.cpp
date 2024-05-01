@@ -5,7 +5,6 @@ using Eigen::MatrixXd;
 using Eigen::VectorXd;
 using Eigen::ArrayXd;  // For element-wise operations
 
-
 /**
  * Initialize Unscented Kálmán Filter (UKF)
  */
@@ -24,10 +23,10 @@ UKF::UKF()
   P_ = MatrixXd(5, 5);
 
   // Process noise standard deviation longitudinal acceleration, in m/s^2
-  std_a_ = 5.;
+  std_a_ = 2.;
 
   // Process noise standard deviation yaw acceleration, in rad/s^2
-  std_yawdd_ = 5.;
+  std_yawdd_ = 2.;
   
   /**
    * DO NOT MODIFY measurement noise values below.
@@ -58,7 +57,12 @@ UKF::UKF()
   n_x_ = 5;
   n_aug_ = n_x_ + 2;  // [px, py, v, psi, psi_dot, std_a_, std_yawdd_]
   n_z_ = 3;
-  lambda_ = 3 - n_x_;
+
+  /** 
+   * [1] - Lesson 17: Augmentation Assignment 1, Augmented Kálmán Filters, Udacity Sensor Fusion
+   * [2] - https://knowledge.udacity.com/questions/703758
+   */
+  lambda_ = 3 - n_aug_;  // As suggested in [1], [2] and instead of setting to (3 - n_x_)
 
   Xsig_aug_.resize(n_aug_, 2 * n_aug_ + 1);  // Custom addition
 
@@ -83,13 +87,13 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package)
         x_ << meas_package.raw_measurements_[0], meas_package.raw_measurements_[1], 0, 0, 0;
 
         /**
-         * To pass RMSE tests for all combinations of single cars and pairs of cars, set the last 3
-         * diagonal components of P_ to: 1, 0.1, 0.05. If visualize_pcd = true, the RMSE thresholds
-         * will be breached for X because the LiDAR point cloud often does not capture the full shape
-         * of the target objects.
+         * To pass RMSE tests for all combinations of single and pairs of cars as well, the last 3
+         * diagonal elements of P_ are set to 1, 0.5, 0.25. If visualize_pcd = true, the RMSE thresholds
+         * will still be breached for X because the LiDAR point cloud often does not capture the full
+         * shape of the target objects.
          */
         P_.setZero();
-        P_.diagonal() << pow(std_laspx_, 2), pow(std_laspy_, 2), 1, 1, 1;
+        P_.diagonal() << pow(std_laspx_, 2), pow(std_laspy_, 2), 1, 0.5, 0.25;
 
         break;
 
@@ -153,16 +157,16 @@ void UKF::Prediction(double delta_t)
   // Generate UKF sigma points based on posterior state vector x_{k|k} and covariance matrix P_{k|k}
   AugmentedSigmaPoints();
 
-  // Predict k+1 sigma points according to CTRV process model
+  // Predict sigma points at k+1 via CTRV (Constant Turn Rate and Velocity Magnitude) process model
   SigmaPointsPrediction(delta_t);
 
-  // Predict a priori mean state vector x_{k+1|k} and covariance matrix P_{k+1|k} using sigma points
+  // Predict mean state vector x_{k+1|k} and covariance matrix P_{k+1|k} using sigma points
   PredictMeanAndCovariance();
 }
 
 void UKF::UpdateLidar(MeasurementPackage meas_package)  // Kálmán Filter [1]
 {
-  // 
+  // Measurement matrix
   MatrixXd H_ = MatrixXd::Zero(2, n_x_);
   H_.leftCols(2) = Eigen::Matrix2d::Identity();
 
@@ -170,69 +174,32 @@ void UKF::UpdateLidar(MeasurementPackage meas_package)  // Kálmán Filter [1]
   Eigen::Matrix2d R_ = Eigen::Matrix2d::Identity();
   R_.diagonal() << pow(std_laspx_, 2), pow(std_laspy_, 2);
 
-  VectorXd z_pred = H_ * x_;
+  // Predicted measurement mean
+  z_pred_ = H_ * x_;
 
   // Prediction error
-  VectorXd y = meas_package.raw_measurements_ - z_pred;
+  VectorXd y = meas_package.raw_measurements_ - z_pred_;
 
   // Predicted measurement covariance matrix
-  MatrixXd S = H_ * P_ * H_.transpose() + R_;
+  S_ = H_ * P_ * H_.transpose() + R_;
 
   // Kálmán gain
-  MatrixXd K = P_ * H_.transpose() * S.inverse();
+  MatrixXd K = P_ * H_.transpose() * S_.inverse();
 
   x_ += K * y;
 
   long x_size = x_.size();
-  MatrixXd I = Eigen::MatrixXd::Identity(x_size, x_size);
+  MatrixXd I = MatrixXd::Identity(x_size, x_size);
   P_ = (I - K * H_) * P_;
 }
 
 void UKF::UpdateRadar(MeasurementPackage meas_package)  // Unscented Kálmán Filter
 {
-  //void PredictRadarMeasurement();
-  //void UpdateState();
+  // Predict measurement mean z_{k+1|k} and covariance matrix S_{k+1|k} using sigma points
+  PredictRadarMeasurement();
 
-
-
-  ArrayXd px_pred = Xsig_pred_.row(0);  // Use ArrayXd for element-wise operations
-  ArrayXd py_pred = Xsig_pred_.row(1);
-  ArrayXd v_pred = Xsig_pred_.row(2);
-  ArrayXd psi_pred = Xsig_pred_.row(3);
-
-  MatrixXd x_diff = Xsig_pred_.colwise() - x_;
-  x_diff.row(3) = normalizeAnglesHelper(x_diff.row(3));
-
-  MatrixXd Zsig_pred = MatrixXd(n_z_, 2 * n_aug_ + 1);  // [rho (m), phi (rad), rho_dot (m/s)]
-  ArrayXd rho_pred = (px_pred.square() + py_pred.square()).sqrt();
-  Zsig_pred.row(0) = rho_pred;
-  Zsig_pred.row(1) = py_pred.binaryExpr(px_pred, [](double py, double px) { return atan2(py, px); });
-  Zsig_pred.row(2) = (px_pred * cos(psi_pred) * v_pred + py_pred * sin(psi_pred) * v_pred) / rho_pred;
-
-  // Predicted measurement mean
-  VectorXd z_pred = Zsig_pred * weights_;
-
-  MatrixXd z_diff = Zsig_pred.colwise() - z_pred;  // Includes angle subtraction
-  z_diff.row(1) = normalizeAnglesHelper(z_diff.row(1));
-
-  // Predicted measurement noise covariance matrix
-  Eigen::Matrix3d R_ = Eigen::Matrix3d::Identity();
-  R_.diagonal() << pow(std_radr_, 2), pow(std_radphi_, 2), pow(std_radrd_, 2);
-
-  // Predicted measurement covariance matrix
-  MatrixXd S = z_diff * weights_.asDiagonal() * z_diff.transpose() + R_;
-
-  // Cross-correlation between sigma points in predicted and measurement spaces
-  MatrixXd Tc = x_diff * weights_.asDiagonal() * z_diff.transpose();
-
-  // Kálmán gain
-  MatrixXd K = Tc * S.inverse();  
-
-  VectorXd z_difference = (meas_package.raw_measurements_ - z_pred);  // Includes angle subtraction
-  z_difference.row(1) = normalizeAnglesHelper(z_difference.row(1));
-
-  x_ += K * z_difference;
-  P_ -= K * S * K.transpose();
+  // Update mean state vector x_{k+1|k+1} and covariance matrix P_{k+1|k+1}
+  UpdateState(meas_package);
 }
 
 /*********************************************************************************************************************
@@ -316,11 +283,56 @@ void UKF::PredictMeanAndCovariance()
   // Predicted state mean
   x_ = Xsig_pred_ * weights_;  // To invert the spread of the sigma points
 
-  MatrixXd x_diff = Xsig_pred_.colwise() - x_;  // Includes angle subtraction
+  MatrixXd x_diff_ = Xsig_pred_.colwise() - x_;  // Includes angle subtraction
 
   // Normalization for psi required after angle subtraction
-  x_diff.row(3) = normalizeAnglesHelper(x_diff.row(3));
+  x_diff_.row(3) = normalizeAnglesHelper(x_diff_.row(3));
 
   // Predicted state covariance matrix
-  P_ = x_diff * weights_.asDiagonal() * x_diff.transpose();
+  P_ = x_diff_ * weights_.asDiagonal() * x_diff_.transpose();
+}
+
+void UKF::PredictRadarMeasurement()
+{
+  ArrayXd px_pred = Xsig_pred_.row(0);  // Use ArrayXd for element-wise operations
+  ArrayXd py_pred = Xsig_pred_.row(1);
+  ArrayXd v_pred = Xsig_pred_.row(2);
+  ArrayXd psi_pred = Xsig_pred_.row(3);
+
+  x_diff_ = Xsig_pred_.colwise() - x_;
+  x_diff_.row(3) = normalizeAnglesHelper(x_diff_.row(3));
+
+  MatrixXd Zsig_pred = MatrixXd(n_z_, 2 * n_aug_ + 1);  // [rho (m), phi (rad), rho_dot (m/s)]
+  ArrayXd rho_pred = (px_pred.square() + py_pred.square()).sqrt();
+  Zsig_pred.row(0) = rho_pred;
+  Zsig_pred.row(1) = py_pred.binaryExpr(px_pred, [](double py, double px) { return atan2(py, px); });
+  Zsig_pred.row(2) = (px_pred * cos(psi_pred) * v_pred + py_pred * sin(psi_pred) * v_pred) / rho_pred;
+
+  // Predicted measurement mean
+  z_pred_ = Zsig_pred * weights_;
+
+  z_diff_ = Zsig_pred.colwise() - z_pred_;  // Includes angle subtraction
+  z_diff_.row(1) = normalizeAnglesHelper(z_diff_.row(1));
+
+  // Predicted measurement noise covariance matrix
+  Eigen::Matrix3d R_ = Eigen::Matrix3d::Identity();
+  R_.diagonal() << pow(std_radr_, 2), pow(std_radphi_, 2), pow(std_radrd_, 2);
+
+  // Predicted measurement covariance matrix
+  S_ = z_diff_ * weights_.asDiagonal() * z_diff_.transpose() + R_;
+}
+
+void UKF::UpdateState(MeasurementPackage meas_package)
+{
+  // Cross-correlation between sigma points in predicted and measurement spaces
+  MatrixXd Tc = x_diff_ * weights_.asDiagonal() * z_diff_.transpose();
+
+  // Kálmán gain
+  MatrixXd K = Tc * S_.inverse();  
+
+  VectorXd z_difference = (meas_package.raw_measurements_ - z_pred_);  // Includes angle subtraction
+  z_difference.row(1) = normalizeAnglesHelper(z_difference.row(1));
+
+  x_ += K * z_difference;
+  P_ -= K * S_ * K.transpose();
 }

@@ -1,8 +1,6 @@
 #include "tools.h"
 
 using namespace std;
-using std::vector;
-
 
 Tools::Tools() {}
 

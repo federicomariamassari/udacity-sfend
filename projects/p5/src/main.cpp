@@ -3,7 +3,6 @@
 
 #include "highway.h"
 
-
 void initCamera(CameraAngle& setAngle, pcl::visualization::PCLVisualizer::Ptr viewer)
 {
   viewer->setBackgroundColor(0, 0, 0);
