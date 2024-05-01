@@ -63,6 +63,20 @@ void renderClusters(pcl::visualization::PCLVisualizer::Ptr& viewer,
   const std::vector<typename pcl::PointCloud<PointT>::Ptr>& clusters);
 
 /**
+ * @brief Compute axis-aligned (AABB) bounding box for a point cloud cluster [1] [2].
+ * 
+ * @param cluster A point cloud cluster.
+ * @param box The box object, to populate.
+ * 
+ * Resources:
+ * 
+ * [1] - https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p1/src/processPointClouds.cpp#L248
+ * [2] - https://pcl.readthedocs.io/projects/tutorials/en/latest/moment_of_inertia.html
+ */
+template <typename PointT>
+void boundingBox(const typename pcl::PointCloud<PointT>::Ptr cluster, Box& box);
+
+/**
  * @brief Helper function to compute the norm of a vector using (x, y) coordinates.
  * 
  * @param car A car object.

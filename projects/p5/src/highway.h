@@ -24,7 +24,7 @@ struct ProjectOptions
   // Visualize sensor measurements
   bool visualize_lidar = true;  // true to display red orb
   bool visualize_radar = true;  // true to display radar metric
-  bool visualize_pcd = false;  // true to display colorless LiDAR point clouds, false for stylised green car shapes
+  bool visualize_pcd = true;  // true to display colorless LiDAR point clouds, false for stylised green car shapes
 
   // Predict path in the future using UKF
   double projectedTime = 2;
@@ -36,7 +36,7 @@ struct ProjectOptions
   bool cluster_pcd = true;
 
   // Rendering options
-  bool renderBoxes = true;  // true to render simple (rectangular prism) bounding boxes around clusters
+  bool renderBoxes = true;  // true to render axis-aligned bounding boxes around clusters
 };
 
 class Highway
@@ -157,7 +157,7 @@ class Highway
 
           renderClusters<pcl::PointXYZ>(viewer, clusters);
 
-          if (options.renderBoxes)  // Render simple bounding boxes
+          if (options.renderBoxes)  // Render axis-aligned bounding boxes
           {
             int clusterId = 0;
             for (const auto& cluster : clusters)
