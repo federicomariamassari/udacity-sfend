@@ -3,7 +3,6 @@
 
 #include <Eigen/Geometry> 
 
-
 struct BoxQ
 {
   // Translation and scaling of the bounding box (position, size)

@@ -1,6 +1,5 @@
 #include "process_point_cloud.h"
 
-
 template<typename PointT>
 void filterCloud(const typename pcl::PointCloud<PointT>::Ptr cloud, typename pcl::PointCloud<PointT>::Ptr filtered, 
   float filterRes)

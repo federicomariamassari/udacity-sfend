@@ -12,7 +12,6 @@
 #include "box.h"
 #include "../ukf.h"
 
-
 struct Color
 {
   float r, g, b;
