@@ -2,6 +2,10 @@
 
 My Udacity Sensor Fusion Engineer Nanodegree projects, in C++.
 
+## [Certificate of Completion](https://www.udacity.com/certificate/e/a75714f6-1c0d-11ee-8912-6751ad62567e)
+
+![Certificate of Completion](certificate-of-completion.png)
+
 # Core Projects
 
 ## Environment
