@@ -140,3 +140,9 @@ If run locally, this project requires a valid MATLAB license plus Signal Process
 ### Overview
 
 __[Link to code](projects/p5/src)__ | [Starter Code from Udacity](https://github.com/udacity/SFND_Unscented_Kalman_Filter)
+
+![UKF Default Camera View](./projects/p5/img/mov1.gif)
+
+### Output
+
+![UKF XY Bounding Boxes](./projects/p5/img/mov2.gif)
