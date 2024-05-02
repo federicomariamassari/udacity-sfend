@@ -4,6 +4,8 @@
 
 ## Overview
 
+![UKF XY Output](./img/mov3.gif)
+
 ## Building and Running the Project
 
 ### Preliminary Configurations
