@@ -1,7 +1,7 @@
 #ifndef MEASUREMENT_PACKAGE_H_
 #define MEASUREMENT_PACKAGE_H_
 
-#include "Eigen/Dense"  // If Eigen is in the current working directory, else #include <Eigen/Dense>
+#include <Eigen/Dense>  // If Eigen is installed, else if in current working directory #include "Eigen/Dense"
 
 class MeasurementPackage 
 {

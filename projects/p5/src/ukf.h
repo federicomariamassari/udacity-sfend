@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include "Eigen/Dense"  // If Eigen is in the current working directory, else #include <Eigen/Dense>
+#include <Eigen/Dense>  // If Eigen is installed, else if in current working directory #include "Eigen/Dense"
 #include "measurement_package.h"
 
 class UKF

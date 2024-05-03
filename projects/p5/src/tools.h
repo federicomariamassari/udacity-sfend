@@ -6,7 +6,7 @@
 #include <vector>
 #include <pcl/io/pcd_io.h>
 
-#include "Eigen/Dense"  // If Eigen is in the current working directory, else #include <Eigen/Dense>
+#include <Eigen/Dense>  // If Eigen is installed, else if in current working directory #include "Eigen/Dense"
 #include "render/render.h"
 #include "render/box.h"  // To compute LiDAR markers' position based on bounding box coordinates
 
