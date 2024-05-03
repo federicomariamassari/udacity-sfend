@@ -95,7 +95,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package)
          * clouds often do not capture the entire shape of the target objects. One such example is when a car is
          * right in front or behind ego vehicle. This issue happens both when the xy-centerpoint of the cluster's
          * bounding box and when the cluster's centroid xy-coordinates [2] are used as LiDAR markers. In the latter
-         * case, the "visible" side of the target car shifts the centroid towards itself and away from the vehicle's
+         * case, the "visible" side of the target car draws the centroid towards itself and away from the vehicle's
          * real center, amplifying the error compared to the case in which the bounding box midpoint is used.
          *
          * [1] - https://knowledge.udacity.com/questions/1036196

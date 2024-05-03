@@ -32,7 +32,7 @@ struct ProjectOptions
 
   // Filtering options
   bool filterPointCloud = true;  // true to downsample input point cloud using voxel grid filtering
-  float voxelSide = 0.18f;  // 0.01f = 1 cm
+  float voxelSide = 0.25f;  // 0.01f = 1 cm
 
   // Euclidean clustering options
   bool cluster_pcd = true;
