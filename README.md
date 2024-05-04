@@ -141,7 +141,7 @@ If run locally, this project requires a valid MATLAB license plus Signal Process
 
 _Track non-linear vehicle motion blending data from multiple sensors via Unscented Kálmán Filter._
 
-In this capstone project, I implement an Unscented Kálmán Filter to estimate the state of multiple cars on a simulated highway, fusing noisy measurements from LiDAR and radar.
+In this capstone assignment, I implement an Unscented Kálmán Filter to estimate the state of multiple cars on a simulated highway, fusing noisy measurements from LiDAR and radar.
 
 __[Link to code](projects/p5/src)__ | [Starter Code from Udacity](https://github.com/udacity/SFND_Unscented_Kalman_Filter)
 
