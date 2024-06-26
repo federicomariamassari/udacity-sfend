@@ -141,7 +141,7 @@ If run locally, this project requires a valid MATLAB license plus Signal Process
 
 _Track non-linear vehicle motion blending data from multiple sensors via Unscented Kálmán Filter._
 
-In this capstone assignment, I implement an Unscented Kálmán Filter to estimate the state of multiple cars on a simulated highway, fusing noisy measurements from LiDAR and radar. To cover a wider range of possible state values and capture the uncertainty and variability of the state estimation more accurately, the UKF's sigma points (representative points from a Gaussian distributions) are generated using the Constant Turn Rate and Velocity Magnitude (CTRV) model. This choice impacts the prediction step of the algorithm, and is reflected in the green orbs displayed at the top of each target vehicle.
+In this capstone assignment, I implement an Unscented Kálmán Filter to estimate the state of multiple cars on a simulated highway, fusing noisy measurements from LiDAR and radar. To cover a wider range of possible state values and capture the uncertainty and variability of the state estimation more accurately, the UKF's sigma points (representative points from a Gaussian distributions) are generated using the Constant Turn Rate and Velocity Magnitude (CTRV) model. This choice impacts the prediction step of the algorithm, and is reflected in the green orbs displayed at the top of each target vehicle. LiDAR and radar markers are also included as a red sphere and as a magenta arrow line, respectively.
 
 __[Link to code](projects/p5/src)__ | [Starter Code from Udacity](https://github.com/udacity/SFND_Unscented_Kalman_Filter)
 
