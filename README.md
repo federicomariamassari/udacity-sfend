@@ -159,6 +159,6 @@ make
 
 ### Output
 
-An alternative outcome, in which the stylised car shapes are replaced by box-bound point cloud clusters, is presented below. Because LiDAR is at times unable to capture the full shape of the vehicles (especially when a target is in front of ego car and moving away from it), the RMSE threshold for X is frequently crossed, since the XY-midpoints of the bounding boxes, used to calculate the position of the red orbs, do not align well with the ground truth.
+An alternative outcome, in which the stylised car shapes are replaced by box-bound point cloud clusters, is presented below. Because LiDAR is at times unable to capture the full shape of the vehicles, especially when a target is in front of ego car and moving away from it, the RMSE threshold for X is frequently crossed (the XY-midpoints of the bounding boxes, used to calculate the position of the red orbs, tend to align poorly with the ground truth).
 
 ![UKF XY Bounding Boxes](./projects/p5/img/mov2.gif)
