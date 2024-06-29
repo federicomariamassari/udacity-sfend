@@ -159,6 +159,6 @@ make
 
 ### Output
 
-An alternative outcome, in which the stylised car shapes are replaced by box-bound point cloud clusters, is presented below. Because LiDAR is at times unable to capture the full shape of the vehicles, especially when a target is in front of ego car and moving away from it, the RMSE threshold for X is frequently crossed (the XY-midpoints of the bounding boxes, used to calculate the position of the red orbs, tend to align poorly with the ground truth). Using minimum (PCA-based) boxes does not seem to improve upon the results.
+An alternative outcome, in which the stylised car shapes are replaced by box-bound point cloud clusters, is presented below. Because LiDAR is at times unable to capture the full shape of the vehicles, especially when a target is in front of ego car and moving away from it, the RMSE threshold for X is frequently crossed (the XY-midpoints of the bounding boxes, used to calculate the position of the red orbs, tend to align poorly with the ground truth). Using minimum (PCA-based) boxes does not seem to improve upon the results. Point cloud processing considerably slows down the simulation, but reducing cloud size through voxel grid sampling would significantly worsen the accuracy of the LiDAR estimate so it is not recommended.
 
 ![UKF XY Bounding Boxes](./projects/p5/img/mov2.gif)
