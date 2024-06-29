@@ -141,7 +141,7 @@ If run locally, this project requires a valid MATLAB license plus Signal Process
 
 _Track non-linear vehicle motion blending data from multiple sensors via Unscented Kálmán Filter._
 
-In this capstone assignment, I implement an Unscented Kálmán Filter to estimate the state of multiple cars on a simulated highway, fusing noisy measurements from LiDAR and radar. To cover a wider range of possible state values and capture the uncertainty and variability of the state estimation more accurately, the UKF's sigma points (representative points from a Gaussian distributions) are generated using the Constant Turn Rate and Velocity Magnitude (CTRV) model. This choice impacts the prediction step of the algorithm, and is reflected in the green orbs displayed at the top of each target vehicle. LiDAR and radar markers are also included as a red sphere and as a magenta arrow line, respectively.
+In this capstone assignment, I implement an Unscented Kálmán Filter to estimate the state of multiple cars on a simulated highway, fusing noisy measurements from LiDAR and radar. To cover a wider range of possible state values and capture the uncertainty and variability of the state estimation more accurately, the UKF's sigma points (representative points from a Gaussian distributions) are generated using the Constant Turn Rate and Velocity Magnitude (CTRV) model. This choice impacts the prediction step of the algorithm, and is reflected in the green orbs displayed at the top of each target vehicle. LiDAR and radar markers are also included as red spheres and as magenta arrow lines, respectively.
 
 __[Link to code](projects/p5/src)__ | [Starter Code from Udacity](https://github.com/udacity/SFND_Unscented_Kalman_Filter)
 
@@ -158,5 +158,7 @@ make
 ```
 
 ### Output
+
+An alternative outcome, in which the stylised car shapes are replaced by box-bound point cloud clusters, is presented below. Because LiDAR is at times unable to capture the full shape of the vehicles (especially when a target is in front of ego car and moving away from it), the RMSE threshold for X is frequently crossed, since the XY-midpoints of the bounding boxes, used to calculate the position of the red orbs, do not align well with the ground truth.
 
 ![UKF XY Bounding Boxes](./projects/p5/img/mov2.gif)
