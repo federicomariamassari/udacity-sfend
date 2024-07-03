@@ -15,6 +15,8 @@ This project was developed and tested on Ubuntu 20.04 (UTM VM QEMU 7.0 aarch64).
 1. Updated the starter `CMakeLists.txt` to compile with C++14 and PCL 1.11 rather than with the default C++11 and PCL 1.2
 2. Disabled GPU acceleration [1] to correctly display `pcl::Visualization` point size property when point cloud data are used
 
+### Build and Run
+
 It is enough to build and run as such:
 
 ```bash
