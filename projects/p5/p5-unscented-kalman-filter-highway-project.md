@@ -2,8 +2,6 @@
 
 # Project 5: Unscented Kálmán Filter Highway Project
 
-"Unscented" because the first-order Taylor linearization of the Extended Kálmán Filter around a midpoint "stinks".
-
 ## Overview
 
 ![UKF XY Output](./img/mov3.gif)
@@ -12,30 +10,10 @@
 
 ### Preliminary Configurations
 
-To correctly display `pcl::Visualization` point size property, useful with PCD clustering, 
+This project was developed and tested on Ubuntu 20.04 (UTM VM QEMU 7.0 aarch64). Minor tweaks were needed:
 
-
-
-the point cloud size attributes on Ubuntu 20.04 (UTM VM QEMU 7.0 aarch64), disable GPU acceleration as suggested in [1].
-
-
-C++14 is required with PCL 1.11; with lower versions of PCL like 1.2, C++11 is enough.
-
-To build and run Udacity's starter code on Ubuntu 20.04 (UTM VM QEMU 7.0 aarch64), I updated the project's `CMakeLists.txt` as such:
-
-1. I compiled using C++14 instead of the default C++11:
-
-```c
-add_definitions(-std=c++14)
-```
-
-2. To bypass a well-known assertion error [1], I included the following preprocessor directive [2], before adding the executables:
-
-```c
-add_definitions(-DEIGEN_MAX_STATIC_ALIGN_BYTES=0)
-```
-
-Simply switching to C++17, as [1] suggests, did not resolve the error because required dependency Point Cloud Library had already been built from source with C++14.
+1. Updating the starter `CMakeLists.txt` to compile with C++14 and PCL 1.11 rather than with the default C++11 and PCL 1.2
+2. Disabling GPU acceleration [1] to correctly display `pcl::Visualization` point size property when point cloud data are used
 
 ## Code Logic
 
