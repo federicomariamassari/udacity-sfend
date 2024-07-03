@@ -10,10 +10,10 @@
 
 ### Preliminary Configurations
 
-This project was developed and tested on Ubuntu 20.04 (UTM VM QEMU 7.0 aarch64). Minor tweaks were needed:
+This project was developed and tested on Ubuntu 20.04 (UTM VM QEMU 7.0 aarch64). Minor configuration changes were made:
 
-1. Updating the starter `CMakeLists.txt` to compile with C++14 and PCL 1.11 rather than with the default C++11 and PCL 1.2
-2. Disabling GPU acceleration [1] to correctly display `pcl::Visualization` point size property when point cloud data are used
+1. Updated the starter `CMakeLists.txt` to compile with C++14 and PCL 1.11 rather than with the default C++11 and PCL 1.2
+2. Disabled GPU acceleration [1] to correctly display `pcl::Visualization` point size property when point cloud data are used
 
 ## Code Logic
 
