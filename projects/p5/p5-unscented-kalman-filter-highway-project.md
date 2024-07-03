@@ -17,8 +17,6 @@ This project was developed and tested on Ubuntu 20.04 (UTM VM QEMU 7.0 aarch64).
 
 ### Build and Run
 
-It is enough to build and run as such:
-
 ```bash
 cd /home/$whoami/workspace/udacity-rsend/projects/p5
 mkdir build && cd build
