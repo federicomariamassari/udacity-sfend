@@ -34,6 +34,5 @@ State vector $\bf{x}$ and state covariance matrix $\bf{P}$ are initialized in [`
 ## Resources
 
 1. https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p1/p1-preliminary-configs.md
-2. https://eigen.tuxfamily.org/dox/TopicPreprocessorDirectives.html
 
 [Home](../../README.md) | Previous: [Radar Target Generation and Detection](../p4/p4-radar-target-generation-and-detection.md)
