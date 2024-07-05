@@ -1,8 +1,10 @@
-[Home](../../README.md) | Previous: [Radar Target Generation and Detection](../p4/p4-radar-target-generation-and-detection.md)
+[Home](../../README.md) | Previous: [Radar Target Generation and Detection](../p4/p4-radar-target-generation-and-detection.md) | Next: [Embedded Input Reader](https://github.com/federicomariamassari/udacity-esfnd/blob/main/projects/p1/p1-embedded-input-reader.md)
 
 # Project 5: Unscented Kálmán Filter Highway Project
 
 ## Overview
+
+In the capstone project of the Sensor Fusion Nanodegree, 
 
 ![UKF XY Output](./img/mov3.gif)
 
@@ -35,4 +37,4 @@ State vector $\bf{x}$ and state covariance matrix $\bf{P}$ are initialized in [`
 
 1. https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p1/p1-preliminary-configs.md
 
-[Home](../../README.md) | Previous: [Radar Target Generation and Detection](../p4/p4-radar-target-generation-and-detection.md)
+[Home](../../README.md) | Previous: [Radar Target Generation and Detection](../p4/p4-radar-target-generation-and-detection.md) | Next: [Embedded Input Reader](https://github.com/federicomariamassari/udacity-esfnd/blob/main/projects/p1/p1-embedded-input-reader.md)
