@@ -6,7 +6,41 @@
 
 In the capstone project of the Sensor Fusion Nanodegree, I implement an Unscented Kálmán Filter (UKF) algorithm to estimate the state of multiple target cars on a simulated highway, fusing noisy measurements from LiDAR and radar. For its predict-update cycle, the Unscented Kálmán Filter relies on a set of carefully-selected sigma points (representative points from a Gaussian distribution) which capture the mean and covariance matrix of the distribution of state variables, so it provides an accurate estimation of position and velocity in highly non-linear systems. The motion model used to predict the targets' state between sensor measurements is Constant Turn Rate and Velocity Magnitude (CTRV), which accounts for the natural turning and acceleration or deceleration behaviour of vehicles in a highway.
 
+__Figure 1: Unscented Kálmán Filter Project Output__
 ![UKF XY Output](./img/mov3.gif)
+
+## Project Structure
+
+__Figure 2: Directory Structure Tree__
+
+```bash
+.
+├── build
+│   ├── ...
+│   └── ukf_highway
+└── src
+    ├── custom
+    │   ├── process_point_cloud.cpp
+    │   └── process_point_cloud.h
+    ├── highway.h
+    ├── main.cpp
+    ├── measurement_package.h
+    ├── render
+    │   ├── box.h
+    │   ├── render.cpp
+    │   └── render.h
+    ├── sensors
+    │   ├── data
+    │   │   └── pcd
+    │   │       ├── highway_0.pcd
+    │   │       ├── ...
+    │   │       └── highway_9966666.pcd
+    │   └── lidar.h
+    ├── tools.cpp
+    ├── tools.h
+    ├── ukf.cpp
+    └── ukf.h
+```
 
 ## Building and Running the Project
 
