@@ -4,7 +4,7 @@
 
 ## Overview
 
-In the capstone project of the Sensor Fusion Nanodegree, I implement an Unscented Kálmán Filter (UKF) algorithm to predict the state of multiple target cars on a simulated highway, fusing noisy measurements from LiDAR and radar.
+In the capstone project of the Sensor Fusion Nanodegree, I implement an Unscented Kálmán Filter (UKF) algorithm to estimate the state of multiple target cars on a simulated highway, fusing noisy measurements from LiDAR and radar. For its predict-update cycle, the Unscented Kálmán Filter relies on a set of carefully-selected sigma points (representative points from a Gaussian distribution) which capture the mean and covariance matrix of the distribution of state variables, so it provides an accurate estimation of position and velocity in highly non-linear systems.
 
 ![UKF XY Output](./img/mov3.gif)
 
