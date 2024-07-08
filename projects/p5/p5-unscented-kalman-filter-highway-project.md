@@ -11,6 +11,14 @@ __Figure 1: UKF-CTRV Non-Linear Vehicle Tracking__
 
 ## Project Structure
 
+The directory structure tree for the project appears in Figure 2. In particular:
+
+- `highway.h` includes the environment rendering logic, the project options, calls to the point cloud processing functions, and the Root Mean Squared Error (RMSE) tests;
+- `process_point_cloud.h`, a custom extensionfor PCD files, adds methods for voxel grid downsampling, Euclidean clustering, and bounding box encapsulation;
+- `main.cpp` runs the program and provides camera initialization options; 
+- `tools.h` contains auxiliary methods to display LiDAR and radar markers, inject random noise into simulated sensor measurements, and calculate RMSE, among the others;
+- `ukf.h` holds the Unscented Kálmán Filter algorithm (prediction and update steps for both LiDAR and radar).
+
 __Figure 2: Directory Structure Tree__
 
 ```bash
@@ -61,6 +69,8 @@ cmake ..
 make
 ./ukf_highway
 ```
+
+### Options
 
 ## Code Logic
 
