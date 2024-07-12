@@ -71,6 +71,96 @@ make
 
 ### Options
 
+<table>
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>Parameter</th>
+            <th>Default value</th>
+            <th>Explanation</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td rowspan=1><b>Camera initialisation options</b></td>
+            <td><code>setAngle</code></td>
+            <td><code>XY</code></td>
+            <td><code>XY</code> for lateral camera view, <code>Default</code> for starter code angle</td>
+        </tr>
+        <tr>
+            <td rowspan=1><b>Target selection options</b></td>
+            <td><code>trackCars</code></td>
+            <td><code>{true, true, true}</code></td>
+            <td><code>true</code> for each car to track as target (SW, NE, S)</td>
+        </tr>
+        <tr>
+            <td rowspan=3><b>Sensor measurements visualisation options</b></td>
+            <td><code>visualize_lidar</code></td>
+            <td><code>true</code></td>
+            <td><code>true</code> to display LiDAR red orbs at the top of target vehicles</td>
+        </tr>
+        <tr>
+            <td><code>visualize_radar</code></td>
+            <td><code>true</code></td>
+            <td><code>true</code> to display magenta radar arrows tracking target vehicles</td>
+        </tr>
+        <tr>
+            <td><code>visualize_pcd</code></td>
+            <td><code>true</code></td>
+            <td><code>true</code> to display colorless LiDAR point clouds, <code>false</code> for stylised green car shapes</td>
+        </tr>
+        <tr>
+            <td rowspan=2><b>UKF path prediction options</b></td>
+            <td><code>projectedTime</code></td>
+            <td>2</td>
+            <td>Number of seconds into the future to predict the CTRV trajectory of targets</td>
+        </tr>
+        <tr>
+            <td><code>projectedSteps</code></td>
+            <td>6</td>
+            <td>Number of green orbs to display at the top of target vehicles</td>
+        </tr>
+        <tr>
+            <td rowspan=2><b>Cloud filtering options</b></td>
+            <td><code>filterPointCloud</code></td>
+            <td><code>true</code></td>
+            <td><code>true</code> to downsample input point cloud using voxel grid filtering</td>
+        </tr>
+        <tr>
+            <td><code>voxelSide</code></td>
+            <td>0.25f</td>
+            <td>Side length of the voxel cube (0.01f = 1 cm)</td>
+        </tr>
+        <tr>
+            <td rowspan=4><b>Euclidean clustering options</b></td>
+            <td><code>cluster_pcd</code></td>
+            <td><code>true</code></td>
+            <td><code>true</code> to render Euclidean Clustering on obstacle data (rotating colors among red, yellow, blue)</td>
+        </tr>
+        <tr>
+            <td><code>clusterTol</code></td>
+            <td>1.2</td>
+            <td>Maximum tolerance to keep points within a cluster (in meters)</td>
+        </tr>
+        <tr>
+            <td><code>minSize</code></td>
+            <td>50</td>
+            <td>Minimum number of points in a cluster</td>
+        </tr>
+        <tr>
+            <td><code>maxSize</code></td>
+            <td>1000</td>
+            <td>Maximum number of points in a cluster</td>
+        </tr>
+        <tr>
+            <td rowspan=1><b>Rendering options</b></td>
+            <td><code>renderBoxes</code></td>
+            <td><code>true</code></td>
+            <td><code>true</code> to render axis-aligned bounding boxes around the clusters</td>
+        </tr>
+    </tbody>
+</table>
+
 ## Code Logic
 
 ### Initialization
