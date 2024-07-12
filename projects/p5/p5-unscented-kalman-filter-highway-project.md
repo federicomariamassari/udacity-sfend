@@ -120,7 +120,7 @@ Project options can be set in [`highway.h`](https://github.com/federicomariamass
         <tr>
             <td><code>projectedSteps</code></td>
             <td>6</td>
-            <td>Number of green orbs to display at the top of target vehicles</td>
+            <td>Number of green orbs to display at the top of target vehicles (+1 to describe the current state)</td>
         </tr>
         <tr>
             <td rowspan=2><b>Cloud filtering options</b></td>
