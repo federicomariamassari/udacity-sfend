@@ -71,6 +71,8 @@ make
 
 ### Options
 
+Project options can be set from within [`highway.h`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/highway.h#L17-L45).
+
 <table>
     <thead>
         <tr>
