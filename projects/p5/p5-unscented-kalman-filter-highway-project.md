@@ -99,7 +99,7 @@ Project options can be set in [`highway.h`](https://github.com/federicomariamass
             <td rowspan=3><b>Sensor measurements visualisation options</b></td>
             <td><code>visualize_lidar</code></td>
             <td><code>true</code></td>
-            <td><code>true</code> to display LiDAR red orbs at the top of target vehicles</td>
+            <td><code>true</code> to display LiDAR pings (red orbs) at the top of target vehicles</td>
         </tr>
         <tr>
             <td><code>visualize_radar</code></td>
@@ -168,6 +168,9 @@ Project options can be set in [`highway.h`](https://github.com/federicomariamass
 ### Initialization
 
 State vector $\bf{x}$ and state covariance matrix $\bf{P}$ are initialized in [`UKF::ProcessMeasurement()`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/ukf.cpp#L78), and their values depend on the [type of marker](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/tools.h#L17-L33) received (LiDAR or radar). Laser data contain info on the object's position $(p_x, p_y)$ while radar data contain info on radial distance, bearing, and range rate $(\rho, \phi, \dot{\rho})$.
+
+__Figure 2: RMSE LiDAR Measurement X-Threshold Breach__
+![RMSE X-dimension breach](./img/mov4.gif)
 
 ## Resources
 
