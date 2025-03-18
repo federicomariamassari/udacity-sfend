@@ -7,7 +7,7 @@ void initCamera(CameraAngle& setAngle, pcl::visualization::PCLVisualizer::Ptr vi
 {
   viewer->setBackgroundColor(0, 0, 0);
 
-// Set camera position and angle
+  // Set camera position and angle
   viewer->initCameraParameters();
   
   float x_pos = 0;
