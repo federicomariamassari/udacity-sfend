@@ -167,7 +167,11 @@ Project options can be set in [`highway.h`](https://github.com/federicomariamass
 
 ### Initialization
 
-State vector $\bf{x}$ and state covariance matrix $\bf{P}$ are initialized in [`UKF::ProcessMeasurement()`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/ukf.cpp#L78), and their values depend on the [type of marker](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/tools.h#L17-L33) received (LiDAR or radar). Laser data contain info on the object's position $(p_x, p_y)$ while radar data contain info on radial distance, bearing, and range rate $(\rho, \phi, \dot{\rho})$. In this project, the state estimates are initialized with LiDAR measurement, which is [always first by design](https://github.com/federicomariamassari/udacity-sfend/blob/92eb89f7cd22dce75865f76b58bdcb1f306a52e0/projects/p5/src/highway.h#L205-L212).
+State vector $\bf{x}$ and state covariance matrix $\bf{P}$ are initialised in [`UKF::ProcessMeasurement()`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/ukf.cpp#L78), and their values depend on the [type of marker](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/tools.h#L17-L33) received (LiDAR or radar). Laser data contain info on the object's position $(p_x, p_y)$ while radar data contain info on radial distance, bearing, and range rate $(\rho, \phi, \dot{\rho})$. In this project, the state estimates are initialised with a LiDAR measurement, which is [always first by design](https://github.com/federicomariamassari/udacity-sfend/blob/92eb89f7cd22dce75865f76b58bdcb1f306a52e0/projects/p5/src/highway.h#L205-L212).
+
+### Predict-Update Cycle
+
+Once initialisation is complete, the algorithm enters a state prediction and measurement update cycle. __State prediction__ infers the current state of the objects on the road by incorporating the time elapsed since last measurement (by default, [1/3 of a second](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/main.cpp#L40-L47)) into a Constant Turn Rate and Velocity Magnitude (CTRV) model. __Measurement update__, instead, combines
 
 __Figure 2: RMSE LiDAR Measurement X-Threshold Breach__
 ![RMSE X-dimension breach](./img/mov4.gif)
