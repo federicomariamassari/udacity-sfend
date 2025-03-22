@@ -257,8 +257,8 @@ void UKF::SigmaPointsPrediction(double& delta_t)
     // Avoid division by zero
     if (fabs(psi_dot[i]) > 1e-3)  // Vehicle turns
     {
-      state_aug(0, i) = v(i) / psi_dot(i) * (sin(psi(i) + psi_dot(i)*delta_t) - sin(psi(i)));
-      state_aug(1, i) = v(i) / psi_dot(i) * (-cos(psi(i) + psi_dot(i)*delta_t) + cos(psi(i)));
+      state_aug(0, i) = v(i) / psi_dot(i) * (sin(psi(i) + psi_dot(i) * delta_t) - sin(psi(i)));
+      state_aug(1, i) = v(i) / psi_dot(i) * (-cos(psi(i) + psi_dot(i) * delta_t) + cos(psi(i)));
 
     } else  // Vehicle drives straight
     {

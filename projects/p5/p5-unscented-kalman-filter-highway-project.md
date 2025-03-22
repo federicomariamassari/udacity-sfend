@@ -175,6 +175,10 @@ Post initialisation, the algorithm enters a state prediction and measurement upd
 
 ### Prediction Stage
 
+$$
+X_{k|k} = \biggr[x_{k|k} \quad x_{k|k} + \sqrt{\big(\lambda + n_x\big) P_{k|k}} \quad x_{k|k} - \sqrt{\big(\lambda + n_x\big) P_{k|k}} \biggr]
+$$
+
 __Figure 2: RMSE LiDAR Measurement X-Threshold Breach__
 ![RMSE X-dimension breach](./img/mov4.gif)
 
