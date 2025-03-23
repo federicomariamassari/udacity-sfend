@@ -175,8 +175,10 @@ Post initialisation, the algorithm enters a state prediction and measurement upd
 
 ### Prediction Stage
 
+#### Augmented Sigma Points
+
 $$
-X_{k|k} = \biggr[x_{k|k} \quad x_{k|k} + \sqrt{\big(\lambda + n_x\big) P_{k|k}} \quad x_{k|k} - \sqrt{\big(\lambda + n_x\big) P_{k|k}} \biggr]
+X_{a,k|k} = \biggr[x_{a,k|k} \quad x_{a,k|k} + \sqrt{\big(\lambda + n_a\big) P_{a,k|k}} \quad x_{a,k|k} - \sqrt{\big(\lambda + n_a\big) P_{a,k|k}} \biggr]
 $$
 
 __Figure 2: RMSE LiDAR Measurement X-Threshold Breach__
