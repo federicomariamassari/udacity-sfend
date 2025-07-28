@@ -93,7 +93,7 @@ Point Cloud Library and associated Viewer have specific [build and rendering req
 ### Main File
 
 ```bash
-cd /home/$whoami/workspace/udacity-rsend/projects/p1
+cd /home/$whoami/workspace/udacity-sfend/projects/p1
 mkdir build && cd build
 cmake ..
 make
@@ -103,7 +103,7 @@ make
 ### Quiz Files
 
 ```bash
-cd /home/$whoami/workspace/udacity-rsend/projects/p1/src/quiz/{ransac|cluster}
+cd /home/$whoami/workspace/udacity-sfend/projects/p1/src/quiz/{ransac|cluster}
 mkdir build && cd build
 cmake ..
 make
