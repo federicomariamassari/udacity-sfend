@@ -317,6 +317,10 @@ A comparison between regular and PCA-based bounding boxes appears in Figure 7.
   </tr>
 </table>
 
+## A More Complex Environment
+
+![Tracking a Cyclist](./img/mov4.gif)
+
 ## Resources
 
 1. [Udacity Knowledge: About a theory of voxel grid and interest of region](https://knowledge.udacity.com/questions/609855)
