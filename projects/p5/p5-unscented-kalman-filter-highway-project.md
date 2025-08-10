@@ -171,15 +171,15 @@ State vector $\bf{x}$ and state covariance matrix $\bf{P}$ are initialised in [`
 
 ### Predict-Update Cycle
 
-Post initialisation, the algorithm enters a state prediction and measurement update cycle. __State prediction__ infers the current state of the objects on the road by incorporating the time elapsed since the last measurement (by default, [1/3 of a second](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/main.cpp#L40-L47)) into a Constant Turn Rate and Velocity Magnitude (CTRV) model. __Measurement update__ then combines the above prediction with a new measurement (initially from radar) to provide an updated, more accurate representation of the objects' location, assigning greater weight to the component with the lower uncertainty.
+After initialisation, the algorithm enters a state prediction and measurement update cycle.
+
+__State prediction__ estimates the future state of a tracked object on the road by incorporating its most recent state and the time elapsed since the last measurement (by default, [1/3 of a second](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/main.cpp#L40-L47)) into a Constant Turn Rate and Velocity Magnitude (CTRV) process model.
+
+__Measurement update__ combines the above prediction with a new measurement (initially from LiDAR) to provide an updated, more accurate representation of the objects' location, assigning greater weight to the component (either state prediction or measurement update) with the lowest uncertainty.
 
 ### Prediction Stage
 
 #### Augmented Sigma Points
-
-$$
-X_{a,k|k} = \biggr[x_{a,k|k} \quad x_{a,k|k} + \sqrt{\big(\lambda + n_a\big) P_{a,k|k}} \quad x_{a,k|k} - \sqrt{\big(\lambda + n_a\big) P_{a,k|k}} \biggr]
-$$
 
 __Figure 2: RMSE LiDAR Measurement X-Threshold Breach__
 ![RMSE X-dimension breach](./img/mov4.gif)
