@@ -177,9 +177,9 @@ After initialisation, the algorithm enters a state prediction and measurement up
 
 For each time $k$, state prediction consists of three steps:
 
-1. Augmented sigma point generation, which takes as input the posterior state vector $x_{k|k}, augmented with process noise $\nu_k$, and the posterior covariance matrix P_{k|k};
+1. Augmented sigma point generation, which takes as input the posterior state vector $x_{k|k}$, augmented with process noise $\nu_k$, and the posterior covariance matrix $P_{k|k}$;
 2. Sigma point prediction at time $k+1$, via propagation of the augmented sigma points through the CTRV model;
-3. Prediction of the _a priori_ state vector $x_{k+1|k}$ and covariance matrix P_{k+1|k} via the predicted sigma points.
+3. Prediction of the _a priori_ state vector $x_{k+1|k}$ and covariance matrix $P_{k+1|k}$ via the predicted sigma points.
 
 These steps are incorporated into [`UKF::Prediction()`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/ukf.cpp#L165-L175)
 
