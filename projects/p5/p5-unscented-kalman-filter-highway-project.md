@@ -171,17 +171,17 @@ State vector $\bf{x}$ and state covariance matrix $\bf{P}$ are initialised in [`
 
 ### Predict-Update Cycle
 
-After initialisation, the algorithm enters a state prediction and measurement update cycle. __State prediction__ estimates the future state of a tracked object on the road by incorporating its most recent state and the time elapsed since the last measurement (by default, [1/3 of a second](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/main.cpp#L40-L47)) into a Constant Turn Rate and Velocity Magnitude (CTRV) process model. __Measurement update__ combines the above prediction with a new measurement (initially from LiDAR) to provide an updated, more accurate representation of the objects' location, assigning greater weight to the component (either state prediction or measurement update) with the lowest uncertainty.
+Post initialisation, the algorithm enters a state prediction and measurement update cycle. __State prediction__ estimates the future state of a tracked object by incorporating its most recent state and the time elapsed since the last measurement (by default, [1/3 of a second](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/main.cpp#L40-L47)) into a Constant Turn Rate and Velocity Magnitude (CTRV) process model. __Measurement update__ combines the above prediction with a new measurement (initially from LiDAR) to provide an updated, more accurate representation of the objects' location, assigning greater weight to the component (either state prediction or measurement update) with the lowest uncertainty.
 
 ### State Prediction
 
-For each time step $k$, state prediction consists of three steps (encapsulated in [`UKF::Prediction()`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/ukf.cpp#L165-L175)):
+State prediction is implemented in [`UKF::Prediction()`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/ukf.cpp#L165-L175) and, at each time step $k$, consists of three stages:
 
-1. Generating augmented sigma points, using as input the posterior state vector $x_{k|k}$, augmented with process noise $\nu_k$, and the posterior covariance matrix $P_{k|k}$.
-2. Predicting sigma points at time $k+1$ by propagating the augmented sigma points in $k$ through the CTRV model.
-3. Forecasting the _a priori_ state vector $x_{k+1|k}$ and covariance matrix $P_{k+1|k}$ with the sigma points predicted above.
+1. __Augmented Sigma Point Generation:__ A set of augmented sigma points is created based on the current posterior state vector $x_{k|k}$ and covariance matrix $P_{k|k}$, incorporating process noise $\nu_k$. The augmentation ensures that both the system state and process uncertainties are accurately represented.
+2. __Sigma Point Propagation:__ The augmented sigma points are propagated forward in time ($k+1$) using the CTRV motion model. This step forecasts how the system state will evolve, effectively capturing the non-linear dynamics of vehicle motion.
+3. __State and Covariance Prediction:__ The predicted sigma points are used to compute the _a priori_ state vector $x_{k+1|k}$ and covariance matrix $P_{k+1|k}$. This yields the best estimate of the system state and its uncertainty prior to incorporating the next sensor measurement.
 
-#### Augmented Sigma Points
+### Measurement Update
 
 __Figure 2: RMSE LiDAR Measurement X-Threshold Breach__
 ![RMSE X-dimension breach](./img/mov4.gif)
