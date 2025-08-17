@@ -171,13 +171,11 @@ State vector $\bf{x}$ and state covariance matrix $\bf{P}$ are initialised in [`
 
 ### Predict-Update Cycle
 
-After initialisation, the algorithm enters a state prediction and measurement update cycle.
+After initialisation, the algorithm enters a state prediction and measurement update cycle. __State prediction__ estimates the future state of a tracked object on the road by incorporating its most recent state and the time elapsed since the last measurement (by default, [1/3 of a second](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/main.cpp#L40-L47)) into a Constant Turn Rate and Velocity Magnitude (CTRV) process model. __Measurement update__ combines the above prediction with a new measurement (initially from LiDAR) to provide an updated, more accurate representation of the objects' location, assigning greater weight to the component (either state prediction or measurement update) with the lowest uncertainty.
 
-__State prediction__ estimates the future state of a tracked object on the road by incorporating its most recent state and the time elapsed since the last measurement (by default, [1/3 of a second](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/main.cpp#L40-L47)) into a Constant Turn Rate and Velocity Magnitude (CTRV) process model.
+### State Prediction
 
-__Measurement update__ combines the above prediction with a new measurement (initially from LiDAR) to provide an updated, more accurate representation of the objects' location, assigning greater weight to the component (either state prediction or measurement update) with the lowest uncertainty.
-
-### Prediction Stage
+For each time $k$, state prediction consists of three steps: (1) augmented sigma point generation, which takes as input the state vector $x_k$ augmented with process noise $\nu_k$; (2) sigma point prediction at $k+1$, obtained by propagating the augmented sigma points through the CTRV model; (3) (3) recombination of the predicted sigma points to recover the predicted mean and covariance of the state. These steps are incorporated into [`UKF::Prediction()`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/ukf.cpp#L165-L175)
 
 #### Augmented Sigma Points
 
