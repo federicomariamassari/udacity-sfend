@@ -183,6 +183,14 @@ State prediction is implemented in [`UKF::Prediction()`](https://github.com/fede
 
 ### Measurement Update
 
+In the measurement update phase, the state estimate is refined by integrating the new measurement data from the sensor. The process involves three steps:
+
+1. __Predicted State to Measurement Space Transformation:__ Each predicted sigma point is converted from the state space into the measurement space. This mapping, which allows to capture the uncertainty associated with the measurement, [varies based on the sensor](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/ukf.cpp#L147-L162) producing the data: __radar__ measurements are non-linear and provide data in _polar_ coordinates; by contrast, __LiDAR__ ones are more linear, producing distances in the _Cartesian_ plane.
+2. __Predicted Measurement Mean and Covariance Calculation:__ The predicted measurement state vector $z_{k+1|k}$ is calculated as the weighted average of the transformed sigma points, while the predicted measurement covariance $S_{k+1|k}$ captures the spread of these points.
+3. __Prediction and New Measurement Combination:__ The final step involves combining the predicted measurement with a new sensor measurement. This includes calculating the Kálmán gain, which determines the weight assigned to each quantity, resulting in a more accurate update of the object's state, $z_{k+1|k+1}$.
+
+The implementation for LiDAR (which relies on a simple Kálmán filter due to its inherent linearity) and radar (which relies on the Unscented Kálmán filter) is provided, respectively, in [`UKF::UpdateLidar`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/ukf.cpp#L177-L204) and [`UKF::UpdateRadar`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/ukf.cpp#L206-L213).
+
 __Figure 2: RMSE LiDAR Measurement X-Threshold Breach__
 ![RMSE X-dimension breach](./img/mov4.gif)
 
