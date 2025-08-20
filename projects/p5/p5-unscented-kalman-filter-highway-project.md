@@ -191,11 +191,16 @@ In the measurement update phase, the state estimate is refined by integrating th
 
 The implementation for LiDAR (which relies on a simple Kálmán filter due to its inherent linearity) and radar (which relies on the Unscented Kálmán filter) is provided, respectively, in [`UKF::UpdateLidar`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/ukf.cpp#L177-L204) and [`UKF::UpdateRadar`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/ukf.cpp#L206-L213).
 
+## Performance Assessment
+
+A metric for the accuracy of the implemented filter is presented in the Root Mean Square Error (RMSE) across all relevant dimensions, $X$, $Y$ and velocity $v_x$, $v_y$, and appears at the bottom-left corner of the simulation screen [2]. The algorithm is defined in [`Tools::CalculateRMSE`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/tools.cpp#L128-L160) and called in the project's [main class](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/highway.h#L230-L279).
+
 __Figure 2: RMSE LiDAR Measurement X-Threshold Breach__
 ![RMSE X-dimension breach](./img/mov4.gif)
 
 ## Resources
 
 1. https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p1/p1-preliminary-configs.md
+2. [Wikipedia: Root mean square deviation](https://en.wikipedia.org/wiki/Root_mean_square_deviation)
 
 [Home](../../README.md) | Previous: [Radar Target Generation and Detection](../p4/p4-radar-target-generation-and-detection.md) | Next: [Embedded Input Reader](https://github.com/federicomariamassari/udacity-esfnd/blob/main/projects/p1/p1-embedded-input-reader.md)
