@@ -193,7 +193,8 @@ The implementation for LiDAR (which relies on a simple Kálmán filter due to it
 
 ## Performance Assessment
 
-A metric for the accuracy of the implemented filter is presented in the Root Mean Square Error (RMSE) across all relevant dimensions, $X$, $Y$ and velocity $v_x$, $v_y$, and appears at the bottom-left corner of the simulation screen [2]. The algorithm is defined in [`Tools::CalculateRMSE`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/tools.cpp#L128-L160) and called in the project's [main class](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/highway.h#L230-L279).
+A metric for the accuracy of the implemented filter is the Root Mean Square Error (RMSE) [2], calculated for positions $p_x$, $p_y$, and velocity values $v_x$, $v_y$, and displayed at the bottom-left corner of the simulation screen. The algorithm is defined in the [`Tools::CalculateRMSE`](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/tools.cpp#L128-L160) function and is called within the project's [main class](https://github.com/federicomariamassari/udacity-sfend/blob/main/projects/p5/src/highway.h#L230-L279). The project is deemed successful if, after one second of simulation, the RMSE values do not exceed the designated threshold levels (i.e., $p_x$ <= 0.30, $p_y$ <= 0.16, $v_x$ <= 0.95, and $v_y$ <= 0.70). This task is manageable if the chosen anchor points for LiDAR correspond to the midpoints of the stylised blue cars, which are fixed in shape [Figure 1]. However, if the cars are replaced by box-bound point cloud clusters, the situation becomes more intricate.
+
 
 __Figure 2: RMSE LiDAR Measurement X-Threshold Breach__
 ![RMSE X-dimension breach](./img/mov4.gif)
