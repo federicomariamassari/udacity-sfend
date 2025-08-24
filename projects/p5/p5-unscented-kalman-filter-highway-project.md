@@ -109,7 +109,7 @@ Project options can be set in [`highway.h`](https://github.com/federicomariamass
         <tr>
             <td><code>visualize_pcd</code></td>
             <td><code>true</code></td>
-            <td><code>true</code> to display colorless LiDAR point clouds, <code>false</code> for stylised green car shapes</td>
+            <td><code>true</code> to display colorless LiDAR point clouds, <code>false</code> for stylised blue car shapes</td>
         </tr>
         <tr>
             <td rowspan=2><b>UKF path prediction options</b></td>
