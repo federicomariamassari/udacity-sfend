@@ -62,7 +62,7 @@ This project was developed and tested on Ubuntu 20.04 (UTM VM QEMU 7.0 aarch64).
 ### Build and Run
 
 ```bash
-cd /home/$whoami/workspace/udacity-rsend/projects/p5
+cd /home/$whoami/workspace/udacity-sfend/projects/p5
 mkdir build && cd build
 cmake ..
 make

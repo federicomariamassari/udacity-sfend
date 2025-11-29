@@ -51,7 +51,7 @@ __Figure 2: Directory Structure Tree__
 To enable patented algorithms SIFT and SURF, build OpenCV 4.2.0 [from source](https://github.com/federicomariamassari/udacity-rsend/blob/main/projects/p4/p4-preliminary-config.md#3-rebuild-opencv-from-source-with-patented-modules). Then:
 
 ```bash
-cd /home/$whoami/workspace/udacity-rsend/projects/p2
+cd /home/$whoami/workspace/udacity-sfend/projects/p2
 mkdir build && cd build
 cmake ..
 make
