@@ -39,7 +39,7 @@ __[Link to code](projects/p1/src)__ | [Starter Code from Udacity](https://github
 Clone the repository locally, for example inside `/home/$whoami/workspace` (with `$whoami` the username of the current user). Ensure PCL and associated Viewer are [installed correctly](projects/p1/p1-preliminary-configs.md), then build and run the main project as per below commands. To build and run `quiz` instead, see the project's README file.
 
 ```bash
-cd /home/$whoami/workspace/udacity-rsend/projects/p1
+cd /home/$whoami/workspace/udacity-sfend/projects/p1
 mkdir build && cd build
 cmake ..
 make
@@ -71,7 +71,7 @@ __[Link to code](projects/p2/src)__ | [Starter Code from Udacity](https://github
 As a prerequisite, build OpenCV 4.2.0 [from source](https://github.com/federicomariamassari/udacity-rsend/blob/main/projects/p4/p4-preliminary-config.md#3-rebuild-opencv-from-source-with-patented-modules) to enable patented algorithms SIFT and SURF. Then build and run as follows:
 
 ```bash
-cd /home/$whoami/workspace/udacity-rsend/projects/p2
+cd /home/$whoami/workspace/udacity-sfend/projects/p2
 mkdir build && cd build
 cmake ..
 make
@@ -107,7 +107,7 @@ wget https://pjreddie.com/media/files/yolov3.weights
 Then build and run as follows:
 
 ```bash
-cd /home/$whoami/workspace/udacity-rsend/projects/p3
+cd /home/$whoami/workspace/udacity-sfend/projects/p3
 mkdir build && cd build
 cmake ..
 make
@@ -150,7 +150,7 @@ __[Link to code](projects/p5/src)__ | [Starter Code from Udacity](https://github
 ### How to Build and Run the Project
 
 ```bash
-cd /home/$whoami/workspace/udacity-rsend/projects/p5
+cd /home/$whoami/workspace/udacity-sfend/projects/p5
 mkdir build && cd build
 cmake ..
 make
