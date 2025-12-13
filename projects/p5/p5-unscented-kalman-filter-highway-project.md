@@ -1,4 +1,4 @@
-[Home](../../README.md) | Previous: [Radar Target Generation and Detection](../p4/p4-radar-target-generation-and-detection.md) | Next: [Embedded Input Reader](https://github.com/federicomariamassari/udacity-esfnd/blob/main/README.md)
+[Home](../../README.md) | Previous: [Radar Target Generation and Detection](../p4/p4-radar-target-generation-and-detection.md) | Next: [Embedded Input Reader](https://github.com/federicomariamassari/udacity-esfnd)
 
 # Project 5: Unscented Kálmán Filter Highway Project
 
@@ -204,4 +204,4 @@ __Figure 2: RMSE LiDAR Measurement X-Threshold Breach__
 2. [Wikipedia: Root mean square deviation](https://en.wikipedia.org/wiki/Root_mean_square_deviation)
 3. [Udacity Knowledge: Under which conditions is it required to pass the RMSE thresholds?](https://knowledge.udacity.com/questions/1036196)
 
-[Home](../../README.md) | Previous: [Radar Target Generation and Detection](../p4/p4-radar-target-generation-and-detection.md) | Next: [Embedded Input Reader](https://github.com/federicomariamassari/udacity-esfnd/blob/main/README.md)
+[Home](../../README.md) | Previous: [Radar Target Generation and Detection](../p4/p4-radar-target-generation-and-detection.md) | Next: [Embedded Input Reader](https://github.com/federicomariamassari/udacity-esfnd)
